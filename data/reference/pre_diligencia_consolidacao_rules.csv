@@ -1,0 +1,8 @@
+﻿id_regra;campo;valor_esperado_ou_alerta;interpretação
+CONS_01;status_contato;contato_confirmado;Avança para validação cadastral e documental
+CONS_02;cnpj_validado;sim;Pode avançar se situação cadastral também estiver regular
+CONS_03;situacao_cadastral_validada;ativa|regular|apta;Pode avançar para entrevista se demais campos forem positivos
+CONS_04;representante_identificado;sim;Necessário antes de solicitação documental formal
+CONS_05;risco_juridico_preliminar;sanção|impedimento|irregular;Bloqueia até análise jurídica
+CONS_06;aderencia_tematica_validada;não;Descartar ou manter apenas para cadastro histórico
+CONS_07;documentos_recebidos;sim|parcial;Permite análise documental posterior
