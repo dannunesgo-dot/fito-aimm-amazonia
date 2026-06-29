@@ -1,0 +1,34 @@
+name: teste-funcional-query-plan
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/reference/dicionario_indicadores.csv"
+      - "data/reference/source_registry.csv"
+      - "data/evidence/evidence_registry.csv"
+      - "data/reference/query_plan.csv"
+      - "scripts/teste_funcional_query_plan.py"
+      - ".github/workflows/teste_funcional_query_plan.yml"
+
+jobs:
+  teste-funcional:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar teste funcional do query_plan
+        run: python scripts/teste_funcional_query_plan.py
+
+      - name: Publicar relatório do teste funcional
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-teste-funcional-query-plan
+          path: outputs/teste_funcional_query_plan_relatorio.txt
