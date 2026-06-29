@@ -16,9 +16,12 @@ def ler_csv(caminho: Path):
 
 def main():
     if not INPUT_ORGS.exists():
-        # Gera base Mapa OSCs se o artefato anterior ainda não foi salvo no repositório.
-        from fito_aimm.coletor_mapaosc import coletar_mapaosc_municipios
-        coletar_mapaosc_municipios()
+        raise FileNotFoundError(
+            "Arquivo obrigatório ausente: data/processed/organizacoes_candidatas_mapaosc.csv. "
+            "Este workflow não deve tentar baixar novamente a base do Mapa das OSCs. "
+            "Baixe primeiro o artefato do workflow mapaosc-triagem ou deixe o workflow "
+            "risk-osc-screening baixar automaticamente esse artefato pelo GitHub Actions."
+        )
 
     resultado = executar_risk_osc_screening()
 
