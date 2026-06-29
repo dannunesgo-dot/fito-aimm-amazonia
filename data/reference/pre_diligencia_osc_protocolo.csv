@@ -1,0 +1,10 @@
+﻿id_etapa;fase;acao;campos;criticidade;status_inicial;observacao
+PD_01;Preparação;Confirmar dados mínimos da organização;nome, município, UF, CNPJ/id, risco, telefone/e-mail, endereço;obrigatório;pendente;Não contatar antes de conferir duplicidade evidente.
+PD_02;Contato inicial;Testar telefone e e-mail disponíveis;status_contato, telefone_validado, email_validado;obrigatório;pendente;Registrar data, canal e resultado.
+PD_03;Identificação de representante;Confirmar representante formal ou ponto focal;representante_identificado, cargo, contato;obrigatório;pendente;Não solicitar documentos sensíveis a pessoa não confirmada.
+PD_04;Validação cadastral;Confirmar CNPJ e situação cadastral;cnpj_validado, situacao_cadastral_validada;obrigatório;pendente;Organização baixada/inativa permanece bloqueada.
+PD_05;Solicitação documental;Solicitar estatuto, ata vigente, comprovantes e portfólio;documentos_solicitados, documentos_recebidos;obrigatório;pendente;Enviar apenas após contato confirmado.
+PD_06;Aderência temática;Confirmar atuação em saúde, agricultura, bioeconomia, sustentabilidade, P&D ou capacitação;aderencia_tematica_validada;alto valor;pendente;Exigir evidência mínima: projeto, relatório, equipe ou atuação territorial.
+PD_07;Capacidade operacional;Verificar equipe, logística, prestação de contas e atuação territorial;capacidade_operacional_preliminar;alto valor;pendente;Pode exigir entrevista ou visita.
+PD_08;Risco jurídico;Registrar impedimentos, sanções ou inconsistências;risco_juridico_preliminar;obrigatório;pendente;Encaminhar casos críticos para análise jurídica.
+PD_09;Decisão pós-contato;Classificar próxima ação;decisao_pos_contato;obrigatório;pendente;Opções: continuar, pedir documentos, entrevistar, visitar, descartar, bloquear.
