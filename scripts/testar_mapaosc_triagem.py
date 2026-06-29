@@ -53,6 +53,7 @@ def main():
         f"Linhas de resumo municipal: {len(resumo)}",
         f"Linhas de evidência: {len(evidencias)}",
         f"Total de linhas lidas na base de origem: {resultado['total_linhas_lidas']}",
+        f"Encoding detectado: {resultado['encoding']}",
         f"Delimitador detectado: {repr(resultado['delimitador'])}",
         "",
         "Resumo por município:",
