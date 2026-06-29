@@ -1,0 +1,38 @@
+name: validar-bases
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/**"
+      - "scripts/**"
+      - ".github/workflows/validar_bases.yml"
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validar bases CSV
+        run: python scripts/validar_bases.py
+
+      - name: Publicar artefatos de validação
+        uses: actions/upload-artifact@v4
+        with:
+          name: bases-validadas
+          path: |
+            data/reference/source_registry.csv
+            data/evidence/evidence_registry.csv
