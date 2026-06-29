@@ -1,0 +1,40 @@
+name: coleta-ibge-teste
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/fito_aimm/coletor_ibge.py"
+      - "scripts/testar_coleta_ibge.py"
+      - "data/reference/fetch_log.csv"
+      - ".github/workflows/coleta_ibge_teste.yml"
+
+jobs:
+  coleta-ibge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar coleta-teste IBGE/SIDRA
+        run: python scripts/testar_coleta_ibge.py
+
+      - name: Publicar artefatos da coleta IBGE
+        uses: actions/upload-artifact@v4
+        with:
+          name: coleta-ibge-sidra-teste
+          path: |
+            data/raw/ibge/populacao_estimada_municipios.csv
+            data/reference/fetch_log.csv
+            outputs/logs/teste_coleta_ibge.txt
