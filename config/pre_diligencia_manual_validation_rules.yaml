@@ -1,0 +1,72 @@
+# Rodada 4.9 — validação de entrada manual da pré-diligência OSC
+# Objetivo: preparar uma planilha editável para Google Drive e validar retornos manuais antes de reincorporar ao GitHub.
+# Não seleciona executora. Apenas valida preenchimento e integridade dos campos de contato/documentos.
+
+arquivo_manual_esperado: "data/input/pre_diligencia_status_validacao_manual.csv"
+
+campos_obrigatorios_identificacao:
+  - "id_pre_diligencia"
+  - "cnpj_ou_id"
+  - "nome_organizacao"
+  - "municipio"
+  - "uf"
+
+campos_manuais_controlados:
+  status_contato:
+    permitido:
+      - ""
+      - "pendente"
+      - "contato_iniciado"
+      - "contato_sem_resposta"
+      - "contato_confirmado"
+      - "descartada"
+      - "bloqueada"
+  cnpj_validado:
+    permitido: ["", "sim", "não", "nao", "pendente"]
+  situacao_cadastral_validada:
+    permitido: ["", "ativa", "regular", "apta", "baixada", "inativa", "inapta", "irregular", "pendente"]
+  representante_identificado:
+    permitido: ["", "sim", "não", "nao", "pendente"]
+  documentos_solicitados:
+    permitido: ["", "sim", "não", "nao", "parcial", "pendente"]
+  documentos_recebidos:
+    permitido: ["", "sim", "não", "nao", "parcial", "pendente"]
+  necessita_entrevista:
+    permitido: ["", "sim", "não", "nao", "pendente"]
+  necessita_visita:
+    permitido: ["", "sim", "não", "nao", "pendente"]
+  decisao_pos_contato:
+    permitido:
+      - ""
+      - "pendente"
+      - "continuar_contato"
+      - "solicitar_documentos"
+      - "agendar_entrevista"
+      - "recomendar_visita"
+      - "bloquear"
+      - "descartar"
+
+regras:
+  - id: "VAL_01"
+    regra: "id_pre_diligencia não pode estar vazio nem duplicado."
+    severidade: "erro"
+  - id: "VAL_02"
+    regra: "Campos controlados devem usar apenas valores permitidos."
+    severidade: "erro"
+  - id: "VAL_03"
+    regra: "Contato confirmado exige telefone_validado ou email_validado preenchido."
+    severidade: "alerta"
+  - id: "VAL_04"
+    regra: "Documentos recebidos não pode ser sim se documentos solicitados estiver vazio ou não."
+    severidade: "alerta"
+  - id: "VAL_05"
+    regra: "Recomendar visita exige contato confirmado, CNPJ validado, situação regular/ativa/apta e representante identificado."
+    severidade: "alerta"
+  - id: "VAL_06"
+    regra: "Bloquear ou descartar exige observação de validação."
+    severidade: "alerta"
+
+travas:
+  - "Validação de preenchimento não seleciona executora."
+  - "Arquivos com dados pessoais devem ser mantidos no Drive com acesso restrito."
+  - "Somente versões sem erro estrutural devem ser reincorporadas ao GitHub."
