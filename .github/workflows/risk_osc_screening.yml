@@ -9,18 +9,72 @@ on:
       - "data/reference/risk_osc_rules.csv"
       - "data/processed/organizacoes_candidatas_mapaosc.csv"
       - "src/fito_aimm/risk_osc.py"
-      - "src/fito_aimm/coletor_mapaosc.py"
       - "scripts/testar_risk_osc_screening.py"
       - ".github/workflows/risk_osc_screening.yml"
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   risk-osc-screening:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 20
 
     steps:
       - name: Baixar repositório
         uses: actions/checkout@v4
+
+      - name: Baixar artefato aprovado do mapaosc-triagem
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -e
+          mkdir -p data/processed data/evidence data/reference outputs/logs /tmp/mapaosc_artifact
+
+          if [ -s data/processed/organizacoes_candidatas_mapaosc.csv ]; then
+            echo "Arquivo organizacoes_candidatas_mapaosc.csv já existe no repositório. Usando arquivo versionado."
+            exit 0
+          fi
+
+          echo "Arquivo organizacoes_candidatas_mapaosc.csv não está versionado. Tentando baixar artefato do último workflow mapaosc-triagem bem-sucedido."
+
+          RUN_ID="$(gh run list \
+            --workflow mapaosc_triagem.yml \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')"
+
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "ERRO: não encontrei execução bem-sucedida do workflow mapaosc-triagem."
+            echo "Correção manual: baixe o artefato mapaosc-triagem-fito-amazonia e envie organizacoes_candidatas_mapaosc.csv para data/processed/."
+            exit 1
+          fi
+
+          echo "Baixando artefato mapaosc-triagem-fito-amazonia da execução $RUN_ID."
+          gh run download "$RUN_ID" \
+            --name mapaosc-triagem-fito-amazonia \
+            --dir /tmp/mapaosc_artifact
+
+          if [ ! -s /tmp/mapaosc_artifact/organizacoes_candidatas_mapaosc.csv ]; then
+            echo "ERRO: artefato baixado, mas organizacoes_candidatas_mapaosc.csv não foi encontrado."
+            echo "Conteúdo do artefato:"
+            find /tmp/mapaosc_artifact -maxdepth 2 -type f -print
+            exit 1
+          fi
+
+          cp /tmp/mapaosc_artifact/organizacoes_candidatas_mapaosc.csv data/processed/
+
+          # Cópias auxiliares, se existirem, para rastreabilidade.
+          [ -f /tmp/mapaosc_artifact/resumo_organizacoes_mapaosc_municipios.csv ] && cp /tmp/mapaosc_artifact/resumo_organizacoes_mapaosc_municipios.csv data/processed/ || true
+          [ -f /tmp/mapaosc_artifact/evidence_mapaosc_triagem.csv ] && cp /tmp/mapaosc_artifact/evidence_mapaosc_triagem.csv data/evidence/ || true
+          [ -f /tmp/mapaosc_artifact/fetch_log.csv ] && cp /tmp/mapaosc_artifact/fetch_log.csv data/reference/ || true
+          [ -f /tmp/mapaosc_artifact/teste_mapaosc_triagem.txt ] && cp /tmp/mapaosc_artifact/teste_mapaosc_triagem.txt outputs/logs/ || true
+
+          echo "Artefato mapaosc-triagem recuperado com sucesso."
+          ls -lh data/processed/organizacoes_candidatas_mapaosc.csv
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -41,10 +95,13 @@ jobs:
           name: risk-osc-screening-fito-amazonia
           path: |
             data/processed/organizacoes_candidatas_mapaosc.csv
+            data/processed/resumo_organizacoes_mapaosc_municipios.csv
             data/processed/risk_osc_screening.csv
             data/processed/organizacoes_lista_curta_diligencia.csv
+            data/evidence/evidence_mapaosc_triagem.csv
             data/evidence/evidence_risk_osc_screening.csv
             data/reference/osc_due_diligence_checklist.csv
             data/reference/risk_osc_rules.csv
             config/risk_osc_rules.yaml
+            outputs/logs/teste_mapaosc_triagem.txt
             outputs/logs/teste_risk_osc_screening.txt
