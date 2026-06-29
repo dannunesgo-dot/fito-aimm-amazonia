@@ -1,0 +1,11 @@
+﻿rodada;status;nome;workflow;resultado;lacuna_ou_bloqueio
+4.1;validada;Estrutura de fontes, evidências e query_plan;validar-bases;"Validação de bases executada; usar como base de rastreabilidade.";não
+4.2;validada;fetch_log.csv e primeiro coletor IBGE/SIDRA;coleta-ibge;Conectividade e coleta municipal IBGE/SIDRA validadas.;não
+4.3;pendente_confirmacao;Área territorial e densidade IBGE/Geociências;area-densidade-ibge;"Patch preparado; falta print final verde nesta sequência.";sim: confirmar execução antes de usar indicador territorial definitivo
+4.4;validada;Mapa das OSCs/Ipea;mapaosc-triagem;"Triagem remota validada; usar artefato congelado.";não
+4.5;validada;Screening de risco OSC;risk-osc-screening;"5.000 organizações avaliadas; lista curta formal 0.";não
+4.6;validada;Diagnóstico do screening de risco OSC;risk-osc-diagnostics;TopN controlado de 100 organizações para pré-diligência.;não
+4.7;validada;Pré-diligência OSC;pre-diligencia-osc;"Fila de 100 contatos; 87 P1; 13 P2.";não
+4.8;validada;Consolidação da pré-diligência;pre-diligencia-consolidacao;"100 continuar_contato; esperado por campos manuais vazios.";não
+4.9-A;validada_com_lacuna;Validação de entrada manual — geração de template;pre-diligencia-manual-validation;"100 linhas; arquivo manual usado: não; 0 erro; 0 alerta.";"sim: LAC-OP-001; sem preenchimento manual agora"
+4.10;preparada;Congelamento técnico e índice mestre;system-freeze-index;Rodada criada para consolidar sistema e preparar calculadora.;não

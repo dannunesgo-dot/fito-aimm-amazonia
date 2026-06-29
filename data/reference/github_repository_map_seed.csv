@@ -1,0 +1,12 @@
+﻿caminho;classe;manter_no_github;descricao;politica
+config/;configuracao;sim;YAML de regras e travas por rodada;leve
+data/reference/;referencia;sim;Schemas, catálogos, seeds e registros leves;leve
+data/processed/;processadas;parcial;"Apenas bases pequenas necessárias para teste; artefatos grandes ficam no Drive";controlado
+data/evidence/;evidencias;parcial;Evidências leves e auditáveis;controlado
+data/raw/;brutas;não;Bases brutas grandes devem ficar no Drive;evitar
+data/input/;entrada_manual;restrito;Usar somente arquivos manuais validados e sem dados sensíveis;controlado
+outputs/logs/;logs;parcial;Logs de teste e execução, preferencialmente artefatos;controlado
+src/fito_aimm/;codigo;sim;Módulos Python do sistema;leve
+scripts/;scripts;sim;Scripts de teste/execução de workflows;leve
+.github/workflows/;workflow;sim;GitHub Actions;leve
+README_operacional.md;documentacao;sim;Manual operacional da calculadora;leve

@@ -1,0 +1,23 @@
+﻿rodada;artifact_id;arquivo;destino_drive_exato;acao;copia_editavel;status
+4.4;ART-4.4-001;mapaosc-triagem-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.4;ART-4.4-002;organizacoes_candidatas_mapaosc.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.4;ART-4.4-003;evidence_mapaosc_triagem.csv;Fito_Mais_Amazonia/02_evidencias;extrair_e_arquivar_arquivo;não;validado
+4.5;ART-4.5-001;risk-osc-screening-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.5;ART-4.5-002;risk_osc_screening.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.5;ART-4.5-003;evidence_risk_osc_screening.csv;Fito_Mais_Amazonia/02_evidencias;extrair_e_arquivar_arquivo;não;validado
+4.6;ART-4.6-001;risk-osc-diagnostics-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.6;ART-4.6-002;risk_osc_diagnostics.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.6;ART-4.6-003;risk_osc_threshold_scenarios.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.6;ART-4.6-004;organizacoes_pre_diligencia_topN.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.7;ART-4.7-001;pre-diligencia-osc-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.7;ART-4.7-002;pre_diligencia_fila_contato.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.7;ART-4.7-003;pre_diligencia_status_validacao.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;"não agora; criar Google Sheets somente quando LAC-OP-001 for reaberta";validado_com_lacuna
+4.8;ART-4.8-001;pre-diligencia-consolidacao-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.8;ART-4.8-002;pre_diligencia_consolidado.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.8;ART-4.8-003;pre_diligencia_encaminhamentos.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;validado
+4.9-A;ART-4.9-001;pre-diligencia-manual-validation-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;validado
+4.9-A;ART-4.9-002;pre_diligencia_status_validacao_template_drive.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;"não agora; criar Google Sheets somente quando LAC-OP-001 for reaberta";validado_com_lacuna
+4.9-A;ART-4.9-003;pre_diligencia_manual_validation_report.csv;Fito_Mais_Amazonia/06_logs;extrair_e_arquivar_arquivo;não;validado
+4.10;ART-4.10-001;system-freeze-index-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;arquivar_zip_integral;não;preparado
+4.10;ART-4.10-002;master_artifact_index.csv;Fito_Mais_Amazonia/04_bases_processadas;extrair_e_arquivar_arquivo;não;preparado
+4.10;ART-4.10-003;README_operacional.md;Fito_Mais_Amazonia/00_configuracao;extrair_e_arquivar_arquivo;não;preparado

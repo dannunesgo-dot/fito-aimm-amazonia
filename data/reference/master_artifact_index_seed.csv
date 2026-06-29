@@ -1,0 +1,23 @@
+﻿rodada;artifact_id;arquivo;tipo;origem;github_path;drive_path;manter_github;obrigatorio;status
+4.4;ART-4.4-001;mapaosc-triagem-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.4;ART-4.4-002;organizacoes_candidatas_mapaosc.csv;base_processada;artefato mapaosc-triagem;data/processed/organizacoes_candidatas_mapaosc.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.4;ART-4.4-003;evidence_mapaosc_triagem.csv;evidencia;artefato mapaosc-triagem;data/evidence/evidence_mapaosc_triagem.csv;Fito_Mais_Amazonia/02_evidencias;opcional;sim;validado
+4.5;ART-4.5-001;risk-osc-screening-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.5;ART-4.5-002;risk_osc_screening.csv;base_processada;artefato risk-osc-screening;data/processed/risk_osc_screening.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.5;ART-4.5-003;evidence_risk_osc_screening.csv;evidencia;artefato risk-osc-screening;data/evidence/evidence_risk_osc_screening.csv;Fito_Mais_Amazonia/02_evidencias;opcional;sim;validado
+4.6;ART-4.6-001;risk-osc-diagnostics-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.6;ART-4.6-002;risk_osc_diagnostics.csv;base_processada;artefato risk-osc-diagnostics;data/processed/risk_osc_diagnostics.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.6;ART-4.6-003;risk_osc_threshold_scenarios.csv;base_processada;artefato risk-osc-diagnostics;data/processed/risk_osc_threshold_scenarios.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.6;ART-4.6-004;organizacoes_pre_diligencia_topN.csv;base_processada;artefato risk-osc-diagnostics;data/processed/organizacoes_pre_diligencia_topN.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.7;ART-4.7-001;pre-diligencia-osc-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.7;ART-4.7-002;pre_diligencia_fila_contato.csv;base_processada;artefato pre-diligencia-osc;data/processed/pre_diligencia_fila_contato.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.7;ART-4.7-003;pre_diligencia_status_validacao.csv;base_processada_manual_template;artefato pre-diligencia-osc;data/processed/pre_diligencia_status_validacao.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado_com_lacuna
+4.8;ART-4.8-001;pre-diligencia-consolidacao-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.8;ART-4.8-002;pre_diligencia_consolidado.csv;base_processada;artefato pre-diligencia-consolidacao;data/processed/pre_diligencia_consolidado.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.8;ART-4.8-003;pre_diligencia_encaminhamentos.csv;base_processada;artefato pre-diligencia-consolidacao;data/processed/pre_diligencia_encaminhamentos.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado
+4.9-A;ART-4.9-001;pre-diligencia-manual-validation-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;validado
+4.9-A;ART-4.9-002;pre_diligencia_status_validacao_template_drive.csv;template_manual;artefato pre-diligencia-manual-validation;data/processed/pre_diligencia_status_validacao_template_drive.csv;Fito_Mais_Amazonia/04_bases_processadas;opcional;sim;validado_com_lacuna
+4.9-A;ART-4.9-003;pre_diligencia_manual_validation_report.csv;log_validacao;artefato pre-diligencia-manual-validation;data/processed/pre_diligencia_manual_validation_report.csv;Fito_Mais_Amazonia/06_logs;opcional;sim;validado
+4.10;ART-4.10-001;system-freeze-index-fito-amazonia.zip;zip_workflow;GitHub Actions;;Fito_Mais_Amazonia/07_versoes_congeladas;não;sim;preparado
+4.10;ART-4.10-002;master_artifact_index.csv;indice_mestre;workflow system-freeze-index;data/processed/master_artifact_index.csv;Fito_Mais_Amazonia/04_bases_processadas;sim;sim;preparado
+4.10;ART-4.10-003;README_operacional.md;documentacao;repositório;README_operacional.md;Fito_Mais_Amazonia/00_configuracao;sim;sim;preparado
