@@ -1,0 +1,60 @@
+name: product-pathway
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/product_pathway_rules.yaml"
+      - "data/reference/product_type_registry_seed.csv"
+      - "data/reference/product_pathway_registry_seed.csv"
+      - "data/reference/regulatory_route_registry_seed.csv"
+      - "data/reference/quality_requirement_registry_seed.csv"
+      - "data/reference/value_chain_stage_registry_seed.csv"
+      - "src/fito_aimm/product_pathway.py"
+      - "scripts/testar_product_pathway.py"
+      - ".github/workflows/product_pathway.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  product-pathway:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar produtos e rotas produtivas-regulatórias
+        run: python scripts/testar_product_pathway.py
+
+      - name: Publicar artefatos de produtos e rotas
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-pathway-fito-amazonia
+          path: |
+            data/processed/product_type_registry.csv
+            data/processed/product_pathway_registry.csv
+            data/processed/regulatory_route_registry.csv
+            data/processed/quality_requirement_registry.csv
+            data/processed/value_chain_stage_registry.csv
+            data/processed/product_pathway_priority_matrix.csv
+            data/evidence/evidence_product_pathway.csv
+            data/reference/product_type_registry_seed.csv
+            data/reference/product_pathway_registry_seed.csv
+            data/reference/regulatory_route_registry_seed.csv
+            data/reference/quality_requirement_registry_seed.csv
+            data/reference/value_chain_stage_registry_seed.csv
+            config/product_pathway_rules.yaml
+            outputs/logs/teste_product_pathway.txt
