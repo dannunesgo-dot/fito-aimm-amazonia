@@ -10,12 +10,13 @@ on:
       - "scripts/testar_mapaosc_triagem.py"
       - "data/reference/mapaosc_query_catalog.csv"
       - "data/reference/source_registry_append_mapaosc.csv"
+      - "data/raw/mapaosc/20260522_MOSC_baseDivulgacao.csv"
       - ".github/workflows/mapaosc_triagem.yml"
 
 jobs:
   mapaosc-triagem:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Baixar repositório
@@ -30,6 +31,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Tentar pré-download da base Mapa OSCs com curl
+        continue-on-error: true
+        run: |
+          mkdir -p data/raw/mapaosc
+          if [ ! -s data/raw/mapaosc/20260522_MOSC_baseDivulgacao.csv ]; then
+            curl -L --ipv4 \
+              --retry 6 \
+              --retry-delay 30 \
+              --retry-all-errors \
+              --connect-timeout 90 \
+              --max-time 2400 \
+              -o data/raw/mapaosc/20260522_MOSC_baseDivulgacao.csv \
+              "https://mapaosc.ipea.gov.br/download/20260522_MOSC_baseDivulgacao.csv"
+          fi
+          ls -lh data/raw/mapaosc || true
 
       - name: Executar triagem Mapa das OSCs/Ipea
         run: python scripts/testar_mapaosc_triagem.py
