@@ -1,0 +1,64 @@
+# Rodada 4.11 — arquitetura da calculadora AIMM em duas camadas
+# Objetivo: definir a estrutura lógica, os registros de entradas, fórmulas, pesos e saídas da calculadora Fito+ Amazônia AIMM.
+# Não executa cálculo final de impacto. Não cria benchmark definitivo. Não seleciona OSCs.
+
+camadas:
+  camada_1_aimm:
+    descricao: "Diagnóstico AIMM adaptado: lacuna, intensidade, mercado, risco e monitoramento."
+    finalidade: "Gerar leitura padronizada de contribuição ao desenvolvimento, com rastreabilidade."
+  camada_2_operacional:
+    descricao: "Modelo operacional do projeto: espécies, produtos, territórios, orçamento, beneficiários, rotas produtivas, riscos e cenários."
+    finalidade: "Alimentar a camada AIMM com dados específicos do Fito+ Amazônia."
+
+dimensoes_aimm:
+  - "gap"
+  - "intensidade"
+  - "mercado"
+  - "risco"
+  - "monitoramento"
+
+componentes_operacionais:
+  - "territorios"
+  - "organizacoes_e_governanca"
+  - "beneficiarios"
+  - "especies_candidatas"
+  - "produtos_rotas_produtivas"
+  - "orcamento_componentes"
+  - "laboratorios_qualidade_certificacao"
+  - "sus_farmacias_vivas_ped"
+  - "mercados_canais"
+  - "sustentabilidade_salvaguardas"
+
+escala_score:
+  minimo: 0
+  maximo: 100
+  faixas:
+    - id: "muito_baixo"
+      min: 0
+      max: 20
+    - id: "baixo"
+      min: 21
+      max: 40
+    - id: "medio"
+      min: 41
+      max: 60
+    - id: "alto"
+      min: 61
+      max: 80
+    - id: "muito_alto"
+      min: 81
+      max: 100
+
+regras_validacao:
+  - "Todo indicador deve ter id_indicador, nome, camada, dimensão, fórmula, unidade, fonte, periodicidade, limitação e nível de confiança."
+  - "Indicador sem benchmark deve ser marcado como lacuna ou proxy."
+  - "Benchmarks AIMM/IFC não públicos não podem ser inventados."
+  - "Dados manuais ausentes devem ser lacuna operacional, não preenchimento estimado automático."
+  - "Outputs devem separar resultado técnico, risco, evidência e recomendação."
+  - "Nenhuma saída sobre OSCs representa aptidão, seleção ou contratação."
+
+travas:
+  - "Rodada 4.11 define arquitetura. Não calcula score final."
+  - "Rodada 4.11 não substitui coleta de dados, benchmarks, orçamento ou seleção de espécies."
+  - "Toda fórmula deve ser auditável e referenciar entradas explícitas."
+  - "Toda estimativa futura deve carregar campo de confiança e limitação."
