@@ -1,0 +1,61 @@
+name: calculator-architecture
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/calculator_architecture_rules.yaml"
+      - "data/reference/calculator_dimensions.csv"
+      - "data/reference/calculator_layers_map_seed.csv"
+      - "data/reference/calculator_schema_seed.csv"
+      - "data/reference/formulas_registry_seed.csv"
+      - "data/reference/scoring_model_spec_seed.csv"
+      - "data/reference/calculator_input_requirements_seed.csv"
+      - "src/fito_aimm/calculator_architecture.py"
+      - "scripts/testar_calculator_architecture.py"
+      - ".github/workflows/calculator_architecture.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  calculator-architecture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar arquitetura da calculadora
+        run: python scripts/testar_calculator_architecture.py
+
+      - name: Publicar artefatos da arquitetura da calculadora
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-architecture-fito-amazonia
+          path: |
+            data/processed/calculator_schema.csv
+            data/processed/scoring_model_spec.csv
+            data/processed/formulas_registry.csv
+            data/processed/calculator_layers_map.csv
+            data/processed/calculator_input_requirements.csv
+            data/evidence/evidence_calculator_architecture.csv
+            data/reference/calculator_dimensions.csv
+            data/reference/calculator_layers_map_seed.csv
+            data/reference/calculator_schema_seed.csv
+            data/reference/formulas_registry_seed.csv
+            data/reference/scoring_model_spec_seed.csv
+            data/reference/calculator_input_requirements_seed.csv
+            config/calculator_architecture_rules.yaml
+            outputs/logs/teste_calculator_architecture.txt
