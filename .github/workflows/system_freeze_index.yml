@@ -1,0 +1,61 @@
+name: system-freeze-index
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/system_freeze_rules.yaml"
+      - "data/reference/master_artifact_index_seed.csv"
+      - "data/reference/round_status_seed.csv"
+      - "data/reference/drive_archive_manifest_seed.csv"
+      - "data/reference/github_repository_map_seed.csv"
+      - "data/reference/operational_gaps_register_seed.csv"
+      - "src/fito_aimm/system_freeze_index.py"
+      - "scripts/testar_system_freeze_index.py"
+      - "README_operacional.md"
+      - ".github/workflows/system_freeze_index.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  system-freeze-index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar congelamento técnico e índice mestre
+        run: python scripts/testar_system_freeze_index.py
+
+      - name: Publicar artefatos do congelamento técnico
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-freeze-index-fito-amazonia
+          path: |
+            data/processed/master_artifact_index.csv
+            data/processed/round_status.csv
+            data/processed/drive_archive_manifest.csv
+            data/processed/github_repository_map.csv
+            data/processed/operational_gaps_register.csv
+            data/evidence/evidence_system_freeze_index.csv
+            data/reference/master_artifact_index_seed.csv
+            data/reference/round_status_seed.csv
+            data/reference/drive_archive_manifest_seed.csv
+            data/reference/github_repository_map_seed.csv
+            data/reference/operational_gaps_register_seed.csv
+            config/system_freeze_rules.yaml
+            README_operacional.md
+            outputs/logs/teste_system_freeze_index.txt
