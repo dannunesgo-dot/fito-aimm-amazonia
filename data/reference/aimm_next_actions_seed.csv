@@ -1,0 +1,8 @@
+﻿id_acao;acao;area;prioridade;justificativa;origem
+ACT_001;Executar pré-diligência manual das OSCs;organizações;alta;Transformar triagem remota em validação documental/cadastral.;Rodadas 4.6–4.8
+ACT_002;Criar cadastro real de beneficiários e metas por município;beneficiários;alta;Permitir cálculo real de intensidade e custo por beneficiário.;Rodada 4.16
+ACT_003;Realizar rodada normativa ANVISA/MAPA por rota de produto;regulação;alta;Reduzir risco regulatório e classificar rotas corretamente.;Rodada 4.13
+ACT_004;Mapear NCM/SH e mercado por produto priorizado;mercado;alta;Permitir cálculo de substituição de importações e mercado endereçável.;Rodada 4.15
+ACT_005;Detalhar orçamento com pesquisa de preços e memória de cálculo;orçamento;alta;Transformar orçamento preliminar em base de cálculo auditável.;Rodada 4.14
+ACT_006;Validar evidências por espécie e produto;evidências;alta;Reduzir dependência de proxies e baixa confiança.;Rodadas 4.12–4.13
+ACT_007;Criar pacote de outputs editáveis e painel visual;monitoramento;média;Melhorar comunicação do resultado e auditoria da calculadora.;Rodada 4.17

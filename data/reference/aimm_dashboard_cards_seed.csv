@@ -1,0 +1,7 @@
+﻿id_card;titulo;tipo;arquivo_origem;campo_origem;regra_exibicao
+CARD_001;Score estrutural preliminar;score;aimm_overall_score.csv;score_estrutural_preliminar;Mostrar score preliminar com trava explícita.
+CARD_002;Penalidade de risco preliminar;risco;aimm_overall_score.csv;risk_penalty_preliminar;Mostrar risco como penalizador.
+CARD_003;Fator de monitoramento preliminar;monitoramento;aimm_overall_score.csv;monitoring_factor_preliminar;Mostrar robustez de monitoramento.
+CARD_004;Indicadores processados;processo;aimm_indicator_scores.csv;count;Contar indicadores processados.
+CARD_005;Dimensões processadas;processo;aimm_dimension_scores.csv;count;Contar dimensões processadas.
+CARD_006;Bloqueios/lacunas ativos;bloqueio;aimm_blockers_report.csv;count;Contar bloqueios ativos.
