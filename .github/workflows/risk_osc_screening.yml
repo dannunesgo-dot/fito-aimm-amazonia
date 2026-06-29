@@ -34,11 +34,12 @@ jobs:
           mkdir -p data/processed data/evidence data/reference outputs/logs /tmp/mapaosc_artifact
 
           if [ -s data/processed/organizacoes_candidatas_mapaosc.csv ]; then
-            echo "Arquivo organizacoes_candidatas_mapaosc.csv já existe no repositório. Usando arquivo versionado."
+            echo "Arquivo data/processed/organizacoes_candidatas_mapaosc.csv já existe no repositório. Usando arquivo versionado."
             exit 0
           fi
 
-          echo "Arquivo organizacoes_candidatas_mapaosc.csv não está versionado. Tentando baixar artefato do último workflow mapaosc-triagem bem-sucedido."
+          echo "Arquivo data/processed/organizacoes_candidatas_mapaosc.csv não está versionado."
+          echo "Tentando baixar artefato do último workflow mapaosc-triagem bem-sucedido."
 
           RUN_ID="$(gh run list \
             --workflow mapaosc_triagem.yml \
@@ -58,20 +59,28 @@ jobs:
             --name mapaosc-triagem-fito-amazonia \
             --dir /tmp/mapaosc_artifact
 
-          if [ ! -s /tmp/mapaosc_artifact/organizacoes_candidatas_mapaosc.csv ]; then
-            echo "ERRO: artefato baixado, mas organizacoes_candidatas_mapaosc.csv não foi encontrado."
-            echo "Conteúdo do artefato:"
-            find /tmp/mapaosc_artifact -maxdepth 2 -type f -print
+          echo "Conteúdo do artefato baixado:"
+          find /tmp/mapaosc_artifact -type f -print | sort
+
+          ORG_FILE="$(find /tmp/mapaosc_artifact -type f -name 'organizacoes_candidatas_mapaosc.csv' | head -n 1 || true)"
+          if [ -z "$ORG_FILE" ]; then
+            echo "ERRO: artefato baixado, mas organizacoes_candidatas_mapaosc.csv não foi encontrado em nenhuma subpasta."
+            echo "Possível causa: a execução bem-sucedida mais recente do mapaosc-triagem publicou artefato incompleto."
+            echo "Correção: rode manualmente o workflow mapaosc-triagem novamente e confirme que o artefato contém data/processed/organizacoes_candidatas_mapaosc.csv."
             exit 1
           fi
 
-          cp /tmp/mapaosc_artifact/organizacoes_candidatas_mapaosc.csv data/processed/
+          cp "$ORG_FILE" data/processed/organizacoes_candidatas_mapaosc.csv
 
-          # Cópias auxiliares, se existirem, para rastreabilidade.
-          [ -f /tmp/mapaosc_artifact/resumo_organizacoes_mapaosc_municipios.csv ] && cp /tmp/mapaosc_artifact/resumo_organizacoes_mapaosc_municipios.csv data/processed/ || true
-          [ -f /tmp/mapaosc_artifact/evidence_mapaosc_triagem.csv ] && cp /tmp/mapaosc_artifact/evidence_mapaosc_triagem.csv data/evidence/ || true
-          [ -f /tmp/mapaosc_artifact/fetch_log.csv ] && cp /tmp/mapaosc_artifact/fetch_log.csv data/reference/ || true
-          [ -f /tmp/mapaosc_artifact/teste_mapaosc_triagem.txt ] && cp /tmp/mapaosc_artifact/teste_mapaosc_triagem.txt outputs/logs/ || true
+          RESUMO_FILE="$(find /tmp/mapaosc_artifact -type f -name 'resumo_organizacoes_mapaosc_municipios.csv' | head -n 1 || true)"
+          EVID_FILE="$(find /tmp/mapaosc_artifact -type f -name 'evidence_mapaosc_triagem.csv' | head -n 1 || true)"
+          FETCH_FILE="$(find /tmp/mapaosc_artifact -type f -name 'fetch_log.csv' | head -n 1 || true)"
+          LOG_FILE="$(find /tmp/mapaosc_artifact -type f -name 'teste_mapaosc_triagem.txt' | head -n 1 || true)"
+
+          [ -n "$RESUMO_FILE" ] && cp "$RESUMO_FILE" data/processed/resumo_organizacoes_mapaosc_municipios.csv || true
+          [ -n "$EVID_FILE" ] && cp "$EVID_FILE" data/evidence/evidence_mapaosc_triagem.csv || true
+          [ -n "$FETCH_FILE" ] && cp "$FETCH_FILE" data/reference/fetch_log.csv || true
+          [ -n "$LOG_FILE" ] && cp "$LOG_FILE" outputs/logs/teste_mapaosc_triagem.txt || true
 
           echo "Artefato mapaosc-triagem recuperado com sucesso."
           ls -lh data/processed/organizacoes_candidatas_mapaosc.csv
