@@ -48,7 +48,11 @@ def agora_utc_iso() -> str:
 
 def registrar_fetch_log(caminho: Path, resultado: ResultadoColeta) -> None:
     caminho.parent.mkdir(parents=True, exist_ok=True)
-    campos = ["id_coleta","data_hora_utc","fonte","endpoint","parametros","indicador_relacionado","territorio","status_http","status_coleta","linhas_extraidas","arquivo_saida","mensagem_erro","observacoes"]
+    campos = [
+        "id_coleta", "data_hora_utc", "fonte", "endpoint", "parametros",
+        "indicador_relacionado", "territorio", "status_http", "status_coleta",
+        "linhas_extraidas", "arquivo_saida", "mensagem_erro", "observacoes",
+    ]
     existe = caminho.exists()
     with caminho.open("a", encoding="utf-8-sig", newline="") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=campos, delimiter=";")
@@ -72,7 +76,10 @@ def registrar_fetch_log(caminho: Path, resultado: ResultadoColeta) -> None:
 
 
 def remover_acentos(texto: str) -> str:
-    return "".join(c for c in unicodedata.normalize("NFKD", str(texto or "")) if not unicodedata.combining(c))
+    return "".join(
+        c for c in unicodedata.normalize("NFKD", str(texto or ""))
+        if not unicodedata.combining(c)
+    )
 
 
 def normalizar_texto(texto: Any) -> str:
@@ -86,20 +93,44 @@ def normalizar_coluna(nome: str) -> str:
 
 
 def detectar_delimitador(amostra: str) -> str:
-    primeira_linha = amostra.splitlines()[0] if amostra.splitlines() else ""
+    linhas = [linha for linha in amostra.splitlines() if linha.strip()]
+    primeira_linha = linhas[0] if linhas else ""
     return max([";", ",", "\t", "|"], key=lambda sep: primeira_linha.count(sep))
 
 
-def baixar_amostra(url: str, tamanho: int = 120000) -> tuple[str, int]:
-    resposta = requests.get(url, stream=True, timeout=90, headers={"User-Agent": "fito-aimm-amazonia/0.5"})
+def baixar_amostra_bytes(url: str, tamanho: int = 200_000) -> tuple[bytes, int]:
+    resposta = requests.get(
+        url,
+        stream=True,
+        timeout=90,
+        headers={"User-Agent": "fito-aimm-amazonia/0.5"},
+    )
     status = resposta.status_code
     resposta.raise_for_status()
+
     conteudo = b""
     for bloco in resposta.iter_content(chunk_size=8192):
         conteudo += bloco
         if len(conteudo) >= tamanho:
             break
-    return conteudo.decode("utf-8", errors="replace"), status
+
+    return conteudo, status
+
+
+def detectar_encoding(amostra_bytes: bytes) -> str:
+    """Detecta codificação suficiente para leitura da base Mapa OSCs.
+
+    A falha observada no GitHub foi:
+    UnicodeDecodeError: 'utf-8' codec can't decode byte 0xcd...
+    Portanto, o coletor deve testar encodings compatíveis com bases públicas brasileiras.
+    """
+    for encoding in ["utf-8-sig", "utf-8", "cp1252", "latin1", "iso-8859-1"]:
+        try:
+            amostra_bytes.decode(encoding)
+            return encoding
+        except UnicodeDecodeError:
+            continue
+    return "latin1"
 
 
 def selecionar_coluna(colunas: list[str], preferencias: list[str]) -> str:
@@ -122,17 +153,43 @@ def carregar_criterios(caminho: Path = Path("config/criterios_triagem_mapaosc.ya
 def localizar_colunas(df: pd.DataFrame) -> dict[str, str]:
     colunas = list(df.columns)
     return {
-        "codigo_municipio": selecionar_coluna(colunas, ["cd_municipio", "codigo_municipio", "cod_municipio", "id_municipio", "municipio_codigo", "cod_mun"]),
-        "municipio": selecionar_coluna(colunas, ["tx_nome_municipio", "nome_municipio", "municipio", "nm_municipio", "cidade"]),
-        "uf": selecionar_coluna(colunas, ["sg_uf", "uf", "sigla_uf", "tx_uf"]),
-        "cnpj": selecionar_coluna(colunas, ["cnpj", "nr_cnpj", "id_osc", "cd_identificador_osc"]),
-        "nome": selecionar_coluna(colunas, ["tx_nome_osc", "nome_osc", "razao_social", "tx_razao_social", "nome_fantasia", "nome"]),
-        "natureza": selecionar_coluna(colunas, ["natureza_juridica", "tx_nome_natureza_juridica", "classe_atividade_economica", "cnae", "juridica"]),
-        "situacao": selecionar_coluna(colunas, ["situacao_cadastral", "situacao", "status", "data_baixa", "dt_baixa", "baixa"]),
-        "email": selecionar_coluna(colunas, ["email", "correio_eletronico", "tx_email"]),
-        "telefone": selecionar_coluna(colunas, ["telefone", "tx_telefone", "ddd"]),
-        "endereco": selecionar_coluna(colunas, ["endereco", "logradouro", "bairro", "cep"]),
-        "area": selecionar_coluna(colunas, ["area_atuacao", "subarea_atuacao", "atividade", "cnae", "finalidade"]),
+        "codigo_municipio": selecionar_coluna(colunas, [
+            "cd_municipio", "codigo_municipio", "cod_municipio", "id_municipio",
+            "municipio_codigo", "cod_mun", "edmu_cd_municipio"
+        ]),
+        "municipio": selecionar_coluna(colunas, [
+            "tx_nome_municipio", "nome_municipio", "municipio", "nm_municipio",
+            "cidade", "edmu_nm_municipio"
+        ]),
+        "uf": selecionar_coluna(colunas, [
+            "sg_uf", "uf", "sigla_uf", "tx_uf", "eduf_sg_uf"
+        ]),
+        "cnpj": selecionar_coluna(colunas, [
+            "cnpj", "nr_cnpj", "id_osc", "cd_identificador_osc", "tx_razao_social_osc"
+        ]),
+        "nome": selecionar_coluna(colunas, [
+            "tx_nome_osc", "nome_osc", "razao_social", "tx_razao_social",
+            "nome_fantasia", "nome"
+        ]),
+        "natureza": selecionar_coluna(colunas, [
+            "natureza_juridica", "tx_nome_natureza_juridica", "classe_atividade_economica",
+            "cnae", "juridica"
+        ]),
+        "situacao": selecionar_coluna(colunas, [
+            "situacao_cadastral", "situacao", "status", "data_baixa", "dt_baixa", "baixa"
+        ]),
+        "email": selecionar_coluna(colunas, [
+            "email", "correio_eletronico", "tx_email"
+        ]),
+        "telefone": selecionar_coluna(colunas, [
+            "telefone", "tx_telefone", "ddd", "nr_telefone"
+        ]),
+        "endereco": selecionar_coluna(colunas, [
+            "endereco", "logradouro", "bairro", "cep"
+        ]),
+        "area": selecionar_coluna(colunas, [
+            "area_atuacao", "subarea_atuacao", "atividade", "cnae", "finalidade"
+        ]),
     }
 
 
@@ -264,7 +321,10 @@ def padronizar_linhas(df: pd.DataFrame, colmap: dict[str, str], criterios: dict[
 def salvar_csv(caminho: Path, linhas: list[dict[str, Any]], campos: list[str] | None = None) -> None:
     caminho.parent.mkdir(parents=True, exist_ok=True)
     if campos is None:
-        campos = list(linhas[0].keys()) if linhas else ["cnpj_ou_id","nome_organizacao","municipio","uf","codigo_municipio_ibge","score_triagem","classificacao_triagem","fonte","limitacao"]
+        campos = list(linhas[0].keys()) if linhas else [
+            "cnpj_ou_id","nome_organizacao","municipio","uf","codigo_municipio_ibge",
+            "score_triagem","classificacao_triagem","fonte","limitacao"
+        ]
     with caminho.open("w", encoding="utf-8-sig", newline="") as arquivo:
         escritor = csv.DictWriter(arquivo, fieldnames=campos, delimiter=";")
         escritor.writeheader()
@@ -281,7 +341,10 @@ def baixar_arquivo(url: str, destino: Path, timeout: int = 120) -> int:
 
 
 def gerar_resumo_por_municipio(linhas: list[dict[str, str]]) -> list[dict[str, str]]:
-    resumo = {f"{i['municipio']}/{i['uf']}": {"total":0,"alta":0,"media":0,"baixa":0,"coop":0,"assoc":0} for i in MUNICIPIOS_PROJETO.values()}
+    resumo = {
+        f"{i['municipio']}/{i['uf']}": {"total":0,"alta":0,"media":0,"baixa":0,"coop":0,"assoc":0}
+        for i in MUNICIPIOS_PROJETO.values()
+    }
     for l in linhas:
         chave = f"{l['municipio']}/{l['uf']}"
         if chave not in resumo:
@@ -297,14 +360,28 @@ def gerar_resumo_por_municipio(linhas: list[dict[str, str]]) -> list[dict[str, s
             resumo[chave]["coop"] += 1
         if "associacao" in l.get("marcadores_triagem",""):
             resumo[chave]["assoc"] += 1
+
     saida = []
     for chave, v in resumo.items():
         municipio, uf = chave.split("/")
-        saida.append({"municipio": municipio, "uf": uf, "total_organizacoes_filtradas": str(v["total"]), "alta_prioridade": str(v["alta"]), "media_prioridade": str(v["media"]), "baixa_prioridade": str(v["baixa"]), "com_marcador_cooperativa": str(v["coop"]), "com_marcador_associacao": str(v["assoc"]), "fonte": "SRC_MAPA_OSC"})
+        saida.append({
+            "municipio": municipio,
+            "uf": uf,
+            "total_organizacoes_filtradas": str(v["total"]),
+            "alta_prioridade": str(v["alta"]),
+            "media_prioridade": str(v["media"]),
+            "baixa_prioridade": str(v["baixa"]),
+            "com_marcador_cooperativa": str(v["coop"]),
+            "com_marcador_associacao": str(v["assoc"]),
+            "fonte": "SRC_MAPA_OSC",
+        })
     return saida
 
 
-def gerar_evidencias_mapaosc(resumo: list[dict[str, str]], arquivo_saida: Path = Path("data/evidence/evidence_mapaosc_triagem.csv")) -> list[dict[str, str]]:
+def gerar_evidencias_mapaosc(
+    resumo: list[dict[str, str]],
+    arquivo_saida: Path = Path("data/evidence/evidence_mapaosc_triagem.csv")
+) -> list[dict[str, str]]:
     data = agora_utc_iso()
     evidencias = []
     for l in resumo:
@@ -349,35 +426,73 @@ def coletar_mapaosc_municipios(
     criterios = carregar_criterios(criterios_path)
 
     try:
-        amostra, status = baixar_amostra(MAPAOSC_BASE_URL)
-        delimitador = detectar_delimitador(amostra)
+        amostra_bytes, status = baixar_amostra_bytes(MAPAOSC_BASE_URL)
+        encoding = detectar_encoding(amostra_bytes)
+        amostra_texto = amostra_bytes.decode(encoding, errors="replace")
+        delimitador = detectar_delimitador(amostra_texto)
 
         try:
             baixar_arquivo(MAPAOSC_DICIONARIO_URL, arquivo_dicionario)
         except Exception:
             arquivo_dicionario.parent.mkdir(parents=True, exist_ok=True)
-            arquivo_dicionario.with_suffix(".txt").write_text("Dicionário não baixado automaticamente nesta execução.", encoding="utf-8")
+            arquivo_dicionario.with_suffix(".txt").write_text(
+                "Dicionário não baixado automaticamente nesta execução.",
+                encoding="utf-8"
+            )
 
         linhas_processadas = []
         colmap_final = {}
         total_linhas_lidas = 0
 
-        reader = pd.read_csv(MAPAOSC_BASE_URL, sep=delimitador, dtype=str, chunksize=100000, encoding="utf-8", low_memory=False, on_bad_lines="skip")
+        try:
+            reader = pd.read_csv(
+                MAPAOSC_BASE_URL,
+                sep=delimitador,
+                dtype=str,
+                chunksize=100000,
+                encoding=encoding,
+                encoding_errors="replace",
+                low_memory=False,
+                on_bad_lines="skip",
+            )
+        except TypeError:
+            reader = pd.read_csv(
+                MAPAOSC_BASE_URL,
+                sep=delimitador,
+                dtype=str,
+                chunksize=100000,
+                encoding=encoding,
+                low_memory=False,
+                on_bad_lines="skip",
+            )
+
         for chunk in reader:
             total_linhas_lidas += len(chunk)
             if not colmap_final:
                 colmap_final = localizar_colunas(chunk)
+
             filtrado = filtrar_chunk_por_municipio(chunk, colmap_final)
             if filtrado.empty:
                 continue
+
             linhas_processadas.extend(padronizar_linhas(filtrado, colmap_final, criterios))
+
             if len(linhas_processadas) >= max_linhas_saida:
                 linhas_processadas = linhas_processadas[:max_linhas_saida]
                 break
 
-        campos = ["cnpj_ou_id","nome_organizacao","municipio","uf","codigo_municipio_ibge","natureza_juridica_ou_classe","situacao_cadastral_ou_status","area_atuacao_ou_atividade","email","telefone","endereco","score_triagem","classificacao_triagem","marcadores_triagem","fonte","limitacao"]
+        campos = [
+            "cnpj_ou_id","nome_organizacao","municipio","uf","codigo_municipio_ibge",
+            "natureza_juridica_ou_classe","situacao_cadastral_ou_status",
+            "area_atuacao_ou_atividade","email","telefone","endereco",
+            "score_triagem","classificacao_triagem","marcadores_triagem","fonte","limitacao"
+        ]
         salvar_csv(arquivo_saida_raw, linhas_processadas, campos=campos)
-        salvar_csv(arquivo_saida_processado, sorted(linhas_processadas, key=lambda x: int(x.get("score_triagem") or 0), reverse=True), campos=campos)
+        salvar_csv(
+            arquivo_saida_processado,
+            sorted(linhas_processadas, key=lambda x: int(x.get("score_triagem") or 0), reverse=True),
+            campos=campos
+        )
 
         resumo = gerar_resumo_por_municipio(linhas_processadas)
         salvar_csv(arquivo_resumo, resumo)
@@ -389,18 +504,32 @@ def coletar_mapaosc_municipios(
                 id_coleta=id_coleta,
                 fonte="SRC_MAPA_OSC",
                 endpoint=MAPAOSC_BASE_URL,
-                parametros=json.dumps({"municipios": MUNICIPIOS_PROJETO, "delimitador_detectado": delimitador, "max_linhas_saida": max_linhas_saida, "colunas_detectadas": colmap_final}, ensure_ascii=False),
+                parametros=json.dumps({
+                    "municipios": MUNICIPIOS_PROJETO,
+                    "delimitador_detectado": delimitador,
+                    "encoding_detectado": encoding,
+                    "max_linhas_saida": max_linhas_saida,
+                    "colunas_detectadas": colmap_final,
+                }, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_05; INT_BEN_05; RISK_OSC_01; MON_02",
                 territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
                 status_http=status,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas_processadas),
                 arquivo_saida=str(arquivo_saida_processado),
-                observacoes=f"Triagem Mapa OSCs concluída. Linhas lidas: {total_linhas_lidas}. Linhas filtradas: {len(linhas_processadas)}.",
+                observacoes=f"Triagem Mapa OSCs concluída. Encoding: {encoding}. Linhas lidas: {total_linhas_lidas}. Linhas filtradas: {len(linhas_processadas)}.",
             ),
         )
 
-        return {"linhas": linhas_processadas, "resumo": resumo, "evidencias": evidencias, "colunas_detectadas": colmap_final, "total_linhas_lidas": total_linhas_lidas, "delimitador": delimitador}
+        return {
+            "linhas": linhas_processadas,
+            "resumo": resumo,
+            "evidencias": evidencias,
+            "colunas_detectadas": colmap_final,
+            "total_linhas_lidas": total_linhas_lidas,
+            "delimitador": delimitador,
+            "encoding": encoding,
+        }
 
     except Exception as erro:
         registrar_fetch_log(
