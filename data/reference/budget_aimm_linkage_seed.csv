@@ -1,0 +1,6 @@
+﻿dimensao_aimm;componentes_relacionados;efeito_esperado;proxy_calculo;nivel_confianca
+gap;"estudos_viabilidade_selecao_especies; farmacias_vivas_sus; capacitacao_extensao_comunicacao";reduz lacunas técnicas, assistenciais e territoriais;gap_reduction_proxy;baixo
+intensidade;"producao_primaria_cultivo_extrativismo; viveiros_material_propagativo; beneficiamento_local_pos_colheita; farmacias_vivas_sus";aumenta alcance produtivo e efeito por beneficiário;beneficiary_intensity_proxy;baixo
+mercado;"processamento_industrial_ifav_produtos; mercados_compras_distribuicao; beneficiamento_local_pos_colheita";amplia rotas de mercado, produtos e agregação de valor;market_creation_proxy;baixo
+risco;"sustentabilidade_rastreabilidade_salvaguardas; reserva_tecnica_contingencia; governanca_gestao_integracao";reduz risco de execução, rastreabilidade e sustentabilidade;risk_mitigation_proxy;baixo
+monitoramento;"dados_monitoramento_calculadora_aimm; laboratorios_qualidade_certificacao; pesquisa_desenvolvimento_evidencias";aumenta rastreabilidade, laudos, evidências e avaliação;monitoring_quality_proxy;baixo

@@ -1,0 +1,11 @@
+﻿id_pressuposto;codigo_pressuposto;descricao;unidade;valor_referencia;quantidade_referencia;status;nivel_confianca;limitacao
+COST_001;ano_base;Ano-base monetário ainda não definido;ano;;;definir;baixo;Necessário antes de deflação/atualização monetária.
+COST_002;inflacao_reajuste;Índice de atualização/reajuste ainda não definido;índice;;;definir;baixo;Definir IPCA, INCC, índice setorial ou combinação conforme item.
+COST_003;pesquisa_precos;Pesquisa de preços obrigatória por item de custo;procedimento;;;obrigatório;baixo;Rodada futura deve criar fonte, data, fornecedor, unidade e memória.
+COST_004;capex_opex_split;Separação CAPEX/OPEX preliminar por componente;classe;;;preliminar;baixo;Validar com plano de trabalho e contabilidade pública.
+COST_005;beneficiarios_agricultores;Meta preliminar de agricultores por município;pessoas;"20-50 inicial; até 100 por município";4 municípios;preliminar;baixo;Usar cadastro futuro para cálculo por beneficiário.
+COST_006;farmacias_vivas;Número preliminar de Farmácias Vivas;unidades;4;1 por município;preliminar;médio;Depende de projeto técnico e estrutura local.
+COST_007;cooperativas_oscs;Organizações/cooperativas preliminares;unidades;4-8;;preliminar;baixo;Seleção bloqueada por falta de pré-diligência manual.
+COST_008;laboratorios;Laboratórios e ICTs a estruturar/contratar;unidades/serviços;;;a definir;baixo;Depende de escopo 17025, universidades, laboratórios oficiais e privados.
+COST_009;especies;Espécies candidatas;espécies;6 + reserva;;preliminar;baixo;"Rodada 4.12 gerou matriz preliminar; requer evidências."
+COST_010;produtos_rotas;Produtos e rotas espécie-produto;rotas;12;;preliminar;baixo;"Rodada 4.13 gerou rotas preliminares; requer validação regulatória."
