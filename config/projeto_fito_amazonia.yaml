@@ -1,0 +1,15 @@
+project_id: fito_mais_amazonia
+project_name: "Fito+ Amazônia"
+territorios:
+  - "Manaus/AM"
+  - "Benjamin Constant/AM"
+  - "Belém/PA"
+  - "Santarém/PA"
+bioma: "Amazônia"
+investimento_total_brl: 80000000
+horizonte:
+  implantacao_anos: 3
+  avaliacao_anos: 5
+  impacto_anos: 10
+armazenamento:
+  google_drive_folder_raiz: "AIMM_Cadeias_Herbais/Fito_Mais_Amazonia"
