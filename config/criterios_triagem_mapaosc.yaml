@@ -1,0 +1,41 @@
+# Critérios preliminares de triagem de OSCs — Fito+ Amazônia
+# Versão: v0.1
+# Score é triagem remota inicial. Não substitui diligência documental, contato e validação de campo.
+
+territorios:
+  - codigo_ibge: "1302603"
+    municipio: "Manaus"
+    uf: "AM"
+  - codigo_ibge: "1300607"
+    municipio: "Benjamin Constant"
+    uf: "AM"
+  - codigo_ibge: "1501402"
+    municipio: "Belém"
+    uf: "PA"
+  - codigo_ibge: "1506807"
+    municipio: "Santarém"
+    uf: "PA"
+
+pontuacao:
+  base_municipio_alvo: 20
+  ativa_ou_sem_baixa: 15
+  tipo_associacao: 15
+  tipo_cooperativa: 20
+  tipo_fundacao: 10
+  area_saude: 20
+  area_agricultura_extrativismo_bioeconomia: 20
+  area_meio_ambiente_sustentabilidade: 15
+  area_pesquisa_educacao_capacitacao: 10
+  possui_email_ou_telefone: 10
+  possui_endereco: 5
+  penalidade_baixada_inativa: -40
+  penalidade_dado_minimo_insuficiente: -10
+
+palavras_chave:
+  associacao: ["associacao", "associação", "associativa"]
+  cooperativa: ["cooperativa", "cooperado", "cooperados"]
+  fundacao: ["fundacao", "fundação"]
+  saude: ["saude", "saúde", "hospital", "clinica", "clínica", "terapeut", "fitoter", "farmacia", "farmácia", "medicinal"]
+  agricultura_extrativismo_bioeconomia: ["agricultura", "agricultor", "agro", "extrativ", "floresta", "bioeconomia", "rural", "produtor", "coleta", "cultivo"]
+  meio_ambiente_sustentabilidade: ["meio ambiente", "ambiental", "sustent", "biodivers", "conserv", "amazonia", "amazônia"]
+  pesquisa_educacao_capacitacao: ["pesquisa", "educacao", "educação", "capacit", "tecnolog", "inovacao", "inovação", "univers"]
