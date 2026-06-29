@@ -1,0 +1,47 @@
+# Rodada 4.18 — pacote editável de comunicação e visualização do dashboard
+# Objetivo: gerar pacote editável e auditável de comunicação a partir dos outputs da Rodada 4.17.
+#
+# A rodada gera:
+# - HTML executivo editável;
+# - SVG editável do painel;
+# - Mermaid editável;
+# - roteiro de apresentação em Markdown;
+# - matriz de mensagens;
+# - manifesto de arquivos do pacote;
+# - evidência da rodada.
+#
+# Atenção:
+# - Não recalcula score AIMM.
+# - Não altera motor.
+# - Não aprova decisões executivas.
+# - Não remove bloqueios.
+# - Score baixo deve ser interpretado como maturidade insuficiente de dados/evidências, não como julgamento final do projeto.
+
+projeto:
+  nome: "Fito+ Amazônia"
+  base_calculo: "Rodada 4.17 — aimm-dashboard"
+  status_pacote: "comunicacao_preliminar_editavel"
+
+formatos_saida:
+  - "HTML"
+  - "SVG"
+  - "Mermaid"
+  - "Markdown"
+  - "CSV"
+  - "JSON"
+
+regras_visualizacao:
+  - "Todo arquivo visual deve conter a trava de score preliminar."
+  - "Todo painel deve exibir bloqueios/lacunas ativos."
+  - "Toda mensagem deve separar resultado, limitação e próxima ação."
+  - "SVG deve ser editável como texto/vetores."
+  - "Mermaid deve permanecer em texto editável."
+  - "HTML deve ser autocontido, sem dependência externa."
+  - "Não usar paletas confusas; priorizar contraste e legibilidade."
+
+travas:
+  - "Pacote de comunicação não é aprovação técnica, regulatória, orçamentária ou executiva."
+  - "Pacote não calcula score AIMM final."
+  - "Pacote não substitui relatório metodológico."
+  - "Pacote não substitui evidências, busca normativa, orçamento detalhado ou diligência de OSCs."
+  - "O resultado deve sempre ser descrito como estrutural preliminar."
