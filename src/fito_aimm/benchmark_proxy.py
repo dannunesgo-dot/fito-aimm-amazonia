@@ -23,6 +23,9 @@ OUT_READINESS = Path("data/processed/benchmark_readiness_matrix.csv")
 OUT_EVIDENCE = Path("data/evidence/evidence_benchmark_proxy.csv")
 
 
+DEFAULT_DIMS = ["gap", "intensidade", "mercado", "risco", "monitoramento"]
+
+
 def read_csv(path: Path) -> list[dict[str, str]]:
     if not path.exists():
         raise FileNotFoundError(f"Arquivo obrigatório ausente: {path}")
@@ -42,9 +45,18 @@ def write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str] | None =
 
 def load_yaml(path: Path) -> dict[str, Any]:
     if not path.exists():
-        return {}
+        raise FileNotFoundError(f"Arquivo obrigatório ausente: {path}")
     with path.open("r", encoding="utf-8") as f:
         return yaml.safe_load(f) or {}
+
+
+def get_valid_dimensions(rules: dict[str, Any]) -> set[str]:
+    # Aceita variantes para evitar falha por uso de acento ou nome alternativo.
+    for key in ("dimensoes", "dimensões", "dimensoes_aimm", "dimensões_aimm"):
+        vals = rules.get(key)
+        if isinstance(vals, list) and vals:
+            return {str(v).strip() for v in vals if str(v).strip()}
+    return set(DEFAULT_DIMS)
 
 
 def check_unique(rows: list[dict[str, str]], field: str, label: str) -> list[str]:
@@ -69,9 +81,16 @@ def validate_inputs(benchmarks, methods, gaps, dim_map, sources, rules) -> list[
 
     valid_classes = set(rules.get("classificacao_benchmark", []))
     valid_conf = set(rules.get("niveis_confianca", []))
-    valid_dims = set(rules.get("dimensoes", []))
+    valid_dims = get_valid_dimensions(rules)
     method_ids = {r["id_metodo_proxy"] for r in methods}
     source_ids = {r["id_fonte"] for r in sources}
+
+    if not valid_classes:
+        errors.append("benchmark_proxy_rules.yaml: classificacao_benchmark ausente ou vazia")
+    if not valid_conf:
+        errors.append("benchmark_proxy_rules.yaml: niveis_confianca ausente ou vazio")
+    if not valid_dims:
+        errors.append("benchmark_proxy_rules.yaml: dimensoes ausente ou vazio")
 
     for i, row in enumerate(benchmarks, start=2):
         if row.get("classificacao_benchmark") not in valid_classes:
