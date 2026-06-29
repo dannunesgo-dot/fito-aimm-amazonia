@@ -1,0 +1,40 @@
+# Rodada 4.6 — diagnóstico do screening de risco OSC
+# Objetivo: explicar por que a lista curta preliminar ficou zerada e gerar pré-lista controlada para contato/validação.
+# Importante: pré-diligência não é seleção de executora.
+
+parametros:
+  top_n_por_municipio: 25
+  risco_maximo_pre_diligencia: 75
+  risco_maximo_cenario_moderado: 60
+  risco_maximo_cenario_contato_cnpj: 70
+
+regras_pre_diligencia:
+  exigir_nome_organizacao: true
+  exigir_municipio_uf: true
+  permitir_sem_contato_apenas_com_flag: true
+  bloquear_sem_cnpj_para_lista_curta_formal: true
+  bloquear_possivelmente_baixada_ou_inativa: true
+
+cenarios:
+  - id_cenario: "S00_REGRAS_ATUAIS"
+    nome: "Regras atuais da Rodada 4.5"
+    descricao: "Mantém somente organizações classificadas como aptas_para_diligencia_preliminar e recomendadas para diligência."
+  - id_cenario: "S01_RISCO_BAIXO_MODERADO"
+    nome: "Risco baixo ou moderado"
+    descricao: "Conta organizações com risco <= 60, ainda sem classificar como aptas."
+  - id_cenario: "S02_RISCO_ATE_75"
+    nome: "Risco até 75 para contato exploratório"
+    descricao: "Amplia para organizações com risco até 75, apenas para contato/validação inicial."
+  - id_cenario: "S03_COM_CNPJ_E_CONTATO"
+    nome: "Com CNPJ e contato mínimo"
+    descricao: "Prioriza organizações com identificador e e-mail ou telefone."
+  - id_cenario: "S04_TOPN_MUNICIPIO"
+    nome: "Top N por município"
+    descricao: "Seleciona os 25 menores riscos por município para pré-diligência, preservando travas."
+
+travas:
+  - "Nenhum cenário aprova ou seleciona organização executora."
+  - "Organizações sem CNPJ ou com marcador de baixa/inatividade permanecem bloqueadas para lista curta formal."
+  - "Pré-diligência serve apenas para contato, checagem cadastral e coleta documental."
+  - "Qualquer alteração de limiar deve ser registrada em risk_osc_threshold_scenarios.csv."
+  - "A próxima etapa só pode avançar com análise humana dos campos de bloqueio."
