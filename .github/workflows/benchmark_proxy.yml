@@ -1,0 +1,60 @@
+name: benchmark-proxy
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/benchmark_proxy_rules.yaml"
+      - "data/reference/benchmark_registry_seed.csv"
+      - "data/reference/proxy_method_registry_seed.csv"
+      - "data/reference/benchmark_gap_report_seed.csv"
+      - "data/reference/aimm_dimension_benchmark_map_seed.csv"
+      - "data/reference/source_registry_benchmark_seed.csv"
+      - "src/fito_aimm/benchmark_proxy.py"
+      - "scripts/testar_benchmark_proxy.py"
+      - ".github/workflows/benchmark_proxy.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar benchmarks, proxies e lacunas AIMM
+        run: python scripts/testar_benchmark_proxy.py
+
+      - name: Publicar artefatos de benchmarks e proxies
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-proxy-fito-amazonia
+          path: |
+            data/processed/benchmark_registry.csv
+            data/processed/proxy_method_registry.csv
+            data/processed/benchmark_gap_report.csv
+            data/processed/aimm_dimension_benchmark_map.csv
+            data/processed/source_registry_benchmark.csv
+            data/processed/benchmark_readiness_matrix.csv
+            data/evidence/evidence_benchmark_proxy.csv
+            data/reference/benchmark_registry_seed.csv
+            data/reference/proxy_method_registry_seed.csv
+            data/reference/benchmark_gap_report_seed.csv
+            data/reference/aimm_dimension_benchmark_map_seed.csv
+            data/reference/source_registry_benchmark_seed.csv
+            config/benchmark_proxy_rules.yaml
+            outputs/logs/teste_benchmark_proxy.txt
