@@ -1,0 +1,11 @@
+﻿id_criterio;criterio;descricao;peso;direcao;escala;fonte_prevista;status_evidencia;limitacao
+CRI_001;mercado_demanda;Potencial de demanda em mercados-alvo;0.14;maior_melhor;0-100;"market_registry; SUS; B2B; varejo; exportação";pendente;Não usar sem validação de mercado.
+CRI_002;valor_agregado;Potencial de valor agregado por produto/rota;0.12;maior_melhor;0-100;"product_pathway_registry; preços; margens";pendente;Depende de produtos e beneficiamento.
+CRI_003;retencao_valor_local;Retenção de valor em campo/floresta e cooperativas;0.10;maior_melhor;0-100;"modelo de cadeia; ValueLinks; orçamento";pendente;Depende de desenho de governança e contratos.
+CRI_004;adequacao_amazonia;Adequação territorial/agroecológica/extrativista;0.10;maior_melhor;0-100;"campo; zoneamento; literatura; dados locais";pendente;Depende de validação territorial.
+CRI_005;maturidade_cadeia;Maturidade produtiva e de beneficiamento;0.10;maior_melhor;0-100;"diagnósticos; compradores; capacidade local";pendente;Não confundir existência de mercado com capacidade local.
+CRI_006;viabilidade_regulatoria;Viabilidade regulatória por rota de produto;0.10;maior_melhor;0-100;regulatory_route_registry;pendente;Depende da rota: alimento, cosmético, fitoterápico, IFAV etc.
+CRI_007;evidencia_uso_qualidade;Evidência técnica de uso, identidade, qualidade e segurança;0.10;maior_melhor;0-100;"evidence_registry; farmacopeias; guias; literatura";pendente;Deve separar uso tradicional, evidência clínica e qualidade.
+CRI_008;sustentabilidade_salvaguardas;Sustentabilidade, manejo e salvaguardas;0.10;maior_melhor;0-100;"salvaguardas; rastreabilidade; plano de manejo";pendente;Critério crítico para extrativismo.
+CRI_009;risco_implementacao;Risco de implantação e execução;0.08;menor_melhor;0-100;"risk_registry; lacunas operacionais";pendente;Menor risco gera maior score ajustado.
+CRI_010;alinhamento_sus_farmacia_viva_ped;Aderência a SUS, Farmácia Viva e P&D;0.06;maior_melhor;0-100;"políticas SUS; Farmácia Viva; P&D";pendente;Depende da rota assistencial e evidências.

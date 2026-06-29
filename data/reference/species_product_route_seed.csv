@@ -1,0 +1,8 @@
+﻿id_rota;id_especie;produto;mercado_potencial;operacao_chave;status_evidencia;limitacao
+ROUTE_001;SPC_001;óleo essencial;"cosmético herbal; insumo B2B; P&D";"destilação/extração; controle de perfil químico";pendente;Exige validação de qualidade, segurança e mercado.
+ROUTE_002;SPC_002;droga vegetal;"SUS; Farmácia Viva; varejo; B2B";"secagem; moagem; controle de identidade e contaminantes";pendente;Exige rota regulatória por uso pretendido.
+ROUTE_003;SPC_002;extrato/tintura;"fitoterápico; suplemento; insumo B2B";"extração; padronização; controle de marcadores";pendente;Separar suplemento, fitoterápico e IFAV.
+ROUTE_004;SPC_003;extrato;"suplemento; fitoterápico; cosmético herbal; insumo";"extração; padronização; controle de marcadores";pendente;Exige controle de qualidade e restrições de alegação.
+ROUTE_005;SPC_004;óleo vegetal;"cosmético herbal; B2B; P&D";"coleta/manejo; prensagem/extração; filtração; rastreabilidade";pendente;Crítica de rastreabilidade e sustentabilidade.
+ROUTE_006;SPC_005;óleo-resina;"fitoterápico; cosmético herbal; B2B";"manejo; extração; controle de identidade; padronização";pendente;Identificação de espécie e manejo sustentável são críticos.
+ROUTE_007;SPC_006;droga vegetal/extrato;"fitoterápico; suplemento; P&D";"manejo/cultivo; secagem; extração; controle de identidade";pendente;Exige sustentabilidade e validação regulatória.
