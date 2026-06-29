@@ -1,0 +1,113 @@
+name: pre-diligencia-osc
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/pre_diligencia_osc_rules.yaml"
+      - "data/reference/pre_diligencia_osc_protocolo.csv"
+      - "data/processed/organizacoes_pre_diligencia_topN.csv"
+      - "src/fito_aimm/pre_diligencia_osc.py"
+      - "scripts/testar_pre_diligencia_osc.py"
+      - ".github/workflows/pre_diligencia_osc.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  pre-diligencia-osc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Baixar artefato aprovado do risk-osc-diagnostics
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -e
+          mkdir -p data/processed data/evidence data/reference outputs/logs /tmp/risk_diag_artifact
+
+          if [ -s data/processed/organizacoes_pre_diligencia_topN.csv ]; then
+            echo "Arquivo data/processed/organizacoes_pre_diligencia_topN.csv já existe no repositório. Usando arquivo versionado."
+            exit 0
+          fi
+
+          echo "Arquivo data/processed/organizacoes_pre_diligencia_topN.csv não está versionado."
+          echo "Tentando baixar artefato do último workflow risk-osc-diagnostics bem-sucedido."
+
+          RUN_ID="$(gh run list \
+            --workflow risk_osc_diagnostics.yml \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')"
+
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "ERRO: não encontrei execução bem-sucedida do workflow risk-osc-diagnostics."
+            echo "Correção manual: baixe o artefato risk-osc-diagnostics-fito-amazonia e envie organizacoes_pre_diligencia_topN.csv para data/processed/."
+            exit 1
+          fi
+
+          echo "Baixando artefato risk-osc-diagnostics-fito-amazonia da execução $RUN_ID."
+          gh run download "$RUN_ID" \
+            --name risk-osc-diagnostics-fito-amazonia \
+            --dir /tmp/risk_diag_artifact
+
+          echo "Conteúdo do artefato baixado:"
+          find /tmp/risk_diag_artifact -type f -print | sort
+
+          TOPN_FILE="$(find /tmp/risk_diag_artifact -type f -name 'organizacoes_pre_diligencia_topN.csv' | head -n 1 || true)"
+          CHECK_FILE="$(find /tmp/risk_diag_artifact -type f -name 'checklist_contato_validacao.csv' | head -n 1 || true)"
+          DIAG_FILE="$(find /tmp/risk_diag_artifact -type f -name 'risk_osc_diagnostics.csv' | head -n 1 || true)"
+          SCEN_FILE="$(find /tmp/risk_diag_artifact -type f -name 'risk_osc_threshold_scenarios.csv' | head -n 1 || true)"
+          EVID_FILE="$(find /tmp/risk_diag_artifact -type f -name 'evidence_risk_osc_diagnostics.csv' | head -n 1 || true)"
+          LOG_FILE="$(find /tmp/risk_diag_artifact -type f -name 'teste_risk_osc_diagnostics.txt' | head -n 1 || true)"
+
+          if [ -z "$TOPN_FILE" ]; then
+            echo "ERRO: artefato baixado, mas organizacoes_pre_diligencia_topN.csv não foi encontrado."
+            exit 1
+          fi
+
+          cp "$TOPN_FILE" data/processed/organizacoes_pre_diligencia_topN.csv
+          [ -n "$CHECK_FILE" ] && cp "$CHECK_FILE" data/processed/checklist_contato_validacao.csv || true
+          [ -n "$DIAG_FILE" ] && cp "$DIAG_FILE" data/processed/risk_osc_diagnostics.csv || true
+          [ -n "$SCEN_FILE" ] && cp "$SCEN_FILE" data/processed/risk_osc_threshold_scenarios.csv || true
+          [ -n "$EVID_FILE" ] && cp "$EVID_FILE" data/evidence/evidence_risk_osc_diagnostics.csv || true
+          [ -n "$LOG_FILE" ] && cp "$LOG_FILE" outputs/logs/teste_risk_osc_diagnostics.txt || true
+
+          echo "Artefato risk-osc-diagnostics recuperado com sucesso."
+          ls -lh data/processed/organizacoes_pre_diligencia_topN.csv
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar pré-diligência OSC
+        run: python scripts/testar_pre_diligencia_osc.py
+
+      - name: Publicar artefatos da pré-diligência OSC
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-diligencia-osc-fito-amazonia
+          path: |
+            data/processed/organizacoes_pre_diligencia_topN.csv
+            data/processed/risk_osc_diagnostics.csv
+            data/processed/risk_osc_threshold_scenarios.csv
+            data/processed/pre_diligencia_fila_contato.csv
+            data/processed/pre_diligencia_status_validacao.csv
+            data/processed/pre_diligencia_solicitacao_documentos.csv
+            data/evidence/evidence_pre_diligencia_osc.csv
+            data/reference/pre_diligencia_osc_protocolo.csv
+            config/pre_diligencia_osc_rules.yaml
+            outputs/logs/teste_pre_diligencia_osc.txt
