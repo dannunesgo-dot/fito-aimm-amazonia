@@ -1,0 +1,37 @@
+# Travamentos operacionais da Calculadora AIMM Adaptada — Fito+ Amazônia
+# Versão: v0.1 — Rodada 4.3
+
+estado_sistema:
+  rodada_atual: "4.3"
+  status: "pronto_para_teste_github"
+  ultima_entrega: "área territorial e densidade estimada com IBGE/Geociências"
+  repositorio_github: "dannunesgo-dot/fito-aimm-amazonia"
+  pasta_drive_informada: "1rhza6jubu1TzDaajrRLkBJEWxMzSHvn6"
+
+travas_obrigatorias:
+  - id: "TRAVA_01"
+    regra: "Nenhuma nova rodada deve substituir source_registry.csv, evidence_registry.csv, query_plan.csv ou fetch_log.csv sem gerar backup ou artefato congelado."
+  - id: "TRAVA_02"
+    regra: "Todo workflow novo deve ter workflow_dispatch para execução manual controlada."
+  - id: "TRAVA_03"
+    regra: "Todo coletor novo deve gravar tentativa de coleta em data/reference/fetch_log.csv, inclusive em caso de falha."
+  - id: "TRAVA_04"
+    regra: "Todo dado usado pela calculadora deve produzir evidência em data/evidence/ ou ser registrado como pendência explícita."
+  - id: "TRAVA_05"
+    regra: "Fonte pública, endpoint, período, unidade e limitação devem estar explícitos no arquivo processado ou na evidência."
+  - id: "TRAVA_06"
+    regra: "Dados automáticos que forem proxy não podem ser tratados como indicador final sem campo de limitação."
+  - id: "TRAVA_07"
+    regra: "Se um workflow falhar, não avançar rodada até registrar causa provável e patch corretivo."
+  - id: "TRAVA_08"
+    regra: "Os arquivos entregáveis devem ser espelhados no Google Drive antes de encerrar a rodada, quando a permissão estiver disponível."
+  - id: "TRAVA_09"
+    regra: "Não apagar artefatos zip entregues anteriormente; apenas descartar diretórios temporários extraídos."
+  - id: "TRAVA_10"
+    regra: "A retomada deve começar pela leitura de SISTEMA_ESTADO_RETOMADA.md e config/travamentos_sistema.yaml."
+
+proximos_passos_bloqueados_ate_validacao:
+  - "executar workflow area-densidade-ibge-geociencias"
+  - "baixar artefato area-densidade-ibge-geociencias"
+  - "salvar artefato no Google Drive"
+  - "confirmar log com Resultado: SUCESSO"
