@@ -1,0 +1,26 @@
+﻿campo;grupo;obrigatoriedade;ação;descrição
+id_pre_diligencia;identificação;obrigatório;não editar;ID único gerado pelo sistema
+cnpj_ou_id;identificação;obrigatório;conferir;CNPJ ou identificador da organização
+nome_organizacao;identificação;obrigatório;conferir;Nome da organização
+municipio;território;obrigatório;não editar;Município
+uf;território;obrigatório;não editar;UF
+status_contato;manual;controlado;editar;"pendente; contato_iniciado; contato_sem_resposta; contato_confirmado; descartada; bloqueada"
+telefone_validado;manual;livre;editar;Telefone confirmado
+email_validado;manual;livre;editar;E-mail confirmado
+representante_identificado;manual;controlado;editar;"sim; não; pendente"
+cargo_representante;manual;livre;editar;Cargo/função do representante
+cnpj_validado;manual;controlado;editar;"sim; não; pendente"
+situacao_cadastral_validada;manual;controlado;editar;"ativa; regular; apta; baixada; inativa; inapta; irregular; pendente"
+natureza_juridica_validada;manual;livre;editar;Natureza jurídica confirmada
+endereco_validado;manual;livre;editar;Endereço confirmado
+aderencia_tematica_validada;manual;controlado;editar;"sim; não; parcial; pendente"
+capacidade_operacional_preliminar;manual;livre;editar;Síntese da capacidade operacional
+risco_juridico_preliminar;manual;livre;editar;Registrar sanções, impedimentos ou irregularidades
+documentos_solicitados;manual;controlado;editar;"sim; não; parcial; pendente"
+documentos_recebidos;manual;controlado;editar;"sim; não; parcial; pendente"
+necessita_entrevista;manual;controlado;editar;"sim; não; pendente"
+necessita_visita;manual;controlado;editar;"sim; não; pendente"
+decisao_pos_contato;manual;controlado;editar;"continuar_contato; solicitar_documentos; agendar_entrevista; recomendar_visita; bloquear; descartar; pendente"
+responsavel_pela_validacao;manual;livre;editar;Nome ou unidade responsável
+data_atualizacao;manual;data;editar;AAAA-MM-DD recomendado
+observacoes_validacao;manual;livre;editar;Observações da checagem
