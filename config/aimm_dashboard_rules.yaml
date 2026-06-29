@@ -1,0 +1,46 @@
+# Rodada 4.17 — painel/resumo executivo e outputs da calculadora
+# Objetivo: gerar os primeiros outputs de leitura executiva da calculadora Fito+ Amazônia AIMM.
+#
+# Atenção:
+# - Esta rodada NÃO altera o motor de cálculo.
+# - Esta rodada NÃO aprova score final.
+# - Esta rodada organiza outputs para leitura, auditoria e próximas decisões.
+# - O painel usa os resultados estruturais preliminares do motor AIMM 4.16.
+
+projeto:
+  nome: "Fito+ Amazônia"
+  status_saida: "painel_preliminar"
+  base_calculo: "Rodada 4.16 — aimm-engine"
+  publico_alvo:
+    - "gestão do projeto"
+    - "coordenação técnica"
+    - "avaliadores"
+    - "equipes de dados"
+    - "parceiros institucionais"
+
+arquivos_saida:
+  csv:
+    - "data/processed/aimm_executive_summary.csv"
+    - "data/processed/aimm_dashboard_cards.csv"
+    - "data/processed/aimm_dashboard_dimension_view.csv"
+    - "data/processed/aimm_output_manifest.csv"
+    - "data/processed/aimm_next_actions.csv"
+  relatorios:
+    - "outputs/reports/aimm_executive_summary.md"
+    - "outputs/reports/aimm_dashboard_payload.json"
+  evidencias:
+    - "data/evidence/evidence_aimm_dashboard.csv"
+
+regras_painel:
+  - "Toda saída deve informar que o score é preliminar e estrutural."
+  - "Toda saída deve preservar bloqueios e lacunas."
+  - "Score baixo não deve ser interpretado como fracasso do projeto; deve ser lido como maturidade insuficiente de dados e evidências."
+  - "Outputs devem diferenciar resultado do motor, travas, lacunas e próximas ações."
+  - "O painel deve priorizar ações necessárias para transformar proxy em evidência validada."
+
+travas:
+  - "O painel não calcula novo score AIMM final."
+  - "O painel não substitui validação metodológica."
+  - "O painel não aprova orçamento, produto, OSC, espécie, rota regulatória ou compra pública."
+  - "O painel não remove bloqueios registrados no motor."
+  - "O score estrutural preliminar deve ser exibido com advertência explícita."
