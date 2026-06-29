@@ -1,0 +1,50 @@
+# Rodada 4.10 — congelamento técnico e índice mestre de artefatos
+# Objetivo: consolidar artefatos, rodadas, lacunas, destinos Drive e mapa GitHub antes da construção do motor da calculadora AIMM.
+
+politica_armazenamento:
+  github:
+    manter:
+      - "código Python"
+      - "workflows GitHub Actions"
+      - "arquivos de configuração YAML"
+      - "schemas e registros leves CSV"
+      - "README operacional"
+    evitar:
+      - "bases brutas grandes"
+      - "arquivos com dados pessoais sensíveis"
+      - "artefatos ZIP grandes de rodada"
+      - "planilhas manuais preenchidas com contatos ou documentos"
+  google_drive:
+    manter:
+      - "artefatos ZIP integrais"
+      - "bases brutas"
+      - "bases processadas"
+      - "evidências"
+      - "logs"
+      - "cópias editáveis operacionais"
+      - "pacotes de retomada"
+
+pastas_drive_validas:
+  - "Fito_Mais_Amazonia/00_configuracao"
+  - "Fito_Mais_Amazonia/01_fontes"
+  - "Fito_Mais_Amazonia/02_evidencias"
+  - "Fito_Mais_Amazonia/03_bases_brutas"
+  - "Fito_Mais_Amazonia/04_bases_processadas"
+  - "Fito_Mais_Amazonia/05_resultados"
+  - "Fito_Mais_Amazonia/06_logs"
+  - "Fito_Mais_Amazonia/07_versoes_congeladas"
+
+status_rodada_validos:
+  - "validada"
+  - "validada_com_lacuna"
+  - "pendente_confirmacao"
+  - "preparada"
+  - "bloqueada"
+
+travas:
+  - "Congelamento técnico não altera resultados validados."
+  - "Arquivo ausente no repositório pode ser válido se estiver classificado como artefato GitHub Actions ou Drive."
+  - "Nenhum artefato de pré-diligência manual preenchida será versionado sem validação e autorização."
+  - "Lacunas operacionais devem ser mantidas em operational_gaps_register.csv."
+  - "A Rodada 4.10 é pré-condição para a arquitetura da calculadora AIMM em duas camadas."
+  - "Nenhum benchmark IFC interno não público pode ser inferido ou inventado."
