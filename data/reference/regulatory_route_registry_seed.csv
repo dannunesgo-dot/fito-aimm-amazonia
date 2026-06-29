@@ -1,0 +1,13 @@
+﻿id_rota_regulatoria;codigo_produto;rota_regulatoria_preliminar;uso_potencial;requisitos_documentais_minimos;complexidade;limitacao;status
+REG_001;droga_vegetal;rota_preliminar_droga_vegetal;"Farmácia Viva; insumo; varejo conforme enquadramento";"identidade botânica; qualidade; contaminantes; documentação de lote";média;validação normativa necessária;não_definitivo
+REG_002;extrato;rota_preliminar_derivado_vegetal;"B2B; insumo; fitoterápico; suplemento conforme uso";"padronização; solvente; marcadores; estabilidade; contaminantes";média_alta;depende do produto final e alegações;não_definitivo
+REG_003;tintura;rota_preliminar_preparacao_extrativa;"Farmácia Viva; fitoterápico; P&D conforme uso";"teor alcoólico; marcadores; estabilidade; segurança";média_alta;depende do enquadramento e uso;não_definitivo
+REG_004;oleo_essencial;rota_preliminar_oleo_essencial;"cosmético; B2B; P&D; uso em saúde conforme enquadramento";"perfil químico; pureza; contaminantes; segurança";média;uso final determina exigências;não_definitivo
+REG_005;oleo_vegetal;rota_preliminar_oleo_vegetal;"cosmético; B2B; P&D";"índices físico-químicos; contaminantes; rastreabilidade";média;uso final determina exigências;não_definitivo
+REG_006;oleo_resina;rota_preliminar_oleo_resina;"fitoterápico; cosmético; B2B conforme uso";"identidade; perfil químico; rastreabilidade; segurança";alta;produto crítico para avaliação específica;não_definitivo
+REG_007;ifav;rota_preliminar_ifav;insumo farmacêutico ativo vegetal;"especificação; padronização; boas práticas; estabilidade; validação";alta;exige avaliação regulatória específica;não_definitivo
+REG_008;fitoterapico;rota_preliminar_medicamento_fitoterapico;medicamento;"qualidade; segurança; eficácia/uso; dossiê; estabilidade";alta;não avançar sem análise normativa detalhada;não_definitivo
+REG_009;produto_tradicional_fitoterapico;rota_preliminar_ptf;produto tradicional fitoterápico;"qualidade; segurança; tradicionalidade; estabilidade";alta;não avançar sem análise normativa detalhada;não_definitivo
+REG_010;suplemento;rota_preliminar_suplemento;suplemento alimentar;"ingrediente permitido; segurança; dose; rotulagem; contaminantes";média_alta;depende de ingrediente e alegação;não_definitivo
+REG_011;cosmetico_herbal;rota_preliminar_cosmetico;cosmético;"segurança; estabilidade; qualidade microbiológica; rotulagem";média;alegações não podem extrapolar enquadramento;não_definitivo
+REG_012;insumo_b2b_ped;rota_preliminar_insumo_tecnico;contratos B2B/P&D;"especificação técnica; laudo; rastreabilidade; embalagem";baixa_média;depende de contrato e uso;não_definitivo

@@ -1,0 +1,8 @@
+﻿id_elo;codigo_elo;descricao;atores_potenciais;funcao;risco_chave
+STG_001;producao_primaria;cultivo/extrativismo/manejo;"agricultores; extrativistas; cooperativas";originação de matéria-prima;"rastreabilidade; qualidade inicial; sustentabilidade"
+STG_002;pos_colheita;limpeza, seleção, secagem, armazenamento;"cooperativas; unidades locais";redução de perdas e garantia de qualidade;"umidade; contaminação; armazenamento"
+STG_003;beneficiamento;corte, moagem, prensagem, destilação, extração simples;"cooperativas; ICTs; parceiros";agregação inicial de valor;"boas práticas; equipamentos; laudos"
+STG_004;processamento;extração padronizada, formulação, concentração;"laboratórios; indústria; ICTs";geração de insumos/produtos intermediários;"validação; qualidade; escala"
+STG_005;qualidade_certificacao;análises, laudos, especificações e certificações;"laboratórios; ICTs; indústria";liberação de lote e acesso a mercado;"custo; prazo; escopo"
+STG_006;produto_final;fitoterápico, suplemento, cosmético, insumo B2B;"indústria; Farmácia Viva; parceiros";uso final e comercialização/uso público;"regulação; evidência; compras"
+STG_007;distribuicao_mercado;SUS, compras públicas, B2B, varejo, exportação;"SUS; empresas; cooperativas";acesso e geração de receita;"demanda; preço; logística"

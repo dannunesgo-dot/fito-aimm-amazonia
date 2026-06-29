@@ -1,0 +1,7 @@
+﻿id_requisito_qualidade;codigo_requisito;nome;aplicacao;finalidade;status
+QUAL_001;identidade_botanica;Identidade botânica/farmacognóstica;"droga_vegetal; extrato; tintura; óleo-resina";Confirma espécie, parte usada e adulterações;obrigatório por rota
+QUAL_002;perfil_quimico;Perfil químico/fingerprint;"extrato; óleo essencial; óleo-resina; IFAV";Caracteriza composição e padronização;obrigatório por rota
+QUAL_003;contaminantes;Contaminantes químicos, microbiológicos e físicos;todos;Controle de segurança e qualidade;obrigatório
+QUAL_004;estabilidade;Estabilidade;"extrato; tintura; cosmético; fitoterápico; suplemento; IFAV";Define validade e condições de armazenamento;obrigatório por rota
+QUAL_005;rastreabilidade;Rastreabilidade territorial e de lote;"todos; crítico em extrativismo";Permite controle de origem, manejo e salvaguardas;obrigatório
+QUAL_006;boas_praticas;Boas práticas aplicáveis;"beneficiamento; processamento; indústria";Reduz risco sanitário e operacional;obrigatório por elo
