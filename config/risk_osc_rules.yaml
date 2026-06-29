@@ -1,0 +1,31 @@
+# Regras preliminares de diligência documental e risco de OSCs — Fito+ Amazônia
+# Versão: v0.1
+# Uso: triagem automatizada. Não substitui análise jurídica, documental e decisão administrativa.
+
+classificacao_risco:
+  baixo: "risco_osc_score <= 30"
+  moderado: "31 <= risco_osc_score <= 60"
+  alto: "risco_osc_score > 60"
+
+pesos:
+  risco_base: 50
+  reducao_alta_prioridade_mapaosc: -25
+  reducao_media_prioridade_mapaosc: -10
+  acrescimo_baixa_prioridade_mapaosc: 20
+  acrescimo_possivelmente_baixada_ou_inativa: 35
+  acrescimo_sem_cnpj_ou_id: 25
+  acrescimo_sem_contato: 20
+  acrescimo_sem_endereco: 10
+  reducao_cooperativa: -10
+  reducao_associacao: -8
+  reducao_aderencia_saude: -8
+  reducao_aderencia_agricultura_bioeconomia: -8
+  reducao_aderencia_meio_ambiente: -6
+  reducao_aderencia_pesquisa_capacitacao: -5
+
+travas_decisorias:
+  - "Nenhuma organização pode ser classificada como apta sem validação documental externa."
+  - "Organização com indício de baixa, inatividade ou ausência de CNPJ deve permanecer como alto risco até comprovação."
+  - "Contato ativo e representante formal devem ser confirmados antes de entrevista ou visita."
+  - "Aderência temática deve ser comprovada por documentos, projetos anteriores, equipe ou atuação territorial."
+  - "A lista curta é apenas insumo para diligência; não constitui seleção, contratação ou parceria."
