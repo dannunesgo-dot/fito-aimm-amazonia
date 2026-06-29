@@ -1,0 +1,110 @@
+name: pre-diligencia-consolidacao
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/pre_diligencia_consolidacao_rules.yaml"
+      - "data/reference/pre_diligencia_consolidacao_rules.csv"
+      - "data/processed/pre_diligencia_status_validacao.csv"
+      - "data/processed/pre_diligencia_fila_contato.csv"
+      - "src/fito_aimm/pre_diligencia_consolidacao.py"
+      - "scripts/testar_pre_diligencia_consolidacao.py"
+      - ".github/workflows/pre_diligencia_consolidacao.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  pre-diligencia-consolidacao:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Baixar artefato aprovado do pre-diligencia-osc
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -e
+          mkdir -p data/processed data/evidence data/reference outputs/logs /tmp/pre_diligencia_artifact
+
+          if [ -s data/processed/pre_diligencia_status_validacao.csv ] && [ -s data/processed/pre_diligencia_fila_contato.csv ]; then
+            echo "Arquivos de pré-diligência já existem no repositório. Usando arquivos versionados."
+            exit 0
+          fi
+
+          echo "Tentando baixar artefato do último workflow pre-diligencia-osc bem-sucedido."
+
+          RUN_ID="$(gh run list \
+            --workflow pre_diligencia_osc.yml \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')"
+
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "ERRO: não encontrei execução bem-sucedida do workflow pre-diligencia-osc."
+            exit 1
+          fi
+
+          gh run download "$RUN_ID" \
+            --name pre-diligencia-osc-fito-amazonia \
+            --dir /tmp/pre_diligencia_artifact
+
+          echo "Conteúdo do artefato baixado:"
+          find /tmp/pre_diligencia_artifact -type f -print | sort
+
+          FILA_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'pre_diligencia_fila_contato.csv' | head -n 1 || true)"
+          STATUS_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'pre_diligencia_status_validacao.csv' | head -n 1 || true)"
+          DOCS_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'pre_diligencia_solicitacao_documentos.csv' | head -n 1 || true)"
+          EVID_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'evidence_pre_diligencia_osc.csv' | head -n 1 || true)"
+          LOG_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'teste_pre_diligencia_osc.txt' | head -n 1 || true)"
+
+          if [ -z "$FILA_FILE" ] || [ -z "$STATUS_FILE" ]; then
+            echo "ERRO: artefato baixado, mas arquivos obrigatórios de pré-diligência não foram encontrados."
+            exit 1
+          fi
+
+          cp "$FILA_FILE" data/processed/pre_diligencia_fila_contato.csv
+          cp "$STATUS_FILE" data/processed/pre_diligencia_status_validacao.csv
+          [ -n "$DOCS_FILE" ] && cp "$DOCS_FILE" data/processed/pre_diligencia_solicitacao_documentos.csv || true
+          [ -n "$EVID_FILE" ] && cp "$EVID_FILE" data/evidence/evidence_pre_diligencia_osc.csv || true
+          [ -n "$LOG_FILE" ] && cp "$LOG_FILE" outputs/logs/teste_pre_diligencia_osc.txt || true
+
+          echo "Artefato pre-diligencia-osc recuperado com sucesso."
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar consolidação da pré-diligência
+        run: python scripts/testar_pre_diligencia_consolidacao.py
+
+      - name: Publicar artefatos da consolidação da pré-diligência
+        uses: actions/upload-artifact@v4
+        with:
+          name: pre-diligencia-consolidacao-fito-amazonia
+          path: |
+            data/processed/pre_diligencia_fila_contato.csv
+            data/processed/pre_diligencia_status_validacao.csv
+            data/processed/pre_diligencia_solicitacao_documentos.csv
+            data/processed/pre_diligencia_consolidado.csv
+            data/processed/pre_diligencia_encaminhamentos.csv
+            data/processed/pre_diligencia_pendencias.csv
+            data/evidence/evidence_pre_diligencia_osc.csv
+            data/evidence/evidence_pre_diligencia_consolidacao.csv
+            data/reference/pre_diligencia_consolidacao_rules.csv
+            config/pre_diligencia_consolidacao_rules.yaml
+            outputs/logs/teste_pre_diligencia_osc.txt
+            outputs/logs/teste_pre_diligencia_consolidacao.txt
