@@ -1,0 +1,73 @@
+# Rodada 4.16 — motor de cálculo inicial da calculadora AIMM
+# Objetivo: criar o primeiro motor de cálculo estrutural da calculadora Fito+ Amazônia AIMM,
+# usando os registros validados das rodadas 4.10 a 4.15.
+#
+# Atenção:
+# - Esta rodada calcula score PRELIMINAR estrutural.
+# - Não calcula impacto econômico final.
+# - Não elimina lacunas.
+# - Não usa benchmarks IFC internos não públicos.
+# - Não substitui validação científica, regulatória, orçamentária ou documental.
+
+projeto:
+  nome: "Fito+ Amazônia"
+  investimento_total_brl: 80000000
+  moeda: "BRL"
+  status_calculo: "preliminar_estrutural"
+
+dimensoes:
+  - "gap"
+  - "intensidade"
+  - "mercado"
+  - "risco"
+  - "monitoramento"
+
+pesos_dimensao:
+  gap: 0.25
+  intensidade: 0.25
+  mercado: 0.20
+  risco: 0.20
+  monitoramento: 0.10
+
+tratamento_risco:
+  modo: "penalizador"
+  formula: "score_liquido = score_bruto * (1 - risco_penalty / 100)"
+  observacao: "Risco não é benefício. Risco reduz ou bloqueia robustez do score."
+
+tratamento_confianca:
+  alto: 1.00
+  medio: 0.75
+  baixo: 0.50
+  bloqueado: 0.00
+
+tratamento_prontidao_benchmark:
+  benchmark_utilizavel: 1.00
+  proxy_utilizavel_com_validacao: 0.75
+  proxy_baixa_confianca: 0.50
+  bloqueado: 0.00
+  revisar: 0.25
+
+faixas_score:
+  muito_baixo: [0, 20]
+  baixo: [21, 40]
+  medio: [41, 60]
+  alto: [61, 80]
+  muito_alto: [81, 100]
+
+fontes_estruturais_esperadas:
+  - "data/processed/calculator_schema.csv"
+  - "data/processed/scoring_model_spec.csv"
+  - "data/processed/budget_summary.csv"
+  - "data/processed/benchmark_readiness_matrix.csv"
+  - "data/processed/benchmark_gap_report.csv"
+  - "data/processed/species_priority_ranking.csv"
+  - "data/processed/product_pathway_priority_matrix.csv"
+
+travas:
+  - "O motor inicial calcula score estrutural preliminar, não score AIMM final validado."
+  - "Indicador com benchmark bloqueado não alimenta score final."
+  - "Benchmark IFC interno não público permanece bloqueado."
+  - "Proxy de baixa confiança reduz fator de confiança."
+  - "Lacuna operacional ativa deve aparecer no relatório de bloqueios."
+  - "Score final robusto depende de buscas, evidências, validação regulatória, orçamento detalhado e dados reais."
+  - "Nenhuma OSC, espécie, produto ou orçamento fica aprovado pela Rodada 4.16."
