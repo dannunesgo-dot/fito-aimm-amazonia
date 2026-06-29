@@ -1,0 +1,6 @@
+﻿dimensao_aimm;peso;papel;descricao
+gap;0.25;beneficio;"Mede lacuna/necessidade; maior lacuna com intervenção endereçável aumenta potencial, mas exige evidência."
+intensidade;0.25;beneficio;"Mede magnitude do resultado esperado; depende de beneficiários, orçamento e metas reais."
+mercado;0.2;beneficio;Mede potencial de mercado, substituição de importações, diversificação e funcionamento da cadeia.
+risco;0.2;penalizador;"Risco reduz score líquido; não deve ser somado como benefício."
+monitoramento;0.1;confianca;"Mede rastreabilidade, evidências e capacidade de monitoramento; ajusta robustez."

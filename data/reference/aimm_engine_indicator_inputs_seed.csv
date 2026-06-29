@@ -1,0 +1,13 @@
+﻿id_indicador;dimensao_aimm;score_bruto_preliminar;nivel_confianca;status_prontidao_benchmark;id_benchmark;limitacao
+IND_GAP_TERR_001;gap;45;baixo;proxy_baixa_confianca;BMK_001;Área/densidade ainda depende de confirmação final da Rodada 4.3.
+IND_GAP_ORG_001;gap;20;baixo;proxy_baixa_confianca;BMK_002;"Pré-diligência manual não executada; OSCs não aptas."
+IND_INT_BEN_001;intensidade;35;baixo;proxy_baixa_confianca;BMK_003;Metas de beneficiários ainda preliminares.
+IND_INT_INV_001;intensidade;50;baixo;proxy_baixa_confianca;BMK_004;Orçamento preliminar sem pesquisa de preços/memória de cálculo.
+IND_MKT_IMP_001;mercado;40;baixo;proxy_baixa_confianca;BMK_005;Produtos/NCM ainda não definidos.
+IND_MKT_DIV_001;mercado;55;baixo;proxy_baixa_confianca;BMK_006;Mercados/clientes reais ainda não cadastrados.
+IND_RISK_OSC_001;risco;55;medio;proxy_utilizavel_com_validacao;BMK_007;Risco OSC sem validação documental real.
+IND_RISK_REG_001;risco;65;baixo;proxy_baixa_confianca;BMK_008;Rotas regulatórias ainda conceituais.
+IND_MON_EVD_001;monitoramento;70;medio;proxy_utilizavel_com_validacao;BMK_009;Mede completude documental, não validade substantiva.
+IND_MON_LOG_001;monitoramento;75;medio;proxy_utilizavel_com_validacao;BMK_010;Depende de disciplina de logs e artefatos.
+AIMM_INTERNAL_MARKET_OUTCOME;mercado;;bloqueado;bloqueado;BMK_011;Benchmark IFC/AIMM interno não público bloqueado.
+AIMM_INTERNAL_PROJECT_OUTCOME;intensidade;;bloqueado;bloqueado;BMK_012;Benchmark IFC/AIMM interno não público bloqueado.
