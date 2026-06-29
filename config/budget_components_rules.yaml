@@ -1,0 +1,49 @@
+# Rodada 4.14 — orçamento por componente e pressupostos de custo
+# Objetivo: estruturar orçamento preliminar de R$ 80 milhões em componentes, fases,
+# CAPEX/OPEX, pressupostos de custo e vínculos com a calculadora AIMM.
+#
+# Atenção: esta rodada NÃO é orçamento executivo, NÃO substitui cotação, TR, projeto básico,
+# pesquisa de preços, engenharia, análise jurídica ou aprovação orçamentária.
+
+projeto:
+  nome: "Fito+ Amazônia"
+  investimento_total_brl: 80000000
+  horizonte_implantacao_anos: 3
+  horizonte_avaliacao_anos: 5
+  horizonte_impacto_anos: 10
+  territorios:
+    - "Manaus/AM"
+    - "Benjamin Constant/AM"
+    - "Belém/PA"
+    - "Santarém/PA"
+
+politica_orcamentaria:
+  moeda: "BRL"
+  ano_base: "não_definido"
+  tipo_valor: "preliminar_nominal"
+  status: "estimativa_de_arquitetura"
+  exigir_pesquisa_precos_futura: true
+  exigir_memoria_calculo_futura: true
+
+classes_gasto:
+  - "CAPEX"
+  - "OPEX"
+  - "MIXTO"
+  - "RESERVA_TECNICA"
+
+dimensoes_aimm_relacionadas:
+  - "gap"
+  - "intensidade"
+  - "mercado"
+  - "risco"
+  - "monitoramento"
+
+travas:
+  - "Orçamento preliminar não autoriza contratação, compra, convênio, TED, termo de fomento ou execução."
+  - "Todo custo precisa de fonte, método, unidade, quantidade, preço unitário e memória de cálculo em rodada posterior."
+  - "Valores são blocos de planejamento para calculadora AIMM, não orçamento executivo."
+  - "Custo sem cotação/pesquisa formal deve ser marcado como baixa confiança."
+  - "O total dos componentes deve fechar exatamente R$ 80.000.000."
+  - "Qualquer redistribuição deve preservar trilha de auditoria."
+  - "Farmácias Vivas, laboratórios, beneficiamento, P&D e sustentabilidade exigem detalhamento técnico antes de execução."
+  - "Arquivos orçamentários editáveis devem ter cópia controlada no Drive somente após validação do workflow."
