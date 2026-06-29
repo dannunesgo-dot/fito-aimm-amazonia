@@ -1,0 +1,6 @@
+﻿dimensao_aimm;indicadores_relacionados;benchmarks_relacionados;tipo_cobertura;nivel_confianca_dimensao;limitacao
+gap;"IND_GAP_TERR_001; IND_GAP_ORG_001";"BMK_001; BMK_002";proxy público + proxy interno;baixo;Depende de território e pré-diligência.
+intensidade;"IND_INT_BEN_001; IND_INT_INV_001";"BMK_003; BMK_004; BMK_012";proxy interno + IFC bloqueado;baixo;Depende de beneficiários e orçamento detalhado.
+mercado;"IND_MKT_IMP_001; IND_MKT_DIV_001";"BMK_005; BMK_006; BMK_011";proxy público + proxy interno + IFC bloqueado;baixo;Depende de produtos, NCMs e mercados.
+risco;"IND_RISK_OSC_001; IND_RISK_REG_001";"BMK_007; BMK_008";proxy interno/regulatório;baixo_medio;Sem diligência manual e sem análise normativa específica.
+monitoramento;"IND_MON_EVD_001; IND_MON_LOG_001";"BMK_009; BMK_010";proxy interno;medio;"Bom para governança de dados; não mede impacto substantivo isoladamente."

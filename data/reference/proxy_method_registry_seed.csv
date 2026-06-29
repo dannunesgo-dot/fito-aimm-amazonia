@@ -1,0 +1,8 @@
+﻿id_metodo_proxy;nome_metodo;descricao;formula_conceitual;classificacao_padrao;nivel_confianca;limitacao
+PM_001;normalizacao_por_benchmark_publico;Usa referência pública direta quando há dado compatível.;score = 100 * min(max(valor / benchmark, 0), 1);benchmark_publico_direto;medio;Requer compatibilidade de unidade, território e período.
+PM_002;proxy_por_percentil_publico;Usa distribuição pública para gerar percentil territorial/setorial.;score = percentil(valor, distribuicao_publica);proxy_publico;medio;Exige amostra comparável e documentação da distribuição.
+PM_003;proxy_por_meta_projeto;Usa meta preliminar como benchmark provisório.;score = 100 * valor_observado / meta_projeto;proxy_interno_projeto;baixo;Meta pode ser política/operacional, não benchmark externo.
+PM_004;proxy_por_completude_evidencia;Mede completude de evidências exigidas.;score = evidencias_validas / evidencias_requeridas * 100;proxy_interno_projeto;medio;Avalia monitoramento, não impacto real.
+PM_005;penalizador_risco;Transforma risco em penalizador do score bruto.;score_liquido = score_bruto * (1 - risco / 100);proxy_interno_projeto;medio;Risco não pode ser somado como benefício.
+PM_006;lacuna_bloqueante;Marca indicador sem benchmark suficiente.;"score = vazio; status = bloqueado";lacuna_sem_benchmark;bloqueado;Não alimentar score final.
+PM_007;benchmark_ifc_nao_publico_bloqueado;Registra que o benchmark setorial AIMM/IFC não está público.;"score = vazio; status = bloqueado";benchmark_ifc_nao_publico;bloqueado;Não inferir nem inventar.

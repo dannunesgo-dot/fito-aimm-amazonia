@@ -1,0 +1,10 @@
+﻿id_lacuna_benchmark;id_indicador;lacuna;tratamento_proposto;criticidade;efeito_no_score;status
+GAP_BMK_001;IND_GAP_TERR_001;Rodada 4.3 pendente de confirmação final;Confirmar execução verde de área/densidade IBGE/Geociências.;média;bloqueia indicador territorial definitivo;ativa
+GAP_BMK_002;IND_GAP_ORG_001;Pré-diligência manual não executada;Sem validação cadastral/documental, aptidão das OSCs fica bloqueada.;alta;bloqueia seleção/aptidão de organizações;ativa
+GAP_BMK_003;IND_INT_BEN_001;Cadastro real de beneficiários ausente;Criar beneficiary_registry e metas por município/componente.;alta;bloqueia cálculo real de intensidade por beneficiário;ativa
+GAP_BMK_004;IND_INT_INV_001;Orçamento ainda preliminar;Rodada 4.14 estruturou componentes, mas falta pesquisa de preços e memória de cálculo.;alta;bloqueia custo-efetividade robusto;ativa
+GAP_BMK_005;IND_MKT_IMP_001;Produtos/NCM não definidos;Mapear NCM/SH por rota/produto e coletar ComexStat.;alta;bloqueia substituição de importações;ativa
+GAP_BMK_006;IND_MKT_DIV_001;Clientes/mercados reais não cadastrados;Criar market_registry e buyer_registry.;média;bloqueia diversificação real;ativa
+GAP_BMK_007;IND_RISK_REG_001;Análise normativa detalhada não realizada;Realizar rodada regulatória ANVISA/MAPA por rota de produto.;alta;bloqueia risco regulatório robusto;ativa
+GAP_BMK_008;AIMM_INTERNAL_MARKET_OUTCOME;Benchmark IFC interno não público;"Registrar como bloqueado; usar proxy público/interno documentado.";alta;bloqueia comparação IFC direta;ativa
+GAP_BMK_009;AIMM_INTERNAL_PROJECT_OUTCOME;Benchmark IFC interno não público;"Registrar como bloqueado; usar proxy público/interno documentado.";alta;bloqueia comparação IFC direta;ativa

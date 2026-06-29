@@ -1,0 +1,10 @@
+﻿id_fonte;nome_fonte;instituicao;escopo;url_ou_arquivo;tipo_uso;nivel_confianca_inicial;limitacao
+SRC_BENCH_001;IFC AIMM — fonte institucional;IFC;AIMM/development impact framework;https://www.ifc.org/;referencia_metodologica;baixo;"Usar apenas como referência pública geral; benchmarks internos setoriais não públicos permanecem lacuna."
+SRC_BENCH_002;World Bank Data;World Bank;Indicadores macro, governança e desenvolvimento;https://data.worldbank.org/;benchmark_publico;medio;Selecionar indicador específico em rodada futura.
+SRC_BENCH_003;IBGE/SIDRA;IBGE;População, produção, território e estatísticas municipais;https://sidra.ibge.gov.br/;benchmark_publico;medio;"Já usado nos coletores IBGE; ampliar conforme indicador."
+SRC_BENCH_004;IBGE Geociências;IBGE;Área territorial, malhas e dados geográficos;https://www.ibge.gov.br/geociencias/;benchmark_publico;medio;Rodada 4.3 ainda demanda confirmação final verde.
+SRC_BENCH_005;Mapa das OSCs/Ipea;Ipea;Cadastro e caracterização de OSCs;https://mapaosc.ipea.gov.br/;proxy_publico;medio;"Fonte instável em GitHub Actions; usar artefatos congelados."
+SRC_BENCH_006;ComexStat/MDIC;MDIC;Comércio exterior brasileiro;https://comexstat.mdic.gov.br/;benchmark_publico;medio;"Usar NCM/SH específico; depende de seleção de produtos."
+SRC_BENCH_007;ANVISA;ANVISA;Normas e regularização sanitária;https://www.gov.br/anvisa/;proxy_regulatorio;medio;Usar norma específica por rota de produto em rodada normativa.
+SRC_BENCH_008;MAPA;MAPA;Normas agropecuárias e produção vegetal;https://www.gov.br/agricultura/;proxy_regulatorio;medio;Usar conforme etapa produtiva/insumo.
+SRC_BENCH_009;Arquivos internos do projeto;Fito+ Amazônia;Artefatos GitHub/Drive das rodadas 4.1–4.14;"data/processed/*.csv; data/evidence/*.csv";proxy_interno_projeto;medio;Não substitui validação externa quando necessária.
