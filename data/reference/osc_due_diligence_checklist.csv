@@ -1,0 +1,16 @@
+﻿id_item;dimensao;item;criterio;criticidade;fonte_verificacao;status_inicial;indicador_relacionado
+DD_OSC_01;Identificação jurídica;CNPJ ou identificador oficial;CNPJ válido, razão social e nome fantasia quando disponível;obrigatório;consulta documental / comprovante;pendente;RISK_OSC_01
+DD_OSC_02;Situação cadastral;Situação ativa ou regular;Comprovar que a organização não está baixada, inativa, inapta ou irregular;obrigatório;consulta Receita Federal ou documento equivalente;pendente;RISK_OSC_01
+DD_OSC_03;Natureza jurídica;Natureza compatível;Associação, cooperativa, fundação ou outra natureza admissível para o instrumento pretendido;obrigatório;estatuto, CNPJ, cadastro público;pendente;GAP_TERR_05
+DD_OSC_04;Governança;Diretoria e representantes;Ata vigente de eleição/posse e poderes de representação;obrigatório;ata, estatuto, procuração;pendente;RISK_OSC_01
+DD_OSC_05;Regularidade fiscal;Certidões fiscais;CND federal, estadual/municipal quando aplicável;obrigatório;certidões;pendente;RISK_OSC_01
+DD_OSC_06;Regularidade trabalhista;CNDT;Comprovação de regularidade trabalhista quando aplicável;obrigatório;certidão CNDT;pendente;RISK_OSC_01
+DD_OSC_07;Sanções e impedimentos;CEIS/CNEP/CEPIM/CADIN ou bases equivalentes;Verificar impedimentos, sanções, convênios inadimplentes ou restrições;obrigatório;consulta CGU ou bases oficiais;pendente;RISK_OSC_01
+DD_OSC_08;Experiência territorial;Atuação comprovada no município ou território;Projetos, contratos, relatórios ou atuação local;alto valor;portfólio, relatórios, entrevistas;pendente;INT_BEN_05
+DD_OSC_09;Aderência temática;Saúde, plantas medicinais, agricultura, extrativismo, bioeconomia, sustentabilidade, P&D ou capacitação;Comprovar relação objetiva com o escopo do Fito+ Amazônia;alto valor;portfólio, projetos, equipe técnica;pendente;INT_BEN_05
+DD_OSC_10;Capacidade operacional;Equipe, estrutura, logística e capacidade de execução;Capacidade mínima para mobilizar agricultores, executar atividades e prestar contas;alto valor;visita, entrevista, documentos;pendente;RISK_OSC_01
+DD_OSC_11;Capacidade financeira;Prestação de contas, contabilidade e controles internos;Capacidade de gestão financeira e administrativa;obrigatório;balanços, relatórios, contabilidade;pendente;RISK_OSC_01
+DD_OSC_12;Contato ativo;E-mail, telefone e endereço confirmados;Contato deve ser testado antes de avançar para visita;obrigatório;telefone/e-mail/visita;pendente;MON_02
+DD_OSC_13;Salvaguardas socioambientais;Riscos socioambientais e governança;Critérios mínimos para atuação em biodiversidade, extrativismo e comunidades;alto valor;checklist socioambiental;pendente;RISK_OSC_01
+DD_OSC_14;LGPD e dados pessoais;Tratamento de dados de beneficiários;Capacidade de lidar com dados pessoais de agricultores e participantes;médio valor;política, termo, procedimento;pendente;MON_02
+DD_OSC_15;Potencial de parceria;Aderência ao arranjo produtivo e papel esperado;Classificação do papel: mobilizadora, executora, apoio técnico, laboratório, formação ou governança;alto valor;entrevista e análise técnica;pendente;INT_BEN_05

@@ -1,0 +1,14 @@
+﻿id_regra;condicao;ajuste_score;justificativa
+RISK_RULE_01;classificacao_triagem == alta_prioridade;-25;Reduz risco porque a triagem remota sugere maior aderência inicial.
+RISK_RULE_02;classificacao_triagem == media_prioridade;-10;Reduz parcialmente risco.
+RISK_RULE_03;classificacao_triagem == baixa_prioridade;+20;Aumenta risco por baixa aderência remota.
+RISK_RULE_04;marcadores contém possivelmente_baixada_ou_inativa;+35;Alto alerta até comprovação cadastral.
+RISK_RULE_05;cnpj_ou_id vazio;+25;Sem identificador verificável, risco elevado.
+RISK_RULE_06;sem email e sem telefone;+20;Sem contato ativo, aumenta risco operacional.
+RISK_RULE_07;endereco vazio;+10;Sem endereço, aumenta risco de diligência.
+RISK_RULE_08;marcador cooperativa;-10;Reduz risco para arranjos produtivos se comprovada regularidade.
+RISK_RULE_09;marcador associacao;-8;Reduz risco para mobilização social se comprovada regularidade.
+RISK_RULE_10;marcador saúde;-8;Reduz risco por aderência ao escopo SUS/saúde.
+RISK_RULE_11;marcador agricultura_extrativismo_bioeconomia;-8;Reduz risco por aderência produtiva.
+RISK_RULE_12;marcador meio_ambiente_sustentabilidade;-6;Reduz risco por aderência ambiental/biodiversidade.
+RISK_RULE_13;marcador pesquisa_educacao_capacitacao;-5;Reduz risco para P&D, capacitação e transferência tecnológica.
