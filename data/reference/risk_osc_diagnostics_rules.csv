@@ -1,0 +1,7 @@
+﻿id_regra;procedimento;finalidade
+DIAG_01;Calcular distribuição por município e classe de risco;Detectar concentração territorial de risco e cobertura de triagem
+DIAG_02;Calcular campos faltantes: CNPJ, contato, endereço;Explicar bloqueios operacionais e baixa elegibilidade
+DIAG_03;Calcular marcadores temáticos;Identificar aderência a cooperativa, associação, saúde, agricultura/bioeconomia, meio ambiente e pesquisa/capacitação
+DIAG_04;Simular cenários de limiar;Avaliar se lista curta zerada decorre de regra conservadora ou baixa qualidade da base
+DIAG_05;Gerar top N por município;Criar fila de pré-diligência para contato e validação, sem seleção de executora
+DIAG_06;Gerar checklist de contato;Preparar coleta manual padronizada de confirmação documental e operacional
