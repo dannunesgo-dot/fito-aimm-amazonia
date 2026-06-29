@@ -4,6 +4,7 @@ from __future__ import annotations
 import csv
 import json
 import re
+import time
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -17,6 +18,12 @@ import yaml
 
 MAPAOSC_BASE_URL = "https://mapaosc.ipea.gov.br/download/20260522_MOSC_baseDivulgacao.csv"
 MAPAOSC_DICIONARIO_URL = "https://mapaosc.ipea.gov.br/arquivos/subitems/4038-dicionario-de-dados-mapa-oscs.xlsx"
+
+LOCAL_BASE_CANDIDATES = [
+    Path("data/raw/mapaosc/20260522_MOSC_baseDivulgacao.csv"),
+    Path("data/raw/mapaosc/MOSC_baseDivulgacao.csv"),
+    Path("data/raw/mapaosc/mapaosc_base_principal.csv"),
+]
 
 MUNICIPIOS_PROJETO = {
     "1302603": {"municipio": "Manaus", "uf": "AM"},
@@ -98,32 +105,7 @@ def detectar_delimitador(amostra: str) -> str:
     return max([";", ",", "\t", "|"], key=lambda sep: primeira_linha.count(sep))
 
 
-def baixar_amostra_bytes(url: str, tamanho: int = 200_000) -> tuple[bytes, int]:
-    resposta = requests.get(
-        url,
-        stream=True,
-        timeout=90,
-        headers={"User-Agent": "fito-aimm-amazonia/0.5"},
-    )
-    status = resposta.status_code
-    resposta.raise_for_status()
-
-    conteudo = b""
-    for bloco in resposta.iter_content(chunk_size=8192):
-        conteudo += bloco
-        if len(conteudo) >= tamanho:
-            break
-
-    return conteudo, status
-
-
 def detectar_encoding(amostra_bytes: bytes) -> str:
-    """Detecta codificação suficiente para leitura da base Mapa OSCs.
-
-    A falha observada no GitHub foi:
-    UnicodeDecodeError: 'utf-8' codec can't decode byte 0xcd...
-    Portanto, o coletor deve testar encodings compatíveis com bases públicas brasileiras.
-    """
     for encoding in ["utf-8-sig", "utf-8", "cp1252", "latin1", "iso-8859-1"]:
         try:
             amostra_bytes.decode(encoding)
@@ -131,6 +113,80 @@ def detectar_encoding(amostra_bytes: bytes) -> str:
         except UnicodeDecodeError:
             continue
     return "latin1"
+
+
+def primeiro_arquivo_local_existente() -> Path | None:
+    for caminho in LOCAL_BASE_CANDIDATES:
+        if caminho.exists() and caminho.stat().st_size > 1024:
+            return caminho
+    return None
+
+
+def baixar_com_retry(
+    url: str,
+    destino: Path,
+    tentativas: int = 5,
+    connect_timeout: int = 60,
+    read_timeout: int = 600,
+    espera_inicial: int = 20,
+) -> tuple[int, Path]:
+    """Baixa arquivo grande com retentativas.
+
+    Corrige a falha observada no GitHub:
+    requests.exceptions.ConnectTimeout: Connection to mapaosc.ipea.gov.br timed out.
+    """
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    ultimo_erro = None
+
+    session = requests.Session()
+    headers = {
+        "User-Agent": "fito-aimm-amazonia/0.6 (+github-actions)",
+        "Accept": "text/csv,application/octet-stream,*/*",
+        "Connection": "close",
+    }
+
+    for tentativa in range(1, tentativas + 1):
+        try:
+            with session.get(
+                url,
+                stream=True,
+                timeout=(connect_timeout, read_timeout),
+                headers=headers,
+            ) as resposta:
+                status = resposta.status_code
+                resposta.raise_for_status()
+
+                tmp = destino.with_suffix(destino.suffix + ".tmp")
+                with tmp.open("wb") as arquivo:
+                    for bloco in resposta.iter_content(chunk_size=1024 * 1024):
+                        if bloco:
+                            arquivo.write(bloco)
+
+                if tmp.stat().st_size < 1024:
+                    raise ValueError("Arquivo baixado é pequeno demais para ser a base principal do Mapa das OSCs.")
+
+                tmp.replace(destino)
+                return status, destino
+
+        except Exception as erro:
+            ultimo_erro = erro
+            if tentativa < tentativas:
+                espera = espera_inicial * tentativa
+                print(f"Tentativa {tentativa}/{tentativas} falhou ao baixar Mapa OSCs: {erro}. Nova tentativa em {espera}s.")
+                time.sleep(espera)
+
+    raise RuntimeError(f"Falha após {tentativas} tentativas de download do Mapa das OSCs: {ultimo_erro}")
+
+
+def obter_arquivo_base_mapaosc() -> tuple[Path, str, int | str]:
+    """Usa arquivo local se existir; caso contrário baixa com retry."""
+    local = primeiro_arquivo_local_existente()
+    if local:
+        return local, "arquivo_local_preexistente", "local"
+
+    destino = LOCAL_BASE_CANDIDATES[0]
+    status, caminho = baixar_com_retry(MAPAOSC_BASE_URL, destino)
+    return caminho, "download_requests_retry", status
 
 
 def selecionar_coluna(colunas: list[str], preferencias: list[str]) -> str:
@@ -331,13 +387,24 @@ def salvar_csv(caminho: Path, linhas: list[dict[str, Any]], campos: list[str] | 
         escritor.writerows(linhas)
 
 
-def baixar_arquivo(url: str, destino: Path, timeout: int = 120) -> int:
+def baixar_arquivo_com_retry(url: str, destino: Path, tentativas: int = 3) -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
-    resposta = requests.get(url, timeout=timeout, headers={"User-Agent": "fito-aimm-amazonia/0.5"})
-    status = resposta.status_code
-    resposta.raise_for_status()
-    destino.write_bytes(resposta.content)
-    return status
+    ultimo_erro = None
+    for tentativa in range(1, tentativas + 1):
+        try:
+            resposta = requests.get(
+                url,
+                timeout=(60, 300),
+                headers={"User-Agent": "fito-aimm-amazonia/0.6"},
+            )
+            resposta.raise_for_status()
+            destino.write_bytes(resposta.content)
+            return
+        except Exception as erro:
+            ultimo_erro = erro
+            if tentativa < tentativas:
+                time.sleep(10 * tentativa)
+    print(f"Aviso: dicionário Mapa OSCs não baixado: {ultimo_erro}")
 
 
 def gerar_resumo_por_municipio(linhas: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -424,21 +491,18 @@ def coletar_mapaosc_municipios(
 ) -> dict[str, Any]:
     id_coleta = f"MAPAOSC_TRIAGEM_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
     criterios = carregar_criterios(criterios_path)
+    caminho_base = None
+    metodo_obtencao = ""
+    status_http: int | str = "local"
 
     try:
-        amostra_bytes, status = baixar_amostra_bytes(MAPAOSC_BASE_URL)
+        caminho_base, metodo_obtencao, status_http = obter_arquivo_base_mapaosc()
+        amostra_bytes = caminho_base.read_bytes()[:200000]
         encoding = detectar_encoding(amostra_bytes)
         amostra_texto = amostra_bytes.decode(encoding, errors="replace")
         delimitador = detectar_delimitador(amostra_texto)
 
-        try:
-            baixar_arquivo(MAPAOSC_DICIONARIO_URL, arquivo_dicionario)
-        except Exception:
-            arquivo_dicionario.parent.mkdir(parents=True, exist_ok=True)
-            arquivo_dicionario.with_suffix(".txt").write_text(
-                "Dicionário não baixado automaticamente nesta execução.",
-                encoding="utf-8"
-            )
+        baixar_arquivo_com_retry(MAPAOSC_DICIONARIO_URL, arquivo_dicionario)
 
         linhas_processadas = []
         colmap_final = {}
@@ -446,7 +510,7 @@ def coletar_mapaosc_municipios(
 
         try:
             reader = pd.read_csv(
-                MAPAOSC_BASE_URL,
+                caminho_base,
                 sep=delimitador,
                 dtype=str,
                 chunksize=100000,
@@ -457,7 +521,7 @@ def coletar_mapaosc_municipios(
             )
         except TypeError:
             reader = pd.read_csv(
-                MAPAOSC_BASE_URL,
+                caminho_base,
                 sep=delimitador,
                 dtype=str,
                 chunksize=100000,
@@ -503,21 +567,23 @@ def coletar_mapaosc_municipios(
             ResultadoColeta(
                 id_coleta=id_coleta,
                 fonte="SRC_MAPA_OSC",
-                endpoint=MAPAOSC_BASE_URL,
+                endpoint=str(caminho_base) if metodo_obtencao == "arquivo_local_preexistente" else MAPAOSC_BASE_URL,
                 parametros=json.dumps({
                     "municipios": MUNICIPIOS_PROJETO,
                     "delimitador_detectado": delimitador,
                     "encoding_detectado": encoding,
+                    "metodo_obtencao_base": metodo_obtencao,
+                    "arquivo_base": str(caminho_base),
                     "max_linhas_saida": max_linhas_saida,
                     "colunas_detectadas": colmap_final,
                 }, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_05; INT_BEN_05; RISK_OSC_01; MON_02",
                 territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
-                status_http=status,
+                status_http=status_http,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas_processadas),
                 arquivo_saida=str(arquivo_saida_processado),
-                observacoes=f"Triagem Mapa OSCs concluída. Encoding: {encoding}. Linhas lidas: {total_linhas_lidas}. Linhas filtradas: {len(linhas_processadas)}.",
+                observacoes=f"Triagem Mapa OSCs concluída. Método: {metodo_obtencao}. Encoding: {encoding}. Linhas lidas: {total_linhas_lidas}. Linhas filtradas: {len(linhas_processadas)}.",
             ),
         )
 
@@ -529,6 +595,8 @@ def coletar_mapaosc_municipios(
             "total_linhas_lidas": total_linhas_lidas,
             "delimitador": delimitador,
             "encoding": encoding,
+            "metodo_obtencao_base": metodo_obtencao,
+            "arquivo_base": str(caminho_base),
         }
 
     except Exception as erro:
