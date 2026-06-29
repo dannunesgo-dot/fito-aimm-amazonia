@@ -9,6 +9,7 @@ on:
       - "data/processed/pre_diligencia_status_validacao.csv"
       - "data/processed/pre_diligencia_fila_contato.csv"
       - "src/fito_aimm/pre_diligencia_consolidacao.py"
+      - "src/fito_aimm/__init__.py"
       - "scripts/testar_pre_diligencia_consolidacao.py"
       - ".github/workflows/pre_diligencia_consolidacao.yml"
 
@@ -24,6 +25,14 @@ jobs:
     steps:
       - name: Baixar repositório
         uses: actions/checkout@v4
+
+      - name: Verificar módulo de consolidação
+        shell: bash
+        run: |
+          set -e
+          echo "Conteúdo de src/fito_aimm:"
+          ls -la src/fito_aimm
+          test -f src/fito_aimm/pre_diligencia_consolidacao.py
 
       - name: Baixar artefato aprovado do pre-diligencia-osc
         env:
