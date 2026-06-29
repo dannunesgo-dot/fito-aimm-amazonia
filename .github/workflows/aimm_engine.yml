@@ -1,0 +1,55 @@
+name: aimm-engine
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/aimm_engine_rules.yaml"
+      - "data/reference/aimm_engine_indicator_inputs_seed.csv"
+      - "data/reference/aimm_engine_dimension_policy_seed.csv"
+      - "data/reference/aimm_engine_blockers_seed.csv"
+      - "src/fito_aimm/aimm_engine.py"
+      - "scripts/testar_aimm_engine.py"
+      - ".github/workflows/aimm_engine.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  aimm-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar motor inicial AIMM
+        run: python scripts/testar_aimm_engine.py
+
+      - name: Publicar artefatos do motor AIMM
+        uses: actions/upload-artifact@v4
+        with:
+          name: aimm-engine-fito-amazonia
+          path: |
+            data/processed/aimm_indicator_scores.csv
+            data/processed/aimm_dimension_scores.csv
+            data/processed/aimm_overall_score.csv
+            data/processed/aimm_blockers_report.csv
+            data/processed/aimm_engine_validation_report.csv
+            data/evidence/evidence_aimm_engine.csv
+            data/reference/aimm_engine_indicator_inputs_seed.csv
+            data/reference/aimm_engine_dimension_policy_seed.csv
+            data/reference/aimm_engine_blockers_seed.csv
+            config/aimm_engine_rules.yaml
+            outputs/logs/teste_aimm_engine.txt
