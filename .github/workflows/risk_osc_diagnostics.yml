@@ -1,0 +1,111 @@
+name: risk-osc-diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/risk_osc_diagnostics_rules.yaml"
+      - "data/reference/risk_osc_diagnostics_rules.csv"
+      - "data/processed/risk_osc_screening.csv"
+      - "src/fito_aimm/risk_osc_diagnostics.py"
+      - "scripts/testar_risk_osc_diagnostics.py"
+      - ".github/workflows/risk_osc_diagnostics.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  risk-osc-diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Baixar artefato aprovado do risk-osc-screening
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -e
+          mkdir -p data/processed data/evidence data/reference outputs/logs /tmp/risk_osc_artifact
+
+          if [ -s data/processed/risk_osc_screening.csv ]; then
+            echo "Arquivo data/processed/risk_osc_screening.csv já existe no repositório. Usando arquivo versionado."
+            exit 0
+          fi
+
+          echo "Arquivo data/processed/risk_osc_screening.csv não está versionado."
+          echo "Tentando baixar artefato do último workflow risk-osc-screening bem-sucedido."
+
+          RUN_ID="$(gh run list \
+            --workflow risk_osc_screening.yml \
+            --status success \
+            --limit 1 \
+            --json databaseId \
+            --jq '.[0].databaseId')"
+
+          if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+            echo "ERRO: não encontrei execução bem-sucedida do workflow risk-osc-screening."
+            echo "Correção manual: baixe o artefato risk-osc-screening-fito-amazonia e envie risk_osc_screening.csv para data/processed/."
+            exit 1
+          fi
+
+          echo "Baixando artefato risk-osc-screening-fito-amazonia da execução $RUN_ID."
+          gh run download "$RUN_ID" \
+            --name risk-osc-screening-fito-amazonia \
+            --dir /tmp/risk_osc_artifact
+
+          echo "Conteúdo do artefato baixado:"
+          find /tmp/risk_osc_artifact -type f -print | sort
+
+          RISK_FILE="$(find /tmp/risk_osc_artifact -type f -name 'risk_osc_screening.csv' | head -n 1 || true)"
+          if [ -z "$RISK_FILE" ]; then
+            echo "ERRO: artefato baixado, mas risk_osc_screening.csv não foi encontrado em nenhuma subpasta."
+            exit 1
+          fi
+
+          cp "$RISK_FILE" data/processed/risk_osc_screening.csv
+
+          ORG_FILE="$(find /tmp/risk_osc_artifact -type f -name 'organizacoes_candidatas_mapaosc.csv' | head -n 1 || true)"
+          SHORT_FILE="$(find /tmp/risk_osc_artifact -type f -name 'organizacoes_lista_curta_diligencia.csv' | head -n 1 || true)"
+          EVID_FILE="$(find /tmp/risk_osc_artifact -type f -name 'evidence_risk_osc_screening.csv' | head -n 1 || true)"
+          LOG_FILE="$(find /tmp/risk_osc_artifact -type f -name 'teste_risk_osc_screening.txt' | head -n 1 || true)"
+
+          [ -n "$ORG_FILE" ] && cp "$ORG_FILE" data/processed/organizacoes_candidatas_mapaosc.csv || true
+          [ -n "$SHORT_FILE" ] && cp "$SHORT_FILE" data/processed/organizacoes_lista_curta_diligencia.csv || true
+          [ -n "$EVID_FILE" ] && cp "$EVID_FILE" data/evidence/evidence_risk_osc_screening.csv || true
+          [ -n "$LOG_FILE" ] && cp "$LOG_FILE" outputs/logs/teste_risk_osc_screening.txt || true
+
+          echo "Artefato risk-osc-screening recuperado com sucesso."
+          ls -lh data/processed/risk_osc_screening.csv
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar diagnóstico de risco OSC
+        run: python scripts/testar_risk_osc_diagnostics.py
+
+      - name: Publicar artefatos do diagnóstico de risco OSC
+        uses: actions/upload-artifact@v4
+        with:
+          name: risk-osc-diagnostics-fito-amazonia
+          path: |
+            data/processed/risk_osc_screening.csv
+            data/processed/risk_osc_diagnostics.csv
+            data/processed/risk_osc_threshold_scenarios.csv
+            data/processed/organizacoes_pre_diligencia_topN.csv
+            data/processed/checklist_contato_validacao.csv
+            data/evidence/evidence_risk_osc_diagnostics.csv
+            data/reference/risk_osc_diagnostics_rules.csv
+            config/risk_osc_diagnostics_rules.yaml
+            outputs/logs/teste_risk_osc_diagnostics.txt
