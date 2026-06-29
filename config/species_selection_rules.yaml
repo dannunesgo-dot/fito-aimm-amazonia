@@ -1,0 +1,78 @@
+# Rodada 4.12 — registro e matriz de seleção de espécies candidatas
+# Objetivo: criar cadastro preliminar de espécies candidatas e matriz multicritério para priorização técnica.
+# Atenção: esta rodada NÃO define seleção final de espécies. Ela cria estrutura, critérios, pesos e ranking preliminar de trabalho.
+
+escopo:
+  projeto: "Fito+ Amazônia"
+  bioma: "Amazônia"
+  territorios:
+    - "Manaus/AM"
+    - "Benjamin Constant/AM"
+    - "Belém/PA"
+    - "Santarém/PA"
+
+status_elegiveis:
+  - "candidata_preliminar_usuario"
+  - "candidata_preliminar_sistema"
+  - "pendente_validacao"
+  - "validada_para_estudo"
+  - "descartada"
+
+escala_score:
+  minimo: 0
+  maximo: 100
+  interpretacao:
+    0_20: "muito baixo"
+    21_40: "baixo"
+    41_60: "médio"
+    61_80: "alto"
+    81_100: "muito alto"
+
+criterios:
+  mercado_demanda:
+    peso: 0.14
+    direcao: "maior_melhor"
+    descricao: "Potencial de demanda em SUS, B2B, varejo, exportação ou substituição de importações."
+  valor_agregado:
+    peso: 0.12
+    direcao: "maior_melhor"
+    descricao: "Potencial de agregar valor em campo/floresta e nos elos de beneficiamento."
+  retencao_valor_local:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Capacidade de reter valor com agricultores, extrativistas, cooperativas e territórios."
+  adequacao_amazonia:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Adequação agroecológica, socioterritorial ou extrativista aos territórios amazônicos."
+  maturidade_cadeia:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Disponibilidade de conhecimento produtivo, beneficiamento, fornecedores e compradores."
+  viabilidade_regulatoria:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Facilidade relativa de enquadramento como droga vegetal, insumo, fitoterápico, suplemento ou cosmético."
+  evidencia_uso_qualidade:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Disponibilidade de evidências técnicas, qualidade, identidade, segurança e uso."
+  sustentabilidade_salvaguardas:
+    peso: 0.10
+    direcao: "maior_melhor"
+    descricao: "Potencial de sustentabilidade e menor pressão socioambiental quando bem manejada."
+  risco_implementacao:
+    peso: 0.08
+    direcao: "menor_melhor"
+    descricao: "Risco produtivo, logístico, regulatório, sanitário, ambiental, comercial ou de rastreabilidade."
+  alinhamento_sus_farmacia_viva_ped:
+    peso: 0.06
+    direcao: "maior_melhor"
+    descricao: "Aderência a Farmácias Vivas, SUS, P&D, evidência de mundo real e desenvolvimento tecnológico."
+
+travas:
+  - "A pontuação da Rodada 4.12 é preliminar e não seleciona espécie final."
+  - "Todos os scores iniciais devem ser marcados como baixa confiança até validação por buscas, campo, mercado e orçamento."
+  - "Espécie com risco de sustentabilidade, rastreabilidade, pressão extrativista ou incerteza regulatória deve exigir salvaguarda."
+  - "A seleção final depende de orçamento, mercado, regulamentação, capacidade produtiva, qualidade, evidências e acordos territoriais."
+  - "Nenhum benchmark ou dado de mercado não validado pode ser apresentado como definitivo."
