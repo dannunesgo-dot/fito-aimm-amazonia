@@ -64,7 +64,7 @@ def main():
         "Trava: consolidação não seleciona executora. Se os campos manuais estiverem vazios, os encaminhamentos permanecem preliminares.",
     ]
 
-    texto = "\\n".join(conteudo)
+    texto = "\n".join(conteudo)
     RELATORIO.write_text(texto, encoding="utf-8")
     print(texto)
 
