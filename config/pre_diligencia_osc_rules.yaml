@@ -1,0 +1,50 @@
+# Rodada 4.7 — Protocolo de pré-diligência de OSCs
+# Objetivo: transformar o TopN da Rodada 4.6 em fila operacional de contato, validação cadastral e solicitação documental.
+# Importante: pré-diligência não é seleção, contratação, parceria ou declaração de aptidão.
+
+parametros:
+  max_contatos_por_municipio: 25
+  prioridade_1_risco_maximo: 40
+  prioridade_2_risco_maximo: 60
+  prioridade_3_risco_maximo: 75
+
+status_permitidos:
+  - "pendente"
+  - "contato_iniciado"
+  - "contato_sem_resposta"
+  - "contato_confirmado"
+  - "cnpj_validado"
+  - "documentos_solicitados"
+  - "documentos_recebidos"
+  - "entrevista_agendada"
+  - "visita_recomendada"
+  - "descartada"
+  - "bloqueada"
+
+criterios_bloqueio:
+  - id: "BLQ_01"
+    regra: "Organização sem CNPJ ou identificador não pode avançar para lista curta formal."
+  - id: "BLQ_02"
+    regra: "Organização com marcador de baixa/inatividade não pode avançar sem comprovação cadastral."
+  - id: "BLQ_03"
+    regra: "Organização sem contato ativo deve permanecer em tentativa de localização, não em diligência plena."
+  - id: "BLQ_04"
+    regra: "Organização sem representante formal identificado não pode receber solicitação documental formal."
+  - id: "BLQ_05"
+    regra: "Organização com sanção, impedimento ou irregularidade documental deve ser bloqueada até análise jurídica."
+
+uso_autorizado:
+  - "organizar contato preliminar"
+  - "validar telefone e e-mail"
+  - "confirmar CNPJ e situação cadastral"
+  - "solicitar documentos básicos"
+  - "registrar resposta"
+  - "priorizar entrevistas e visitas técnicas"
+
+uso_proibido:
+  - "selecionar executora"
+  - "declarar aptidão"
+  - "formalizar parceria"
+  - "contratar"
+  - "dispensar análise jurídica"
+  - "dispensar validação documental"
