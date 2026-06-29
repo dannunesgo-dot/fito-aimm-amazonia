@@ -1,0 +1,76 @@
+# Rodada 4.13 — produtos e rotas produtivas/regulatórias
+# Objetivo: estruturar produtos pretendidos, rotas produtivas, rotas regulatórias preliminares,
+# requisitos mínimos de qualidade e matriz de prioridade produto-espécie para a calculadora Fito+ Amazônia AIMM.
+#
+# Atenção: esta rodada NÃO define produto final, NÃO registra produto, NÃO substitui avaliação regulatória ANVISA/MAPA
+# e NÃO calcula viabilidade econômica final.
+
+escopo:
+  projeto: "Fito+ Amazônia"
+  especies_origem: "Rodada 4.12"
+  produtos_iniciais:
+    - "droga vegetal"
+    - "extrato"
+    - "tintura"
+    - "óleo essencial"
+    - "óleo vegetal"
+    - "óleo-resina"
+    - "IFAV"
+    - "fitoterápico"
+    - "produto tradicional fitoterápico"
+    - "suplemento"
+    - "cosmético herbal"
+    - "insumo B2B/P&D"
+
+mercados_alvo:
+  - "SUS"
+  - "Farmácia Viva"
+  - "compras públicas"
+  - "B2B industrial"
+  - "varejo"
+  - "exportação"
+  - "P&D"
+
+escala_score:
+  minimo: 0
+  maximo: 100
+
+criterios_prioridade_produto:
+  demanda_mercado:
+    peso: 0.16
+    direcao: "maior_melhor"
+  aderencia_especie:
+    peso: 0.14
+    direcao: "maior_melhor"
+  valor_agregado:
+    peso: 0.13
+    direcao: "maior_melhor"
+  retencao_valor_local:
+    peso: 0.10
+    direcao: "maior_melhor"
+  complexidade_produtiva:
+    peso: 0.08
+    direcao: "menor_melhor"
+  complexidade_regulatoria:
+    peso: 0.10
+    direcao: "menor_melhor"
+  requisitos_qualidade:
+    peso: 0.09
+    direcao: "menor_melhor"
+  sustentabilidade_rastreabilidade:
+    peso: 0.10
+    direcao: "maior_melhor"
+  compatibilidade_sus_farmacia_viva:
+    peso: 0.06
+    direcao: "maior_melhor"
+  potencial_inovacao_substituicao_importacao:
+    peso: 0.04
+    direcao: "maior_melhor"
+
+travas:
+  - "A rota regulatória é preliminar e deve ser validada em rodada específica com base normativa."
+  - "Nenhum produto está apto para registro, notificação, compra pública ou produção assistencial apenas por esta matriz."
+  - "Produtos com uso em saúde exigem avaliação regulatória, qualidade, segurança, documentação técnica e evidência apropriada."
+  - "Rotas extrativistas exigem rastreabilidade, manejo sustentável e salvaguardas."
+  - "Scores são preliminares e de baixa confiança até validação por mercado, orçamento, campo e regulação."
+  - "A rodada organiza rotas; não escolhe portfólio final."
