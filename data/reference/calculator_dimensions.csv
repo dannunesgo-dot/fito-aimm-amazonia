@@ -1,0 +1,6 @@
+﻿id_dimensao;dimensao;camada;nome;descricao;escala;interpretacao;limitacao
+DIM_GAP;gap;camada_1_aimm;Lacuna ou necessidade de desenvolvimento;mede distância entre situação atual e condição desejada;0-100;Quanto maior, maior lacuna a enfrentar;Exige linha de base e benchmark/proxy
+DIM_INT;intensidade;camada_1_aimm;Intensidade do efeito do projeto;mede magnitude do resultado esperado por beneficiário, território, cadeia ou investimento;0-100;Quanto maior, mais intenso o efeito esperado;Depende de metas e orçamento por componente
+DIM_MKT;mercado;camada_1_aimm;Criação, expansão ou correção de mercado;mede efeitos em mercado, substituição de importações, demanda, canais e competição;0-100;Quanto maior, maior contribuição ao funcionamento de mercado;Exige dados setoriais e benchmarks
+DIM_RISK;risco;camada_1_aimm;Risco de execução e risco de desenvolvimento;mede fragilidades institucionais, operacionais, ambientais, regulatórias e de mercado;0-100;"Quanto maior, maior risco; pode reduzir score líquido";Deve ser usado como penalizador, não como benefício
+DIM_MON;monitoramento;camada_1_aimm;Capacidade de medir e aprender;mede disponibilidade de dados, evidências, frequência, governança e qualidade do monitoramento;0-100;Quanto maior, maior capacidade de acompanhamento;Depende de fonte, periodicidade, evidência e sistema de dados

@@ -1,0 +1,9 @@
+﻿id_requisito;arquivo;bloco;descricao;rodada_prevista;status;lacuna
+REQ_001;territory_registry.csv;territorios;Cadastro dos quatro municípios com códigos IBGE, população, área, densidade e bioma;4.3;pendente_parcial;Confirmação de área/densidade
+REQ_002;organization_registry.csv;organizacoes_e_governanca;Consolidação das organizações candidatas e riscos;4.4-4.9;parcial;Sem validação manual/cadastral real
+REQ_003;beneficiary_registry.csv;beneficiarios;Metas e linha de base de agricultores, cooperativas, laboratórios, SUS e consumidores;4.12+;ausente;Criar em rodada futura
+REQ_004;species_candidate_registry.csv;especies_candidatas;Espécies candidatas e critérios de seleção;4.12;ausente;Próxima etapa substantiva
+REQ_005;product_pathway_registry.csv;produtos_rotas_produtivas;Produtos pretendidos e rotas produtivas/regulatórias;4.13;ausente;Criar após espécies
+REQ_006;budget_components.csv;orcamento_componentes;Orçamento R$ 80 milhões decomposto por componente, fase e CAPEX/OPEX;4.14;ausente;Essencial para intensidade
+REQ_007;benchmark_registry.csv;benchmarks;Benchmarks, proxies, níveis de confiança e fontes;4.15;ausente;Não inventar benchmark IFC interno
+REQ_008;formulas_registry.csv;calculo;Registro formal de fórmulas, variáveis e limites de uso;4.11;preparado;Será gerado nesta rodada

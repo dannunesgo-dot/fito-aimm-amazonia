@@ -1,0 +1,6 @@
+﻿camada;dimensao;peso_inicial;papel_no_score;observacao
+camada_1_aimm;gap;0.25;lacuna de desenvolvimento;"peso inicial conceitual; revisar após benchmarks"
+camada_1_aimm;intensidade;0.25;magnitude do efeito;"peso inicial conceitual; revisar após metas/orçamento"
+camada_1_aimm;mercado;0.20;efeitos de mercado;"peso inicial conceitual; revisar após produtos e mercados"
+camada_1_aimm;risco;0.20;penalizador de risco;"não somar como benefício; aplicar ajuste negativo"
+camada_1_aimm;monitoramento;0.10;confiabilidade e rastreabilidade;pode ajustar confiança do score

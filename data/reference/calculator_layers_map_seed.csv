@@ -1,0 +1,12 @@
+﻿id_camada;camada;bloco;descricao;arquivos_entrada;saida_logica;rodada_origem
+L1;camada_1_aimm;gap;lacunas de desenvolvimento;"indicator_dictionary.csv; benchmark_registry.csv; evidence_registry.csv";gap_score;4.11
+L1;camada_1_aimm;intensidade;magnitude dos efeitos;"metas; budget_components.csv; beneficiary_registry.csv";intensity_score;4.11
+L1;camada_1_aimm;mercado;efeitos de mercado e competição;"market_registry.csv; product_pathway_registry.csv; benchmark_registry.csv";market_score;4.11
+L1;camada_1_aimm;risco;risco de execução e desenvolvimento;"risk_registry.csv; operational_gaps_register.csv";risk_penalty_score;4.11
+L1;camada_1_aimm;monitoramento;qualidade dos dados e rastreabilidade;"evidence_registry.csv; fetch_log.csv; source_registry.csv";monitoring_score;4.11
+L2;camada_2_operacional;territorios;Manaus, Benjamin Constant, Belém e Santarém;"territory_registry.csv; ibge baselines";territory_inputs;4.12+
+L2;camada_2_operacional;organizacoes_e_governanca;OSCs, cooperativas, associações e executores;pre_diligencia_*.csv;organization_inputs;4.4-4.9
+L2;camada_2_operacional;beneficiarios;agricultores, cooperativas, laboratórios, SUS, consumidores;beneficiary_registry.csv;beneficiary_inputs;4.12+
+L2;camada_2_operacional;especies_candidatas;espécies vegetais candidatas;species_candidate_registry.csv;species_inputs;4.12
+L2;camada_2_operacional;produtos_rotas_produtivas;droga vegetal, extrato, óleo, IFAV, fitoterápico, suplemento e cosmético herbal;product_pathway_registry.csv;product_inputs;4.13
+L2;camada_2_operacional;orcamento_componentes;R$ 80 milhões por componente;"budget_components.csv; cost_assumption_registry.csv";budget_inputs;4.14

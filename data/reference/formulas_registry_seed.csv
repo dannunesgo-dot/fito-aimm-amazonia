@@ -1,0 +1,7 @@
+﻿id_formula;nome_formula;expressao;uso;variaveis;saida;limitacao
+FORM_SCORE_NORM_POS;normalizacao_positiva;score = 100 * min(max((valor - minimo) / (benchmark - minimo), 0), 1);Indicadores em que maior valor é melhor;valor, minimo, benchmark;0-100;Usar apenas com benchmark válido
+FORM_SCORE_NORM_NEG;normalizacao_negativa;score = 100 * (1 - min(max((valor - minimo) / (maximo - minimo), 0), 1));Indicadores em que maior valor é pior;valor, minimo, maximo;0-100;Usado para risco/penalizadores
+FORM_WEIGHTED_AVG;media_ponderada;score = soma(score_i * peso_i) / soma(peso_i);Agregação de indicadores por dimensão;score_i, peso_i;0-100;Pesos devem estar registrados
+FORM_RISK_ADJ;ajuste_por_risco;score_liquido = score_bruto * (1 - risco_penalty / 100);Aplicar penalidade de risco ao score bruto;score_bruto, risco_penalty;0-100;Não usar risco como benefício
+FORM_GAP_INT_COMBO;combinacao_gap_intensidade;impacto_potencial = gap_score * intensity_score / 100;Combinar lacuna e intensidade;gap_score, intensity_score;0-100;Não representa impacto final sem evidência
+FORM_MON_CONF;ajuste_confianca_monitoramento;score_confianca = score * fator_confianca;Ajustar score pela qualidade da evidência;score, fator_confianca;0-100;Fator de confiança deve ser transparente
