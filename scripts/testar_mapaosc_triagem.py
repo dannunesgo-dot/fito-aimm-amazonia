@@ -53,6 +53,8 @@ def main():
         f"Linhas de resumo municipal: {len(resumo)}",
         f"Linhas de evidência: {len(evidencias)}",
         f"Total de linhas lidas na base de origem: {resultado['total_linhas_lidas']}",
+        f"Método de obtenção da base: {resultado['metodo_obtencao_base']}",
+        f"Arquivo-base usado: {resultado['arquivo_base']}",
         f"Encoding detectado: {resultado['encoding']}",
         f"Delimitador detectado: {repr(resultado['delimitador'])}",
         "",
@@ -60,7 +62,14 @@ def main():
     ]
 
     for linha in resumo:
-        conteudo.append(f"- {linha['municipio']}/{linha['uf']}: {linha['total_organizacoes_filtradas']} organizações; {linha['alta_prioridade']} alta prioridade; {linha['media_prioridade']} média prioridade; {linha['com_marcador_cooperativa']} com marcador cooperativa; {linha['com_marcador_associacao']} com marcador associação.")
+        conteudo.append(
+            f"- {linha['municipio']}/{linha['uf']}: "
+            f"{linha['total_organizacoes_filtradas']} organizações; "
+            f"{linha['alta_prioridade']} alta prioridade; "
+            f"{linha['media_prioridade']} média prioridade; "
+            f"{linha['com_marcador_cooperativa']} com marcador cooperativa; "
+            f"{linha['com_marcador_associacao']} com marcador associação."
+        )
 
     conteudo.append("")
     conteudo.append("Colunas detectadas automaticamente:")
