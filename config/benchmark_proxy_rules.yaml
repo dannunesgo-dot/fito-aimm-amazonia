@@ -1,23 +1,32 @@
 # Rodada 4.15 — benchmarks, proxies e lacunas AIMM
-# Objetivo: criar registro de benchmarks, proxies, métodos substitutos e lacunas para a calculadora Fito+ Amazônia AIMM.
-#
-# Atenção: esta rodada NÃO inventa benchmarks internos da IFC.
-# Benchmarks não públicos devem ser marcados como lacuna ou proxy documentado.
-# A rodada cria estrutura metodológica, não score AIMM final.
+# Correção v0.2:
+# - Garante chave não acentuada `dimensoes`.
+# - Inclui `proxy_regulatorio` como classificação válida.
+# - O módulo Python também passa a aceitar chaves alternativas por segurança.
 
 escopo:
   projeto: "Fito+ Amazônia"
   origem_arquitetura: "Rodadas 4.10 a 4.14"
-  dimensoes:
-    - "gap"
-    - "intensidade"
-    - "mercado"
-    - "risco"
-    - "monitoramento"
+
+dimensoes:
+  - "gap"
+  - "intensidade"
+  - "mercado"
+  - "risco"
+  - "monitoramento"
+
+# Alias de segurança para evitar falha se algum arquivo futuro usar outro nome de campo.
+dimensoes_aimm:
+  - "gap"
+  - "intensidade"
+  - "mercado"
+  - "risco"
+  - "monitoramento"
 
 classificacao_benchmark:
   - "benchmark_publico_direto"
   - "proxy_publico"
+  - "proxy_regulatorio"
   - "proxy_interno_projeto"
   - "benchmark_ifc_nao_publico"
   - "lacuna_sem_benchmark"
@@ -32,13 +41,14 @@ regras_validacao:
   - "Todo benchmark deve ter id_benchmark, dimensão, indicador relacionado, método, fonte e nível de confiança."
   - "Benchmarks IFC internos não públicos devem ser marcados como benchmark_ifc_nao_publico ou lacuna_sem_benchmark."
   - "Proxy público deve indicar fonte pública e limitação."
+  - "Proxy regulatório deve indicar fonte normativa pública e limitação."
   - "Proxy interno do projeto deve indicar arquivo de origem e trava de uso."
   - "Benchmark com nível bloqueado não pode alimentar score final."
   - "Nenhum indicador pode ficar sem classificação de benchmark/lacuna."
 
 travas:
   - "A Rodada 4.15 não calcula score final."
-  - "Benchmark IFC não público não pode ser presumido, estimado ou inventado."
+  - "Benchmark IFC interno não público não pode ser presumido, estimado ou inventado."
   - "Proxy é substituto metodológico temporário e exige validação."
   - "Indicadores com proxy baixo ou lacuna bloqueiam resultado final robusto."
   - "Benchmarks devem ser auditáveis, versionados e vinculados a evidências."
