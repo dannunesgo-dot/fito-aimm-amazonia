@@ -36,3 +36,4 @@ jobs:
           path: |
             data/reference/source_registry.csv
             data/evidence/evidence_registry.csv
+            data/reference/query_plan.csv
