@@ -1,0 +1,6 @@
+﻿id_visual;codigo_visual;arquivo_saida;formato;descricao;editabilidade
+VIZ_001;html_executivo;outputs/visuals/aimm_dashboard_executivo.html;HTML;Painel executivo autocontido.;editável em qualquer editor de texto
+VIZ_002;svg_painel;outputs/visuals/aimm_dashboard_cards.svg;SVG;Cards e fluxo visual em vetores/texto.;editável em Inkscape, draw.io ou editor SVG
+VIZ_003;mermaid_fluxo;outputs/visuals/aimm_dashboard_flow.mmd;Mermaid;Fluxo lógico da calculadora.;editável como texto
+VIZ_004;roteiro_markdown;outputs/reports/aimm_communication_brief.md;Markdown;Roteiro de fala e briefing executivo.;editável como texto
+VIZ_005;payload_visual;outputs/reports/aimm_communication_payload.json;JSON;Payload de comunicação para visualização futura.;editável como dados

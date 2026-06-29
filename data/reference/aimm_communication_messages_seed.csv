@@ -1,0 +1,7 @@
+﻿id_mensagem;tema;mensagem_principal;limitacao;proxima_acao;prioridade
+MSG_001;Resultado central;A calculadora já executa um motor estrutural preliminar e gera painel auditável.;"O score 2,40 não é score final AIMM; reflete bloqueios, proxies e baixa maturidade de dados.";Usar como diagnóstico de maturidade do sistema, não como decisão final.;alta
+MSG_002;Risco;A penalidade de risco preliminar foi registrada como redutor, não como benefício.;Sem validação documental das OSCs e sem rota regulatória, o risco permanece material.;Priorizar pré-diligência manual, validação normativa e documentação de executores.;alta
+MSG_003;Monitoramento;O sistema já gera logs, evidências e artefatos por workflow.;A qualidade substantiva das evidências ainda precisa ser validada.;Consolidar governança de dados, versionamento e checagem de evidências.;média
+MSG_004;Mercado;Produtos e rotas foram estruturados preliminarmente.;NCM/SH, compradores, preços e substituição de importações ainda não estão validados.;Iniciar rodada de mercado, NCM/SH e ComexStat por rota/produto.;alta
+MSG_005;Orçamento;O orçamento de R$ 80 milhões foi estruturado por componente.;Ainda não há pesquisa de preços, TR, projeto básico ou memória de cálculo.;Detalhar orçamento por item, fonte, unidade, quantidade e preço unitário.;alta
+MSG_006;Comunicação;O pacote torna a leitura executiva rastreável e editável.;Comunicação não substitui validação técnica.;Usar o pacote para alinhamento e priorização das próximas rodadas.;média
