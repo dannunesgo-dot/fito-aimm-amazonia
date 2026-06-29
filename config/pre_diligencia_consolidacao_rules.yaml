@@ -1,0 +1,44 @@
+# Rodada 4.8 — Consolidação da pré-diligência OSC
+# Objetivo: consolidar respostas manuais de contato/validação e classificar o encaminhamento seguinte.
+# Não seleciona executora. Apenas organiza decisão técnica preliminar.
+
+parametros:
+  minimo_para_avancar_entrevista:
+    contato_confirmado: true
+    cnpj_validado: true
+    situacao_cadastral_validada_aceita:
+      - "ativa"
+      - "regular"
+      - "apta"
+    representante_identificado: true
+  encaminhamentos_validos:
+    - "manter_pendente"
+    - "continuar_contato"
+    - "solicitar_documentos"
+    - "agendar_entrevista"
+    - "recomendar_visita"
+    - "bloquear"
+    - "descartar"
+
+regras_encaminhamento:
+  - id: "ENC_01"
+    condicao: "sem contato confirmado"
+    encaminhamento: "continuar_contato"
+  - id: "ENC_02"
+    condicao: "CNPJ não validado ou situação cadastral não confirmada"
+    encaminhamento: "solicitar_documentos"
+  - id: "ENC_03"
+    condicao: "contato, CNPJ, situação cadastral e representante confirmados"
+    encaminhamento: "agendar_entrevista"
+  - id: "ENC_04"
+    condicao: "irregularidade, baixa, sanção ou impedimento registrado"
+    encaminhamento: "bloquear"
+  - id: "ENC_05"
+    condicao: "sem aderência temática ou recusa de participação"
+    encaminhamento: "descartar"
+
+travas:
+  - "Entrevista não equivale à seleção."
+  - "Visita técnica não equivale à seleção."
+  - "Somente análise documental/jurídica pode liberar organização para fase posterior."
+  - "Arquivos com dados pessoais devem ficar no Drive com acesso controlado."
