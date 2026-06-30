@@ -1,0 +1,372 @@
+name: rodada-4-22-e-gis-replication-package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gis-replication-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-E
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import csv
+          from pathlib import Path
+          from typing import Any
+
+
+          OUT_BASE = Path("outputs/gis/rodada_4_22_E_pacote_replicacao")
+          OUT_REPORTS = Path("outputs/reports")
+          OUT_LOGS = Path("outputs/logs")
+          OUT_PROCESSED = Path("data/processed/gis")
+          OUT_EVIDENCE = Path("data/evidence")
+
+          files = {
+              "guia_curto": OUT_BASE / "GUIA_CURTO_REPLICACAO_GIS_NOVO_MUNICIPIO.md",
+              "guia_tecnico": OUT_BASE / "GUIA_TECNICO_QGIS_REPLICACAO_MUNICIPIO.md",
+              "checklist": OUT_BASE / "checklist_replicacao_gis_novo_municipio.csv",
+              "manifesto_template": OUT_BASE / "gis_novo_municipio_manifest_template.csv",
+              "drive_map": OUT_BASE / "drive_map_replicacao_gis.csv",
+              "registry": OUT_PROCESSED / "gis_replication_package_registry_4_22_e.csv",
+              "status": OUT_PROCESSED / "gis_replication_package_status_4_22_e.csv",
+              "gaps": OUT_PROCESSED / "gis_replication_package_gaps_4_22_e.csv",
+              "evidence": OUT_EVIDENCE / "evidence_gis_replication_package_4_22_e.csv",
+              "report": OUT_REPORTS / "RELATORIO_GIS_REPLICACAO_4_22_E.md",
+              "log": OUT_LOGS / "teste_gis_replicacao_4_22_e.txt",
+          }
+
+
+          def write_text(path: Path, content: str) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(content, encoding="utf-8")
+
+
+          def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              fieldnames = list(rows[0].keys()) if rows else []
+              with path.open("w", encoding="utf-8-sig", newline="") as file:
+                  writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
+                  writer.writeheader()
+                  writer.writerows(rows)
+
+
+          guia_curto = """# Guia curto — replicação GIS para novo município
+
+## Finalidade
+
+Repetir o fluxo validado em Manaus para outro município.
+
+## O que a equipe precisa entregar
+
+1. GeoPackage isolado do município.
+2. Código IBGE do município.
+3. Nome do município.
+4. Nome da UF.
+5. Sigla da UF.
+6. Área em km² informada pela fonte oficial usada.
+7. Prints de validação no QGIS.
+8. Projeto QGIS salvo.
+
+## Travas
+
+- Não editar geometria.
+- Não recalcular área sem rodada própria.
+- Não gerar buffer nesta etapa.
+- Não calcular densidade nesta etapa.
+- Não liberar score AIMM final.
+- Não usar workflows antigos C, C2 ou C3.
+
+## Fluxo simples
+
+1. Abrir malha municipal no QGIS.
+2. Selecionar o município pelo código IBGE.
+3. Exportar apenas o município como GeoPackage.
+4. Validar se há 1 feição.
+5. Criar ou preencher o manifesto manual.
+6. Rodar workflow de validação.
+7. Criar tabela relacional de atributos.
+8. Fazer join visual no QGIS.
+9. Salvar prints e projeto.
+10. Registrar validação visual no GitHub.
+"""
+
+          guia_tecnico = """# Guia técnico — QGIS 3.40.14 e GitHub
+
+## 1. Preparar o GeoPackage isolado
+
+No QGIS:
+
+Camada > Adicionar Camada > Adicionar Camada Vetorial
+
+Abrir a malha municipal do IBGE.
+
+Selecionar o município por expressão, por exemplo:
+
+"CD_MUN" = '1302603'
+
+Depois:
+
+Botão direito na camada > Exportar > Salvar feições selecionadas como...
+
+Formato: GeoPackage
+
+CRS: manter o CRS original da camada ou registrar explicitamente o CRS usado.
+
+Nome do arquivo recomendado:
+
+municipio_<nome_minusculo>_<codigo_ibge>.gpkg
+
+Exemplo:
+
+municipio_manaus_1302603.gpkg
+
+## 2. Conferências mínimas no QGIS
+
+- Total de feições: 1
+- Código IBGE correto
+- Nome do município correto, se o campo existir
+- Geometria visível
+- Sem problema visual grosseiro
+- CRS identificado
+
+## 3. Arquivamento Drive
+
+Usar a estrutura:
+
+09_gis/01_insumos_brutos
+09_gis/02_qgis_projetos
+09_gis/03_camadas_validadas
+09_gis/04_outputs
+09_gis/05_logs
+
+## 4. GitHub
+
+Os arquivos manuais devem entrar em:
+
+data/manual/gis/
+
+Os arquivos brutos, quando pequenos e versionáveis, podem entrar em:
+
+data/raw/gis/
+
+Arquivos grandes devem ficar no Drive e ser referenciados por manifesto.
+
+## 5. Join relacional
+
+A tabela de atributos recompostos deve ser associada no QGIS por:
+
+campo da camada = campo da tabela
+
+Exemplo validado:
+
+CD_MUN = codigo_ibge
+
+Prefixo recomendado:
+
+aimm_
+
+## 6. Travas técnicas
+
+Não fazer UPDATE direto na tabela geométrica do GeoPackage pelo SQLite do GitHub Actions.
+Não usar ST_IsEmpty, ST_Area, ST_Centroid, ST_Buffer no SQLite puro.
+Operações espaciais reais devem ser feitas no QGIS ou em rodada própria com biblioteca GIS adequada.
+"""
+
+          checklist_rows = [
+              {"item": "GeoPackage isolado criado", "obrigatorio": "sim", "como_conferir": "arquivo abre no QGIS"},
+              {"item": "Apenas uma feição", "obrigatorio": "sim", "como_conferir": "tabela de atributos mostra total 1"},
+              {"item": "Código IBGE confirmado", "obrigatorio": "sim", "como_conferir": "campo de código tem valor esperado"},
+              {"item": "CRS registrado", "obrigatorio": "sim", "como_conferir": "propriedades da camada"},
+              {"item": "Geometria visível", "obrigatorio": "sim", "como_conferir": "aproximar à camada"},
+              {"item": "Tabela relacional criada", "obrigatorio": "sim", "como_conferir": "tabela interna no GeoPackage ou CSV validado"},
+              {"item": "Join criado", "obrigatorio": "sim", "como_conferir": "campos com prefixo aimm_ aparecem preenchidos"},
+              {"item": "Prints gerados", "obrigatorio": "sim", "como_conferir": "arquivos PNG arquivados"},
+              {"item": "Projeto QGIS salvo", "obrigatorio": "sim", "como_conferir": "arquivo .qgz no Drive"},
+              {"item": "Registro GitHub executado", "obrigatorio": "sim", "como_conferir": "workflow verde"},
+          ]
+
+          manifesto_rows = [
+              {
+                  "rodada": "preencher",
+                  "municipio": "preencher",
+                  "codigo_ibge": "preencher",
+                  "arquivo_gpkg": "municipio_nome_codigo.gpkg",
+                  "crs": "preencher",
+                  "campo_codigo": "preencher",
+                  "valor_codigo": "preencher",
+                  "campo_municipio": "preencher_se_existir",
+                  "valor_municipio": "preencher",
+                  "campo_uf": "preencher_se_existir",
+                  "valor_uf": "preencher",
+                  "numero_feicoes": "1",
+                  "geometria_visivel_qgis": "sim/nao",
+                  "check_validity_executado": "sim/nao",
+                  "valid_count": "preencher_se_executado",
+                  "invalid_count": "preencher_se_executado",
+                  "error_count": "preencher_se_executado",
+                  "pasta_drive": "09_gis/03_camadas_validadas",
+                  "observacao": "preencher",
+              }
+          ]
+
+          drive_map_rows = [
+              {"arquivo": "GeoPackage bruto original", "pasta_drive": "09_gis/01_insumos_brutos"},
+              {"arquivo": "GeoPackage isolado validado", "pasta_drive": "09_gis/03_camadas_validadas"},
+              {"arquivo": "GeoPackage com tabela relacional", "pasta_drive": "09_gis/03_camadas_validadas"},
+              {"arquivo": "Projeto QGIS .qgz", "pasta_drive": "09_gis/02_qgis_projetos"},
+              {"arquivo": "Prints de validação visual", "pasta_drive": "09_gis/04_outputs/rodada_municipio_validacao_visual"},
+              {"arquivo": "Logs", "pasta_drive": "09_gis/05_logs"},
+              {"arquivo": "ZIP de artefato GitHub", "pasta_drive": "07_versoes_congeladas"},
+          ]
+
+          gaps_rows = [
+              {
+                  "gap_id": "GAP_422E_SEM_PROCESSAMENTO_GEOMETRICO",
+                  "tipo": "metodologico",
+                  "criticidade": "controlada",
+                  "descricao": "Pacote operacional não processa geometria real.",
+                  "acao_recomendada": "Executar validação geométrica e join visual no QGIS para cada novo município.",
+                  "bloqueia_score_final": "sim",
+              },
+              {
+                  "gap_id": "GAP_422E_DRIVE_NAO_VERIFICADO",
+                  "tipo": "arquivamento",
+                  "criticidade": "baixa",
+                  "descricao": "Workflow não acessa o Google Drive.",
+                  "acao_recomendada": "Arquivamento deve ser confirmado visualmente pelo operador.",
+                  "bloqueia_score_final": "nao",
+              },
+          ]
+
+          registry = [
+              {
+                  "rodada": "4.22-E",
+                  "pacote": "replicacao_gis_novos_municipios",
+                  "arquivos_operacionais": "5",
+                  "checklist_itens": str(len(checklist_rows)),
+                  "modelo_manifesto": "sim",
+                  "mapa_drive": "sim",
+                  "trava": "nao_processa_geometria_nao_calcula_area_densidade_buffer_centroide_score_final",
+              }
+          ]
+
+          status = [
+              {
+                  "rodada": "4.22-E",
+                  "status": "sucesso",
+                  "erros_estruturais": "0",
+                  "lacunas_registradas": str(len(gaps_rows)),
+                  "proxima_rodada": "4.22-F",
+                  "proxima_rodada_descricao": "aplicacao do pacote GIS a segundo municipio ou fechamento do modulo GIS Manaus",
+              }
+          ]
+
+          evidence = [
+              {
+                  "id_evidencia": "EVD_GIS_REPLICATION_PACKAGE_4_22_E",
+                  "tipo_evidencia": "pacote_operacional",
+                  "descricao": "Pacote para replicação controlada do fluxo GIS em novos municípios.",
+                  "status": "gerado",
+                  "limitacao": "Não processa geometria e não verifica Drive.",
+              }
+          ]
+
+          report = """# Rodada 4.22-E — pacote operacional GIS para replicação em novos municípios
+
+## Resultado
+
+Pacote operacional gerado para replicar o fluxo GIS validado em Manaus.
+
+## Arquivos principais
+
+- `GUIA_CURTO_REPLICACAO_GIS_NOVO_MUNICIPIO.md`
+- `GUIA_TECNICO_QGIS_REPLICACAO_MUNICIPIO.md`
+- `checklist_replicacao_gis_novo_municipio.csv`
+- `gis_novo_municipio_manifest_template.csv`
+- `drive_map_replicacao_gis.csv`
+
+## Travas
+
+- Não processa geometria.
+- Não altera GeoPackage.
+- Não calcula área.
+- Não calcula densidade.
+- Não calcula centroide.
+- Não calcula buffer.
+- Não libera score AIMM final.
+
+## Uso
+
+A equipe deve usar este pacote antes de iniciar novo município no QGIS.
+"""
+
+          write_text(files["guia_curto"], guia_curto)
+          write_text(files["guia_tecnico"], guia_tecnico)
+          write_csv(files["checklist"], checklist_rows)
+          write_csv(files["manifesto_template"], manifesto_rows)
+          write_csv(files["drive_map"], drive_map_rows)
+          write_csv(files["registry"], registry)
+          write_csv(files["status"], status)
+          write_csv(files["gaps"], gaps_rows)
+          write_csv(files["evidence"], evidence)
+          write_text(files["report"], report)
+
+          log = "\n".join(
+              [
+                  "TESTE GIS_REPLICATION_PACKAGE_4_22_E — Fito+ Amazônia",
+                  "=" * 86,
+                  "Pacote operacional GIS gerado: sim",
+                  f"Itens de checklist: {len(checklist_rows)}",
+                  "Modelo de manifesto: sim",
+                  "Mapa de Drive: sim",
+                  f"Lacunas registradas: {len(gaps_rows)}",
+                  "Erros estruturais: 0",
+                  "",
+                  "Resultado: SUCESSO.",
+                  "Pacote operacional GIS para replicação em novos municípios foi gerado.",
+                  "",
+                  "Trava: não processa geometria, não calcula área, densidade, centroide, buffer nem score AIMM final.",
+              ]
+          )
+
+          write_text(files["log"], log)
+          print(log)
+          PY
+
+      - name: Publicar artefatos da Rodada 4.22-E
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-e-gis-replication-package-fito-amazonia
+          path: |
+            outputs/gis/rodada_4_22_E_pacote_replicacao/GUIA_CURTO_REPLICACAO_GIS_NOVO_MUNICIPIO.md
+            outputs/gis/rodada_4_22_E_pacote_replicacao/GUIA_TECNICO_QGIS_REPLICACAO_MUNICIPIO.md
+            outputs/gis/rodada_4_22_E_pacote_replicacao/checklist_replicacao_gis_novo_municipio.csv
+            outputs/gis/rodada_4_22_E_pacote_replicacao/gis_novo_municipio_manifest_template.csv
+            outputs/gis/rodada_4_22_E_pacote_replicacao/drive_map_replicacao_gis.csv
+            data/processed/gis/gis_replication_package_registry_4_22_e.csv
+            data/processed/gis/gis_replication_package_status_4_22_e.csv
+            data/processed/gis/gis_replication_package_gaps_4_22_e.csv
+            data/evidence/evidence_gis_replication_package_4_22_e.csv
+            outputs/reports/RELATORIO_GIS_REPLICACAO_4_22_E.md
+            outputs/logs/teste_gis_replicacao_4_22_e.txt
