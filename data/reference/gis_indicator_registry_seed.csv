@@ -1,0 +1,13 @@
+gis_indicator_id;nome_indicador;grupo;camadas_necessarias;metodo_calculo;unidade;uso_aimm;status_uso;trava
+GIS_IND_001;Disponibilidade de malha municipal oficial;readiness;municipios_ibge;verificar existência, CRS e campo codigo_ibge;binario;territorial_development;apenas_monitoramento;bloqueia processamento GIS se ausente
+GIS_IND_002;Centroide municipal validado;baseline;municipios_ibge;calcular centroide em CRS adequado e exportar coordenadas;graus_decimais;monitoring;calculavel_futuro;não calcular nesta rodada
+GIS_IND_003;Área municipal validada;baseline;municipios_ibge;reprojetar para CRS métrico e calcular área;km2;monitoring;calculavel_futuro;não calcular nesta rodada
+GIS_IND_004;Densidade populacional territorial;baseline;municipios_ibge,populacao_ibge;população dividida por área municipal;hab_km2;gap;calculavel_futuro;depende de área validada e população
+GIS_IND_005;OSCs candidatas por município;institucional;pontos_oscs_cooperativas,municipios_ibge;junção espacial ponto-polígono por município;numero;stakeholder_effects;calculavel_futuro;depende de coordenadas válidas
+GIS_IND_006;OSCs dentro de buffer logístico;institucional;pontos_oscs_cooperativas,vias_logistica,portos_aeroportos;buffer métrico e interseção espacial;numero;resilience;calculavel_futuro;depende de reprojeção métrica
+GIS_IND_007;Distância até laboratório ou ICT;capacidade_tecnica;laboratorios_icts,municipios_ibge;distância do centroide municipal ou ponto produtivo até laboratório mais próximo;km;innovation;calculavel_futuro;depende de coordenadas e CRS métrico
+GIS_IND_008;Proximidade de Farmácia Viva;saude;farmacias_vivas,municipios_ibge;distância ou presença por município;km_ou_binario;health;calculavel_futuro;depende de cadastro validado
+GIS_IND_009;Risco de sobreposição com área protegida;salvaguarda;unidades_conservacao,terras_indigenas,areas_producao_candidatas;interseção e percentual de sobreposição;%_area;environmental_social_effects;calculavel_futuro;exige análise jurídica e campo
+GIS_IND_010;Acessibilidade logística preliminar;logistica;vias_logistica,portos_aeroportos,hidrografia,municipios_ibge;score composto de proximidade e disponibilidade de infraestrutura;score_0_100;resilience;proxy_baixa_confianca;proxy até validação de rede logística real
+GIS_IND_011;Adequação ambiental preliminar;sustentabilidade;uso_cobertura_terra,areas_producao_candidatas;classificação de uso/cobertura e restrições;%_area_adequada;sustainability;proxy_baixa_confianca;depende de base atualizada e validação local
+GIS_IND_012;Readiness GIS territorial;readiness;todas;percentual de camadas obrigatórias disponíveis e válidas;%_camadas;monitoring;calculavel_preliminar;não substitui processamento espacial real
