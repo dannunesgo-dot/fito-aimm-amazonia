@@ -36,6 +36,24 @@ REQUIRED_COLUMNS = {
 }
 
 
+def qident(name: str) -> str:
+    """Protege identificadores SQLite, incluindo nomes com ponto."""
+    return '"' + name.replace('"', '""') + '"'
+
+
+def parse_area(value: str) -> float:
+    """
+    Aceita tanto formato técnico 11401.092 quanto formato brasileiro 11.401,092.
+    Retorna float.
+    """
+    value = str(value).strip()
+
+    if "," in value:
+        value = value.replace(".", "").replace(",", ".")
+
+    return float(value)
+
+
 def read_csv(path: Path) -> list[dict[str, str]]:
     if not path.exists():
         raise FileNotFoundError(f"Arquivo obrigatório ausente: {path}")
@@ -84,10 +102,24 @@ def get_gpkg_info(conn: sqlite3.Connection) -> dict[str, Any]:
 
     geom_table, geom_column, geometry_type, geom_srs = geometry
 
-    count = cur.execute(f'select count(*) from "{table_name}"').fetchone()[0]
+    count = cur.execute(
+        f"select count(*) from {qident(table_name)}"
+    ).fetchone()[0]
 
-    columns_info = cur.execute(f'pragma table_info("{table_name}")').fetchall()
+    columns_info = cur.execute(
+        f"pragma table_info({qident(table_name)})"
+    ).fetchall()
+
     columns = [item[1] for item in columns_info]
+
+    non_null_geometry_count = cur.execute(
+        f"""
+        select count(*)
+        from {qident(table_name)}
+        where {qident(geom_column)} is not null
+          and length({qident(geom_column)}) > 0
+        """
+    ).fetchone()[0]
 
     return {
         "table_name": table_name,
@@ -100,15 +132,27 @@ def get_gpkg_info(conn: sqlite3.Connection) -> dict[str, Any]:
         "geom_srs": str(geom_srs),
         "feature_count": int(count),
         "columns": columns,
+        "non_null_geometry_count": int(non_null_geometry_count),
     }
 
 
-def add_column_if_missing(conn: sqlite3.Connection, table_name: str, column_name: str, column_type: str) -> None:
+def add_column_if_missing(
+    conn: sqlite3.Connection,
+    table_name: str,
+    column_name: str,
+    column_type: str,
+) -> None:
     cur = conn.cursor()
-    columns = [item[1] for item in cur.execute(f'pragma table_info("{table_name}")').fetchall()]
+
+    columns = [
+        item[1]
+        for item in cur.execute(f"pragma table_info({qident(table_name)})").fetchall()
+    ]
 
     if column_name not in columns:
-        cur.execute(f'alter table "{table_name}" add column {column_name} {column_type}')
+        cur.execute(
+            f"alter table {qident(table_name)} add column {qident(column_name)} {column_type}"
+        )
 
 
 def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str], list[str]]:
@@ -126,15 +170,34 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
 
     info_before = get_gpkg_info(conn)
     table_name = info_before["table_name"]
+    campo_codigo = row["campo_codigo"]
 
     if info_before["srs_id"] != "4674":
         errors.append("crs_diferente_epsg_4674")
 
+    if info_before["geom_srs"] != "4674":
+        errors.append("crs_geometria_diferente_epsg_4674")
+
     if info_before["feature_count"] != 1:
         errors.append("numero_feicoes_diferente_de_1")
 
-    if row["campo_codigo"] not in info_before["columns"]:
+    if info_before["non_null_geometry_count"] != 1:
+        errors.append("geometria_nula_ou_vazia")
+
+    if campo_codigo not in info_before["columns"]:
         errors.append("campo_codigo_ausente")
+
+    codigo_detectado = ""
+
+    if campo_codigo in info_before["columns"]:
+        codigo_detectado = str(
+            cur.execute(
+                f"select cast({qident(campo_codigo)} as text) from {qident(table_name)} limit 1"
+            ).fetchone()[0]
+        )
+
+        if codigo_detectado != row["codigo_ibge"]:
+            errors.append("codigo_ibge_divergente")
 
     if not errors:
         add_column_if_missing(conn, table_name, "NM_MUN", "TEXT")
@@ -143,19 +206,19 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
         add_column_if_missing(conn, table_name, "SIGLA_UF", "TEXT")
         add_column_if_missing(conn, table_name, "AREA_KM2", "REAL")
 
-        area = float(row["area_km2"])
+        area = parse_area(row["area_km2"])
 
         cur.execute(
-            f'''
-            update "{table_name}"
+            f"""
+            update {qident(table_name)}
             set
-                NM_MUN = ?,
-                NM_UF = ?,
-                CD_UF = ?,
-                SIGLA_UF = ?,
-                AREA_KM2 = ?
-            where cast({row["campo_codigo"]} as text) = ?
-            ''',
+                {qident("NM_MUN")} = ?,
+                {qident("NM_UF")} = ?,
+                {qident("CD_UF")} = ?,
+                {qident("SIGLA_UF")} = ?,
+                {qident("AREA_KM2")} = ?
+            where cast({qident(campo_codigo)} as text) = ?
+            """,
             (
                 row["nm_mun"],
                 row["nm_uf"],
@@ -167,6 +230,7 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
         )
 
         updated_rows = cur.rowcount
+
         if updated_rows != 1:
             errors.append(f"linhas_atualizadas_incorretas_{updated_rows}")
 
@@ -175,17 +239,17 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
     info_after = get_gpkg_info(conn)
 
     values = cur.execute(
-        f'''
+        f"""
         select
-            cast({row["campo_codigo"]} as text),
-            NM_MUN,
-            NM_UF,
-            CD_UF,
-            SIGLA_UF,
-            AREA_KM2
-        from "{table_name}"
+            cast({qident(campo_codigo)} as text),
+            {qident("NM_MUN")},
+            {qident("NM_UF")},
+            {qident("CD_UF")},
+            {qident("SIGLA_UF")},
+            {qident("AREA_KM2")}
+        from {qident(table_name)}
         limit 1
-        '''
+        """
     ).fetchone()
 
     conn.close()
@@ -211,7 +275,7 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
     if sigla_uf != row["sigla_uf"]:
         errors.append("sigla_uf_divergente")
 
-    if abs(float(area_km2) - float(row["area_km2"])) > 0.000001:
+    if abs(float(area_km2) - parse_area(row["area_km2"])) > 0.000001:
         errors.append("area_km2_divergente")
 
     alerts.append("area_km2_recomposta_como_atributo_nao_calculada")
@@ -225,7 +289,8 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
         "crs_detectado": f"EPSG:{info_after['srs_id']}",
         "geometry_type": info_after["geometry_type"],
         "feature_count": str(info_after["feature_count"]),
-        "campo_codigo": row["campo_codigo"],
+        "geometrias_nao_nulas": str(info_after["non_null_geometry_count"]),
+        "campo_codigo": campo_codigo,
         "codigo_ibge": row["codigo_ibge"],
         "NM_MUN": str(nm_mun),
         "NM_UF": str(nm_uf),
@@ -241,7 +306,12 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
     return registry, errors, alerts
 
 
-def build_report(registry: dict[str, Any], gaps: list[dict[str, str]], errors: list[str], alerts: list[str]) -> str:
+def build_report(
+    registry: dict[str, Any],
+    gaps: list[dict[str, str]],
+    errors: list[str],
+    alerts: list[str],
+) -> str:
     lines = [
         "# Rodada 4.22-C — Recomposição de atributos municipais de Manaus",
         "",
@@ -252,6 +322,7 @@ def build_report(registry: dict[str, Any], gaps: list[dict[str, str]], errors: l
         f"- CRS detectado: `{registry['crs_detectado']}`",
         f"- Tipo geométrico: `{registry['geometry_type']}`",
         f"- Feições: `{registry['feature_count']}`",
+        f"- Geometrias não nulas: `{registry['geometrias_nao_nulas']}`",
         f"- Código IBGE: `{registry['codigo_ibge']}`",
         f"- Município: `{registry['NM_MUN']}`",
         f"- UF: `{registry['NM_UF']}`",
@@ -278,6 +349,7 @@ def build_report(registry: dict[str, Any], gaps: list[dict[str, str]], errors: l
         lines.append("")
         lines.append("## Lacunas")
         lines.append("")
+
         for gap in gaps:
             lines.append(f"- `{gap['gap_id']}` — {gap['descricao']}")
 
@@ -321,7 +393,7 @@ def main() -> None:
         "codigo_ibge": row["codigo_ibge"],
         "municipio": row["nm_mun"],
         "uf": row["sigla_uf"],
-        "area_km2": row["area_km2"],
+        "area_km2": str(parse_area(row["area_km2"])),
         "status": "validado_estruturalmente" if not errors else "erro",
         "limitacao": "AREA_KM2 foi recomposta como atributo informado, não calculada espacialmente.",
     }
