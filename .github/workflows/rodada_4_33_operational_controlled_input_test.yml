@@ -1,0 +1,56 @@
+name: rodada-4-33-operational-controlled-input-test
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/manual/aimm/aimm_operational_input_manifest_4_33.csv"
+      - "scripts/rodada_4_33_operational_controlled_input_test.py"
+      - ".github/workflows/rodada_4_33_operational_controlled_input_test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  operational-controlled-input-test:
+    name: operational-controlled-input-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar teste operacional controlado AIMM 4.33
+        shell: bash
+        run: python scripts/rodada_4_33_operational_controlled_input_test.py
+
+      - name: Publicar artefatos da Rodada 4.33
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-33-operational-controlled-input-test-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_33_operational_controlled_input
+            data/processed/aimm/aimm_operational_controlled_input_registry_4_33.csv
+            data/evidence/evidence_aimm_operational_controlled_input_4_33.csv
+            outputs/reports/RELATORIO_AIMM_OPERACIONAL_CONTROLADO_4_33.md
+            outputs/logs/teste_aimm_operacional_controlado_4_33.txt
