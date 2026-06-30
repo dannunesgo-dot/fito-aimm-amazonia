@@ -1,0 +1,44 @@
+name: rodada-4-22-b1-gis-manaus-register
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/gis_manaus_example_rules.yaml"
+      - "data/manual/gis/gis_manaus_example_manifest_seed.csv"
+      - "scripts/rodada_4_22_b1_gis_manaus_register.py"
+      - ".github/workflows/rodada_4_22_b1_gis_manaus_register.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  gis-manaus-register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-B1
+        run: python scripts/rodada_4_22_b1_gis_manaus_register.py
+
+      - name: Publicar artefatos da Rodada 4.22-B1
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-b1-gis-manaus-register-fito-amazonia
+          path: |
+            data/processed/gis/gis_manaus_example_registry.csv
+            data/processed/gis/gis_manaus_example_status.csv
+            data/processed/gis/gis_manaus_example_gaps.csv
+            data/evidence/evidence_gis_manaus_example.csv
+            outputs/reports/RELATORIO_GIS_MANAUS_4_22_B1.md
+            outputs/logs/teste_gis_manaus_4_22_b1.txt
+            config/gis_manaus_example_rules.yaml
+            data/manual/gis/gis_manaus_example_manifest_seed.csv
