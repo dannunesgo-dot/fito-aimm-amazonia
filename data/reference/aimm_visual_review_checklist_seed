@@ -1,0 +1,11 @@
+id_revisao;grupo;arquivo;criterio;checagem;status;observacao_revisor
+REV_001;HTML executivo;aimm_dashboard_executivo.html;Legibilidade;Todos os textos estão legíveis sem zoom excessivo.;pendente;
+REV_002;HTML executivo;aimm_dashboard_executivo.html;Trava metodológica;A frase de que não é score AIMM final aparece claramente.;pendente;
+REV_003;HTML executivo;aimm_dashboard_executivo.html;Bloqueios;Bloqueios, lacunas e próximas ações aparecem no conteúdo.;pendente;
+REV_004;SVG cards;aimm_dashboard_cards.svg;Editabilidade;Abrir em draw.io ou Inkscape e confirmar que o arquivo permanece editável.;pendente;
+REV_005;SVG cards;aimm_dashboard_cards.svg;Sem truncamento;Nenhum texto está cortado, sobreposto ou ilegível.;pendente;
+REV_006;Mermaid;aimm_dashboard_flow.mmd;Editabilidade;Arquivo abre como texto e pode ser copiado e editado.;pendente;
+REV_007;Briefing;aimm_communication_brief.md;Clareza textual;Mensagem distingue resultado, limitação e próxima ação.;pendente;
+REV_008;Payload JSON;aimm_communication_payload.json;Integridade;JSON abre sem erro e contém summary, cards, dimensions, messages e next_actions.;pendente;
+REV_009;Pacote Drive;todos;Arquivamento;Todos os arquivos foram enviados aos destinos Drive especificados.;pendente;
+REV_010;Uso externo;todos;Bloqueio de circulação;Não circular externamente antes de revisão humana concluída.;pendente;
