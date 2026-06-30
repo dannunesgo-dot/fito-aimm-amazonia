@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AIMM — Interface operacional Fito+ Amazônia</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111827; }
+    header { background: #0f172a; color: #fff; padding: 26px; }
+    main { max-width: 1120px; margin: 24px auto; padding: 0 18px; }
+    section { background: #fff; border: 1px solid #d8dee9; border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+    h1, h2, h3 { margin-top: 0; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input, textarea, select { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
+    button, a.button { display: inline-block; margin-top: 14px; padding: 11px 16px; border: 0; border-radius: 8px; background: #0f172a; color: white; text-decoration: none; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .card { border: 1px solid #d8dee9; border-radius: 10px; padding: 14px; background: #fbfdff; }
+    .ok { color: #166534; font-weight: bold; }
+    .warn { color: #92400e; font-weight: bold; }
+    .block { border-left: 5px solid #1d4ed8; background: #eff6ff; padding: 12px; }
+    code { background: #e5e7eb; padding: 2px 5px; border-radius: 5px; }
+    pre { white-space: pre-wrap; background: #f3f4f6; padding: 12px; border-radius: 8px; overflow:auto; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #d8dee9; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f1f5f9; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>AIMM — Interface operacional Fito+ Amazônia</h1>
+  <p>Ferramenta de apoio à elaboração e avaliação de projetos com análise AIMM, evidências documentais, GIS e relatórios técnicos.</p>
+</header>
+
+<main>
+  <section>
+    <h2>1. Estado da ferramenta</h2>
+    <div class="grid">
+      <div class="card"><h3>Entrada pela interface</h3><p class="ok">Campos operacionais preparados</p></div>
+      <div class="card"><h3>Documentos</h3><p class="ok">Leitura via pasta do Google Drive</p></div>
+      <div class="card"><h3>GIS</h3><p class="warn">Manaus validado; novos municípios exigem validação GIS</p></div>
+      <div class="card"><h3>Relatórios</h3><p class="ok">Executivo IFC e técnico AIMM</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Como os usuários devem trabalhar</h2>
+    <ol>
+      <li>Reunir artigos, notas técnicas, planilhas, PDFs, DOCX e arquivos GIS na pasta de entrada do Google Drive.</li>
+      <li>Copiar o link ou ID da pasta de entrada.</li>
+      <li>Preencher os campos abaixo para preparar a execução.</li>
+      <li>Enviar os dados ao operador responsável.</li>
+      <li>O operador executa a automação pelo GitHub Actions.</li>
+      <li>O sistema gera relatório técnico, relatório executivo, matrizes e evidências no Drive.</li>
+    </ol>
+    <div class="block">
+      Esta interface não guarda dados e não recebe upload direto. Ela prepara a execução sem expor credenciais. O processamento real ocorre no workflow protegido do GitHub Actions.
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Formulário operacional</h2>
+
+    <label>ID do caso</label>
+    <input id="case_id" value="IFC_MANAUS_001">
+
+    <label>Código IBGE</label>
+    <input id="codigo_ibge" value="1302603">
+
+    <label>Município</label>
+    <input id="municipio" value="Manaus">
+
+    <label>UF</label>
+    <input id="uf" value="AM">
+
+    <label>Área km²</label>
+    <input id="area_km2" value="11401.092">
+
+    <label>Link ou ID da pasta Drive com documentos</label>
+    <input id="drive_input_folder" placeholder="Cole aqui o link ou ID da pasta de entrada">
+
+    <label>Objetivo do projeto</label>
+    <textarea id="objetivo">Avaliar potencial, riscos, evidências e maturidade de projeto para apoio à elaboração e avaliação IFC, usando abordagem AIMM.</textarea>
+
+    <label>Tipo de projeto</label>
+    <select id="tipo_projeto">
+      <option value="ifc_project">Projeto IFC / AIMM</option>
+      <option value="cadeia_valor">Cadeia de valor</option>
+      <option value="farmacia_viva">Farmácia Viva / SUS</option>
+      <option value="bioeconomia">Bioeconomia / biodiversidade</option>
+      <option value="outro">Outro</option>
+    </select>
+
+    <label>Nível de relatório</label>
+    <select id="nivel_relatorio">
+      <option value="tecnico_profissional">Técnico profissional</option>
+      <option value="executivo">Executivo</option>
+      <option value="completo">Completo</option>
+    </select>
+
+    <label>Observações para análise</label>
+    <textarea id="observacao">Considerar dimensões AIMM, evidências documentais, maturidade do projeto, riscos, lacunas, viabilidade operacional, territorialidade e uso de GIS quando aplicável.</textarea>
+
+    <button onclick="gerarInstrucao()">Gerar instrução para execução</button>
+    <a class="button" href="https://github.com/dannunesgo-dot/fito-aimm-amazonia/actions/workflows/rodada_4_37_operational_interface_inputs.yml" target="_blank">Abrir workflow 4.37</a>
+
+    <h3>Instrução gerada</h3>
+    <pre id="saida">Preencha o formulário e clique em gerar.</pre>
+  </section>
+
+  <section>
+    <h2>4. Dimensões AIMM consideradas</h2>
+    <table>
+      <tr><th>Dimensão</th><th>Função no relatório</th></tr>
+      <tr><td>Territorial/GIS</td><td>Município, UF, área, arquivos espaciais, coerência territorial e lacunas GIS.</td></tr>
+      <tr><td>Desenho do projeto</td><td>Objetivo, lógica de intervenção, aderência IFC, entregáveis e maturidade.</td></tr>
+      <tr><td>Mercado e cadeia de valor</td><td>Compradores, fornecedores, agregação de valor, escalabilidade e gargalos.</td></tr>
+      <tr><td>Evidências e benchmarks</td><td>Artigos, relatórios, bases, normalização e qualidade das fontes.</td></tr>
+      <tr><td>Risco socioambiental</td><td>Riscos, salvaguardas, dependência territorial, água, solo, biodiversidade e governança.</td></tr>
+      <tr><td>Financeiro-operacional</td><td>CAPEX/OPEX, custos, receitas, produtividade, viabilidade e lacunas de dados.</td></tr>
+      <tr><td>Governança e execução</td><td>Instituições, responsáveis, cronograma, auditoria, travas e revisão humana.</td></tr>
+    </table>
+  </section>
+</main>
+
+<script>
+function v(id) { return document.getElementById(id).value.trim(); }
+function gerarInstrucao() {
+  const texto = `
+RODADA 4.37 — DADOS PARA EXECUÇÃO
+
+case_id: ${v('case_id')}
+codigo_ibge: ${v('codigo_ibge')}
+municipio: ${v('municipio')}
+uf: ${v('uf')}
+area_km2: ${v('area_km2')}
+drive_input_folder: ${v('drive_input_folder')}
+objetivo_projeto: ${v('objetivo')}
+tipo_projeto: ${v('tipo_projeto')}
+nivel_relatorio: ${v('nivel_relatorio')}
+usar_gis: sim
+extrair_documentos: sim
+observacao: ${v('observacao')}
+
+Abra o workflow:
+https://github.com/dannunesgo-dot/fito-aimm-amazonia/actions/workflows/rodada_4_37_operational_interface_inputs.yml
+
+Copie cada valor para o campo correspondente e execute Run workflow.
+`;
+  document.getElementById('saida').textContent = texto;
+}
+</script>
+</body>
+</html>
