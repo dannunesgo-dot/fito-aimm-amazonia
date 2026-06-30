@@ -37,15 +37,10 @@ REQUIRED_COLUMNS = {
 
 
 def qident(name: str) -> str:
-    """Protege identificadores SQLite, incluindo nomes com ponto."""
-    return '"' + name.replace('"', '""') + '"'
+    return '"' + str(name).replace('"', '""') + '"'
 
 
 def parse_area(value: str) -> float:
-    """
-    Aceita tanto formato técnico 11401.092 quanto formato brasileiro 11.401,092.
-    Retorna float.
-    """
     value = str(value).strip()
 
     if "," in value:
@@ -73,6 +68,7 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+
     fields = list(rows[0].keys()) if rows else []
 
     with path.open("w", encoding="utf-8-sig", newline="") as file:
@@ -81,45 +77,56 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(rows)
 
 
+def get_single_row(cur: sqlite3.Cursor, sql: str) -> tuple[Any, ...]:
+    row = cur.execute(sql).fetchone()
+
+    if row is None:
+        raise ValueError(f"Consulta sem retorno: {sql}")
+
+    return row
+
+
 def get_gpkg_info(conn: sqlite3.Connection) -> dict[str, Any]:
     cur = conn.cursor()
 
     content = cur.execute(
-        "select table_name, data_type, identifier, srs_id from gpkg_contents"
+        "select table_name, data_type, identifier, srs_id from gpkg_contents limit 1"
     ).fetchone()
 
     if content is None:
-        raise ValueError("GeoPackage sem gpkg_contents.")
+        raise ValueError("GeoPackage sem registro em gpkg_contents.")
 
     table_name, data_type, identifier, srs_id = content
 
     geometry = cur.execute(
-        "select table_name, column_name, geometry_type_name, srs_id from gpkg_geometry_columns"
+        "select table_name, column_name, geometry_type_name, srs_id from gpkg_geometry_columns limit 1"
     ).fetchone()
 
     if geometry is None:
-        raise ValueError("GeoPackage sem gpkg_geometry_columns.")
+        raise ValueError("GeoPackage sem registro em gpkg_geometry_columns.")
 
     geom_table, geom_column, geometry_type, geom_srs = geometry
 
-    count = cur.execute(
-        f"select count(*) from {qident(table_name)}"
-    ).fetchone()[0]
+    feature_count = get_single_row(
+        cur,
+        f"select count(*) from {qident(table_name)}",
+    )[0]
+
+    geometry_blob_count = get_single_row(
+        cur,
+        f"""
+        select count(*)
+        from {qident(table_name)}
+        where {qident(geom_column)} is not null
+          and length({qident(geom_column)}) > 0
+        """,
+    )[0]
 
     columns_info = cur.execute(
         f"pragma table_info({qident(table_name)})"
     ).fetchall()
 
     columns = [item[1] for item in columns_info]
-
-    non_null_geometry_count = cur.execute(
-        f"""
-        select count(*)
-        from {qident(table_name)}
-        where {qident(geom_column)} is not null
-          and length({qident(geom_column)}) > 0
-        """
-    ).fetchone()[0]
 
     return {
         "table_name": table_name,
@@ -128,11 +135,11 @@ def get_gpkg_info(conn: sqlite3.Connection) -> dict[str, Any]:
         "srs_id": str(srs_id),
         "geom_table": geom_table,
         "geom_column": geom_column,
-        "geometry_type": geometry_type,
+        "geometry_type": str(geometry_type).upper(),
         "geom_srs": str(geom_srs),
-        "feature_count": int(count),
+        "feature_count": int(feature_count),
+        "geometry_blob_count": int(geometry_blob_count),
         "columns": columns,
-        "non_null_geometry_count": int(non_null_geometry_count),
     }
 
 
@@ -144,18 +151,58 @@ def add_column_if_missing(
 ) -> None:
     cur = conn.cursor()
 
-    columns = [
+    existing_columns = [
         item[1]
         for item in cur.execute(f"pragma table_info({qident(table_name)})").fetchall()
     ]
 
-    if column_name not in columns:
+    if column_name not in existing_columns:
         cur.execute(
             f"alter table {qident(table_name)} add column {qident(column_name)} {column_type}"
         )
 
 
-def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str], list[str]]:
+def validate_initial_state(
+    row: dict[str, str],
+    info: dict[str, Any],
+    cur: sqlite3.Cursor,
+) -> list[str]:
+    errors: list[str] = []
+
+    table_name = info["table_name"]
+    campo_codigo = row["campo_codigo"]
+
+    if info["srs_id"] != "4674":
+        errors.append("crs_diferente_epsg_4674")
+
+    if info["geom_srs"] != "4674":
+        errors.append("crs_geometria_diferente_epsg_4674")
+
+    if info["feature_count"] != 1:
+        errors.append("numero_feicoes_diferente_de_1")
+
+    if info["geometry_blob_count"] != 1:
+        errors.append("geometria_nula_ou_sem_blob")
+
+    if info["geometry_type"] != "MULTIPOLYGON":
+        errors.append("tipo_geometrico_diferente_multipolygon")
+
+    if campo_codigo not in info["columns"]:
+        errors.append("campo_codigo_ausente")
+        return errors
+
+    codigo_detectado = get_single_row(
+        cur,
+        f"select cast({qident(campo_codigo)} as text) from {qident(table_name)} limit 1",
+    )[0]
+
+    if str(codigo_detectado) != row["codigo_ibge"]:
+        errors.append("codigo_ibge_divergente")
+
+    return errors
+
+
+def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str], list[str], list[dict[str, str]]]:
     if not GPKG_IN.exists():
         raise FileNotFoundError(f"GeoPackage obrigatório ausente: {GPKG_IN}")
 
@@ -164,6 +211,7 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
 
     errors: list[str] = []
     alerts: list[str] = []
+    gaps: list[dict[str, str]] = []
 
     conn = sqlite3.connect(OUT_GPKG)
     cur = conn.cursor()
@@ -172,32 +220,7 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
     table_name = info_before["table_name"]
     campo_codigo = row["campo_codigo"]
 
-    if info_before["srs_id"] != "4674":
-        errors.append("crs_diferente_epsg_4674")
-
-    if info_before["geom_srs"] != "4674":
-        errors.append("crs_geometria_diferente_epsg_4674")
-
-    if info_before["feature_count"] != 1:
-        errors.append("numero_feicoes_diferente_de_1")
-
-    if info_before["non_null_geometry_count"] != 1:
-        errors.append("geometria_nula_ou_vazia")
-
-    if campo_codigo not in info_before["columns"]:
-        errors.append("campo_codigo_ausente")
-
-    codigo_detectado = ""
-
-    if campo_codigo in info_before["columns"]:
-        codigo_detectado = str(
-            cur.execute(
-                f"select cast({qident(campo_codigo)} as text) from {qident(table_name)} limit 1"
-            ).fetchone()[0]
-        )
-
-        if codigo_detectado != row["codigo_ibge"]:
-            errors.append("codigo_ibge_divergente")
+    errors.extend(validate_initial_state(row, info_before, cur))
 
     if not errors:
         add_column_if_missing(conn, table_name, "NM_MUN", "TEXT")
@@ -229,10 +252,8 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
             ),
         )
 
-        updated_rows = cur.rowcount
-
-        if updated_rows != 1:
-            errors.append(f"linhas_atualizadas_incorretas_{updated_rows}")
+        if cur.rowcount != 1:
+            errors.append(f"linhas_atualizadas_incorretas_{cur.rowcount}")
 
     conn.commit()
 
@@ -244,7 +265,7 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
             cast({qident(campo_codigo)} as text),
             {qident("NM_MUN")},
             {qident("NM_UF")},
-            {qident("CD_UF")},
+            cast({qident("CD_UF")} as text),
             {qident("SIGLA_UF")},
             {qident("AREA_KM2")}
         from {qident(table_name)}
@@ -258,27 +279,38 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
         errors.append("registro_recomposto_nao_encontrado")
         values = ("", "", "", "", "", "")
 
-    detected_code, nm_mun, nm_uf, cd_uf, sigla_uf, area_km2 = values
+    codigo, nm_mun, nm_uf, cd_uf, sigla_uf, area_km2 = values
 
-    if str(detected_code) != row["codigo_ibge"]:
+    if str(codigo) != row["codigo_ibge"]:
         errors.append("codigo_recomposto_divergente")
 
-    if nm_mun != row["nm_mun"]:
+    if str(nm_mun) != row["nm_mun"]:
         errors.append("nm_mun_divergente")
 
-    if nm_uf != row["nm_uf"]:
+    if str(nm_uf) != row["nm_uf"]:
         errors.append("nm_uf_divergente")
 
     if str(cd_uf) != row["cd_uf"]:
         errors.append("cd_uf_divergente")
 
-    if sigla_uf != row["sigla_uf"]:
+    if str(sigla_uf) != row["sigla_uf"]:
         errors.append("sigla_uf_divergente")
 
     if abs(float(area_km2) - parse_area(row["area_km2"])) > 0.000001:
         errors.append("area_km2_divergente")
 
     alerts.append("area_km2_recomposta_como_atributo_nao_calculada")
+
+    gaps.append(
+        {
+            "gap_id": "GAP_422C_VALIDACAO_VISUAL_QGIS",
+            "tipo": "validacao_visual",
+            "criticidade": "baixa",
+            "descricao": "A recomposição foi estrutural. Validação visual em QGIS deve ser registrada em rodada posterior.",
+            "acao_recomendada": "Abrir o GeoPackage recomposto no QGIS e confirmar visualmente geometria e tabela de atributos.",
+            "bloqueia_score_final": "nao",
+        }
+    )
 
     registry = {
         "rodada": "4.22-C",
@@ -289,21 +321,21 @@ def recompose_attributes(row: dict[str, str]) -> tuple[dict[str, Any], list[str]
         "crs_detectado": f"EPSG:{info_after['srs_id']}",
         "geometry_type": info_after["geometry_type"],
         "feature_count": str(info_after["feature_count"]),
-        "geometrias_nao_nulas": str(info_after["non_null_geometry_count"]),
+        "geometry_blob_count": str(info_after["geometry_blob_count"]),
         "campo_codigo": campo_codigo,
         "codigo_ibge": row["codigo_ibge"],
         "NM_MUN": str(nm_mun),
         "NM_UF": str(nm_uf),
         "CD_UF": str(cd_uf),
         "SIGLA_UF": str(sigla_uf),
-        "AREA_KM2": str(area_km2),
+        "AREA_KM2": str(float(area_km2)),
         "colunas_finais": ",".join(info_after["columns"]),
         "status_validacao": "erro" if errors else "ok_com_alerta",
         "erros": "|".join(errors),
         "alertas": "|".join(alerts),
     }
 
-    return registry, errors, alerts
+    return registry, errors, alerts, gaps
 
 
 def build_report(
@@ -322,7 +354,7 @@ def build_report(
         f"- CRS detectado: `{registry['crs_detectado']}`",
         f"- Tipo geométrico: `{registry['geometry_type']}`",
         f"- Feições: `{registry['feature_count']}`",
-        f"- Geometrias não nulas: `{registry['geometrias_nao_nulas']}`",
+        f"- Geometrias com blob: `{registry['geometry_blob_count']}`",
         f"- Código IBGE: `{registry['codigo_ibge']}`",
         f"- Município: `{registry['NM_MUN']}`",
         f"- UF: `{registry['NM_UF']}`",
@@ -360,18 +392,7 @@ def main() -> None:
     rows = read_csv(SEED)
     row = rows[0]
 
-    registry, errors, alerts = recompose_attributes(row)
-
-    gaps = [
-        {
-            "gap_id": "GAP_422C_VALIDACAO_TOPOLOGICA_QGIS",
-            "tipo": "validacao_visual",
-            "criticidade": "baixa",
-            "descricao": "A recomposição foi estrutural. Validação visual/topológica em QGIS pode ser registrada em rodada posterior.",
-            "acao_recomendada": "Abrir o GeoPackage recomposto no QGIS e confirmar visualmente a feição.",
-            "bloqueia_score_final": "nao",
-        }
-    ]
+    registry, errors, alerts, gaps = recompose_attributes(row)
 
     status = {
         "rodada": "4.22-C",
