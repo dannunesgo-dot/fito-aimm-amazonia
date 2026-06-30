@@ -1,0 +1,43 @@
+name: rodada-4-22-b2-gis-manaus-isolated-validate
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/raw/gis/municipio_manaus_1302603.gpkg"
+      - "data/manual/gis/gis_manaus_isolated_manifest_seed.csv"
+      - "scripts/rodada_4_22_b2_gis_manaus_isolated_validate.py"
+      - ".github/workflows/rodada_4_22_b2_gis_manaus_isolated_validate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  gis-manaus-isolated-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-B2
+        run: python scripts/rodada_4_22_b2_gis_manaus_isolated_validate.py
+
+      - name: Publicar artefatos da Rodada 4.22-B2
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-b2-gis-manaus-isolated-validate-fito-amazonia
+          path: |
+            data/processed/gis/gis_manaus_isolated_registry.csv
+            data/processed/gis/gis_manaus_isolated_status.csv
+            data/processed/gis/gis_manaus_isolated_attribute_gaps.csv
+            data/evidence/evidence_gis_manaus_isolated.csv
+            outputs/reports/RELATORIO_GIS_MANAUS_4_22_B2.md
+            outputs/logs/teste_gis_manaus_4_22_b2.txt
+            data/manual/gis/gis_manaus_isolated_manifest_seed.csv
