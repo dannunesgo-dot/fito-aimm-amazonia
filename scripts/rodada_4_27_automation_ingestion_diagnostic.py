@@ -24,21 +24,31 @@ FILES = {
 }
 
 
-def write_text(path: Path, lines: list[str]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
-
-
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         raise ValueError(f"Nenhuma linha para gravar em {path}")
 
     path.parent.mkdir(parents=True, exist_ok=True)
 
+    fieldnames: list[str] = []
+    for row in rows:
+        for key in row.keys():
+            if key not in fieldnames:
+                fieldnames.append(key)
+
+    normalized_rows: list[dict[str, Any]] = []
+    for row in rows:
+        normalized_rows.append({key: row.get(key, "") for key in fieldnames})
+
     with path.open("w", encoding="utf-8-sig", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=list(rows[0].keys()), delimiter=";")
+        writer = csv.DictWriter(
+            file,
+            fieldnames=fieldnames,
+            delimiter=";",
+            extrasaction="ignore",
+        )
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(normalized_rows)
 
 
 def exists(path_text: str) -> str:
