@@ -1,0 +1,144 @@
+name: rodada-4-38-final-ifc-aimm-operational-package
+
+"on":
+  workflow_dispatch:
+    inputs:
+      case_id:
+        description: "ID do caso/projeto"
+        required: true
+        default: "IFC_MANAUS_001"
+        type: string
+      codigo_ibge:
+        description: "Código IBGE"
+        required: true
+        default: "1302603"
+        type: string
+      municipio:
+        description: "Município"
+        required: true
+        default: "Manaus"
+        type: string
+      uf:
+        description: "UF"
+        required: true
+        default: "AM"
+        type: string
+      area_km2:
+        description: "Área km²"
+        required: true
+        default: "11401.092"
+        type: string
+      drive_input_folder:
+        description: "Link ou ID da pasta Drive com documentos"
+        required: true
+        type: string
+      drive_output_folder:
+        description: "Link ou ID da pasta Drive de saída. Opcional."
+        required: false
+        type: string
+      objetivo_projeto:
+        description: "Objetivo do projeto"
+        required: true
+        default: "Avaliar projeto com abordagem IFC/AIMM, usando documentos, evidências e GIS."
+        type: string
+      tipo_projeto:
+        description: "Tipo de projeto"
+        required: true
+        default: "ifc_project"
+        type: choice
+        options:
+          - ifc_project
+          - cadeia_valor
+          - farmacia_viva
+          - bioeconomia
+          - outro
+      nivel_relatorio:
+        description: "Nível de relatório"
+        required: true
+        default: "completo"
+        type: choice
+        options:
+          - executivo
+          - tecnico_profissional
+          - completo
+      usar_gis:
+        description: "Usar GIS?"
+        required: true
+        default: true
+        type: boolean
+      extrair_documentos:
+        description: "Extrair texto dos documentos?"
+        required: true
+        default: true
+        type: boolean
+      observacao:
+        description: "Observações"
+        required: false
+        default: "Gerar pacote final operacional IFC/AIMM com relatório técnico, executivo, matriz de lacunas e guia de uso."
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  final-ifc-aimm-operational-package:
+    name: final-ifc-aimm-operational-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+      AIMM_CASE_ID: ${{ inputs.case_id }}
+      AIMM_CODIGO_IBGE: ${{ inputs.codigo_ibge }}
+      AIMM_MUNICIPIO: ${{ inputs.municipio }}
+      AIMM_UF: ${{ inputs.uf }}
+      AIMM_AREA_KM2: ${{ inputs.area_km2 }}
+      AIMM_DRIVE_INPUT_FOLDER: ${{ inputs.drive_input_folder }}
+      AIMM_DRIVE_OUTPUT_FOLDER: ${{ inputs.drive_output_folder }}
+      AIMM_OBJETIVO_PROJETO: ${{ inputs.objetivo_projeto }}
+      AIMM_TIPO_PROJETO: ${{ inputs.tipo_projeto }}
+      AIMM_NIVEL_RELATORIO: ${{ inputs.nivel_relatorio }}
+      AIMM_USAR_GIS: ${{ inputs.usar_gis }}
+      AIMM_EXTRAIR_DOCUMENTOS: ${{ inputs.extrair_documentos }}
+      AIMM_OBSERVACAO: ${{ inputs.observacao }}
+
+      AIMM_MAX_FILES: "120"
+      AIMM_MAX_TEXT_CHARS: "14000"
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib pypdf python-docx
+
+      - name: Executar pacote final operacional IFC AIMM 4.38
+        shell: bash
+        run: python scripts/rodada_4_38_final_ifc_aimm_operational_package.py
+
+      - name: Publicar artefatos da Rodada 4.38
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-38-final-ifc-aimm-operational-package
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_38_final_ifc_aimm_operational_package
+            outputs/reports/RELATORIO_TECNICO_PROFISSIONAL_IFC_AIMM_4_38.md
+            outputs/reports/RELATORIO_EXECUTIVO_IFC_AIMM_4_38.md
+            outputs/reports/GUIA_USO_FINAL_IFC_AIMM_4_38.md
+            data/processed/aimm/aimm_final_ifc_operational_registry_4_38.csv
+            data/evidence/evidence_aimm_final_ifc_operational_4_38.csv
+            outputs/logs/teste_aimm_final_ifc_operational_4_38.txt
