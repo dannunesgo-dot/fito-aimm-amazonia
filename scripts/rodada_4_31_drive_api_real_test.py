@@ -99,7 +99,7 @@ def main() -> None:
     run_number = os.getenv("GITHUB_RUN_NUMBER", "sem_run_number")
     created_at = datetime.now(timezone.utc).isoformat()
 
-    scopes = ["https://www.googleapis.com/auth/drive.file"]
+    scopes = ["https://www.googleapis.com/auth/drive"]
     credentials = service_account.Credentials.from_service_account_file(
         str(key_path),
         scopes=scopes,
