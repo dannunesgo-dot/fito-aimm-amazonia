@@ -19,8 +19,48 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - name: Baixar repositório
+      - name: Baixar repositório na branch main atual
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Diagnóstico do commit e trava anti-ST_IsEmpty
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SCRIPT="scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py"
+
+          echo "GITHUB_SHA do evento: ${GITHUB_SHA}"
+          echo "HEAD efetivamente baixado:"
+          git rev-parse HEAD
+
+          echo ""
+          echo "Arquivo Python que será executado:"
+          ls -lh "$SCRIPT"
+
+          echo ""
+          echo "Verificando ausência de ST_IsEmpty..."
+          if grep -n "ST_IsEmpty" "$SCRIPT"; then
+            echo "::error file=$SCRIPT::ERRO: script ativo ainda contém ST_IsEmpty. Execução bloqueada para evitar repetir erro antigo."
+            exit 1
+          fi
+
+          echo "OK: ST_IsEmpty ausente no script ativo."
+
+          echo ""
+          echo "Verificando presença da correção geometry_blob_count..."
+          if ! grep -n "geometry_blob_count" "$SCRIPT"; then
+            echo "::error file=$SCRIPT::ERRO: script ativo não contém geometry_blob_count. Provável execução de versão incorreta."
+            exit 1
+          fi
+
+          echo "OK: geometry_blob_count presente."
+
+          echo ""
+          echo "Trecho inicial do script ativo:"
+          sed -n '1,140p' "$SCRIPT"
 
       - name: Configurar Python
         uses: actions/setup-python@v5
