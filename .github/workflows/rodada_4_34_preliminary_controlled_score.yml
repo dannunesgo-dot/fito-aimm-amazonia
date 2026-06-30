@@ -1,0 +1,57 @@
+name: rodada-4-34-preliminary-controlled-score
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/manual/aimm/aimm_operational_input_manifest_4_33.csv"
+      - "data/manual/aimm/aimm_preliminary_score_weights_4_34.csv"
+      - "scripts/rodada_4_34_preliminary_controlled_score.py"
+      - ".github/workflows/rodada_4_34_preliminary_controlled_score.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  preliminary-controlled-score:
+    name: preliminary-controlled-score
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar cálculo preliminar controlado AIMM 4.34
+        shell: bash
+        run: python scripts/rodada_4_34_preliminary_controlled_score.py
+
+      - name: Publicar artefatos da Rodada 4.34
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-34-preliminary-controlled-score-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_34_preliminary_controlled_score
+            data/processed/aimm/aimm_preliminary_controlled_score_registry_4_34.csv
+            data/evidence/evidence_aimm_preliminary_controlled_score_4_34.csv
+            outputs/reports/RELATORIO_AIMM_SCORE_PRELIMINAR_CONTROLADO_4_34.md
+            outputs/logs/teste_aimm_score_preliminar_controlado_4_34.txt
