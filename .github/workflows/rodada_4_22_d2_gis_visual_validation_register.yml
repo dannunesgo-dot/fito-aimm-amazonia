@@ -1,0 +1,286 @@
+name: rodada-4-22-d2-gis-visual-validation-register
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gis-visual-validation-register:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-D2
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          from __future__ import annotations
+
+          import csv
+          from pathlib import Path
+          from typing import Any
+
+
+          SEED = Path("data/manual/gis/gis_manaus_visual_validation_seed.csv")
+
+          OUT_REGISTRY = Path("data/processed/gis/gis_manaus_visual_validation_registry_d2.csv")
+          OUT_STATUS = Path("data/processed/gis/gis_manaus_visual_validation_status_d2.csv")
+          OUT_GAPS = Path("data/processed/gis/gis_manaus_visual_validation_gaps_d2.csv")
+          OUT_EVIDENCE = Path("data/evidence/evidence_gis_manaus_visual_validation_d2.csv")
+          OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_D2.md")
+          OUT_LOG = Path("outputs/logs/teste_gis_manaus_4_22_d2.txt")
+
+
+          REQUIRED_COLUMNS = {
+              "rodada",
+              "municipio",
+              "codigo_ibge",
+              "arquivo_gpkg",
+              "arquivo_qgz",
+              "drive_pasta_gis",
+              "drive_pasta_outputs",
+              "join_criado",
+              "campo_alvo",
+              "campo_juncao",
+              "campos_aimm_preenchidos",
+              "geometria_visivel",
+              "erro_qgis",
+              "print_mapa",
+              "print_tabela_relacional",
+              "print_join",
+              "status_validacao",
+              "observacao",
+          }
+
+
+          def read_seed(path: Path) -> dict[str, str]:
+              if not path.exists():
+                  raise FileNotFoundError(f"Arquivo obrigatório ausente: {path}")
+
+              with path.open("r", encoding="utf-8-sig", newline="") as file:
+                  rows = list(csv.DictReader(file, delimiter=";"))
+
+              if len(rows) != 1:
+                  raise ValueError(f"O seed deve conter exatamente 1 linha de dados. Linhas encontradas: {len(rows)}")
+
+              missing = REQUIRED_COLUMNS.difference(rows[0].keys())
+              if missing:
+                  raise ValueError(f"Colunas obrigatórias ausentes: {sorted(missing)}")
+
+              return rows[0]
+
+
+          def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              fieldnames = list(rows[0].keys()) if rows else []
+
+              with path.open("w", encoding="utf-8-sig", newline="") as file:
+                  writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
+                  writer.writeheader()
+                  writer.writerows(rows)
+
+
+          def norm(value: str) -> str:
+              return str(value).strip().lower()
+
+
+          def main() -> None:
+              row = read_seed(SEED)
+
+              errors: list[str] = []
+              alerts: list[str] = []
+              gaps: list[dict[str, str]] = []
+
+              checks = {
+                  "rodada": row["rodada"] == "4.22-D",
+                  "municipio": row["municipio"] == "Manaus",
+                  "codigo_ibge": row["codigo_ibge"] == "1302603",
+                  "join_criado": norm(row["join_criado"]) == "sim",
+                  "campo_alvo": row["campo_alvo"] == "CD_MUN",
+                  "campo_juncao": row["campo_juncao"] == "codigo_ibge",
+                  "campos_aimm_preenchidos": norm(row["campos_aimm_preenchidos"]) == "sim",
+                  "geometria_visivel": norm(row["geometria_visivel"]) == "sim",
+                  "erro_qgis": norm(row["erro_qgis"]) == "nao",
+                  "status_validacao": norm(row["status_validacao"]) == "validado",
+              }
+
+              for check_name, passed in checks.items():
+                  if not passed:
+                      errors.append(f"falha_validacao_{check_name}")
+
+              required_files_declared = [
+                  "arquivo_gpkg",
+                  "arquivo_qgz",
+                  "print_mapa",
+                  "print_tabela_relacional",
+                  "print_join",
+              ]
+
+              for field in required_files_declared:
+                  if not row[field].strip():
+                      errors.append(f"arquivo_nao_declarado_{field}")
+
+              alerts.append("validacao_visual_registrada_por_declaracao_manual_do_operador")
+              alerts.append("workflow_nao_acessa_drive_e_nao_verifica_existencia_binaria_dos_arquivos")
+
+              gaps.append(
+                  {
+                      "gap_id": "GAP_422D2_VERIFICACAO_BINARIA_DRIVE",
+                      "tipo": "drive",
+                      "criticidade": "baixa",
+                      "descricao": "O workflow registra a validação visual, mas não acessa o Google Drive para verificar binariamente os arquivos arquivados.",
+                      "acao_recomendada": "Manter prints, projeto QGZ e GeoPackage arquivados nas pastas indicadas do Drive.",
+                      "bloqueia_score_final": "nao",
+                  }
+              )
+
+              registry = {
+                  "rodada": "4.22-D2",
+                  "municipio": row["municipio"],
+                  "codigo_ibge": row["codigo_ibge"],
+                  "arquivo_gpkg": row["arquivo_gpkg"],
+                  "arquivo_qgz": row["arquivo_qgz"],
+                  "join_criado": row["join_criado"],
+                  "campo_alvo": row["campo_alvo"],
+                  "campo_juncao": row["campo_juncao"],
+                  "campos_aimm_preenchidos": row["campos_aimm_preenchidos"],
+                  "geometria_visivel": row["geometria_visivel"],
+                  "erro_qgis": row["erro_qgis"],
+                  "print_mapa": row["print_mapa"],
+                  "print_tabela_relacional": row["print_tabela_relacional"],
+                  "print_join": row["print_join"],
+                  "status_validacao": "erro" if errors else "validado_com_lacuna_controlada",
+                  "erros": "|".join(errors),
+                  "alertas": "|".join(alerts),
+                  "observacao": row["observacao"],
+              }
+
+              status = {
+                  "rodada": "4.22-D2",
+                  "validacao_visual_qgis": "sim" if not errors else "nao",
+                  "join_visual_confirmado": row["join_criado"],
+                  "campos_aimm_preenchidos": row["campos_aimm_preenchidos"],
+                  "erros_estruturais": str(len(errors)),
+                  "alertas": str(len(alerts)),
+                  "lacunas_registradas": str(len(gaps)),
+                  "status_rodada": "erro" if errors else "sucesso",
+                  "trava": "registro_nao_processa_geometria_nao_calcula_area_densidade_buffer_centroide_score_final",
+              }
+
+              evidence = {
+                  "id_evidencia": "EVD_GIS_MANAUS_VISUAL_VALIDATION_4_22_D2",
+                  "tipo_evidencia": "registro_de_validacao_visual_qgis",
+                  "municipio": row["municipio"],
+                  "codigo_ibge": row["codigo_ibge"],
+                  "arquivo_gpkg": row["arquivo_gpkg"],
+                  "arquivo_qgz": row["arquivo_qgz"],
+                  "print_mapa": row["print_mapa"],
+                  "print_tabela_relacional": row["print_tabela_relacional"],
+                  "print_join": row["print_join"],
+                  "status": "validado_estruturalmente" if not errors else "erro",
+                  "limitacao": "Validacao baseada em declaracao manual e prints arquivados no Drive.",
+              }
+
+              report = "\n".join(
+                  [
+                      "# Rodada 4.22-D2 — Registro da validação visual QGIS",
+                      "",
+                      "## Resultado",
+                      "",
+                      f"- Município: `{row['municipio']}`",
+                      f"- Código IBGE: `{row['codigo_ibge']}`",
+                      f"- GeoPackage: `{row['arquivo_gpkg']}`",
+                      f"- Projeto QGIS: `{row['arquivo_qgz']}`",
+                      f"- Join criado: `{row['join_criado']}`",
+                      f"- Campo alvo: `{row['campo_alvo']}`",
+                      f"- Campo de junção: `{row['campo_juncao']}`",
+                      f"- Campos AIMM preenchidos: `{row['campos_aimm_preenchidos']}`",
+                      f"- Geometria visível: `{row['geometria_visivel']}`",
+                      f"- Erro no QGIS: `{row['erro_qgis']}`",
+                      f"- Erros estruturais: `{len(errors)}`",
+                      f"- Alertas: `{len(alerts)}`",
+                      "",
+                      "## Travas",
+                      "",
+                      "- Esta rodada apenas registra a validação visual.",
+                      "- Não processa geometria.",
+                      "- Não altera GeoPackage.",
+                      "- Não calcula área.",
+                      "- Não calcula densidade.",
+                      "- Não calcula centroide.",
+                      "- Não calcula buffer.",
+                      "- Não libera score AIMM final.",
+                  ]
+              )
+
+              write_csv(OUT_REGISTRY, [registry])
+              write_csv(OUT_STATUS, [status])
+              write_csv(OUT_GAPS, gaps)
+              write_csv(OUT_EVIDENCE, [evidence])
+
+              OUT_REPORT.parent.mkdir(parents=True, exist_ok=True)
+              OUT_REPORT.write_text(report, encoding="utf-8")
+
+              OUT_LOG.parent.mkdir(parents=True, exist_ok=True)
+
+              log = "\n".join(
+                  [
+                      "TESTE GIS_MANAUS_4_22_D2 — Fito+ Amazônia",
+                      "=" * 86,
+                      f"Município: {row['municipio']}",
+                      f"Código IBGE: {row['codigo_ibge']}",
+                      f"Join criado: {row['join_criado']}",
+                      f"Campo alvo: {row['campo_alvo']}",
+                      f"Campo de junção: {row['campo_juncao']}",
+                      f"Campos AIMM preenchidos: {row['campos_aimm_preenchidos']}",
+                      f"Geometria visível: {row['geometria_visivel']}",
+                      f"Erro QGIS: {row['erro_qgis']}",
+                      f"Erros estruturais: {len(errors)}",
+                      f"Alertas: {len(alerts)}",
+                      f"Lacunas registradas: {len(gaps)}",
+                      "",
+                      "Resultado: SUCESSO." if not errors else "Resultado: ERRO.",
+                      "Registro automatizado da validação visual QGIS concluído.",
+                      "",
+                      "Trava: não processa geometria, não calcula área, densidade, centroide, buffer nem score AIMM final.",
+                  ]
+              )
+
+              OUT_LOG.write_text(log, encoding="utf-8")
+              print(log)
+
+              if errors:
+                  raise ValueError(f"Rodada 4.22-D2 contém {len(errors)} erro(s) estrutural(is).")
+
+
+          if __name__ == "__main__":
+              main()
+          PY
+
+      - name: Publicar artefatos da Rodada 4.22-D2
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-d2-gis-visual-validation-register-fito-amazonia
+          path: |
+            data/manual/gis/gis_manaus_visual_validation_seed.csv
+            data/processed/gis/gis_manaus_visual_validation_registry_d2.csv
+            data/processed/gis/gis_manaus_visual_validation_status_d2.csv
+            data/processed/gis/gis_manaus_visual_validation_gaps_d2.csv
+            data/evidence/evidence_gis_manaus_visual_validation_d2.csv
+            outputs/reports/RELATORIO_GIS_MANAUS_4_22_D2.md
+            outputs/logs/teste_gis_manaus_4_22_d2.txt
