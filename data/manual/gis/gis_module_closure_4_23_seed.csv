@@ -1,0 +1,2 @@
+rodada;modulo;municipio_base;codigo_ibge;rodadas_validadas;drive_gis;baseline_gis_validado;join_qgis_validado;pacote_replicacao_validado;segundo_municipio_testado;score_aimm_liberado;status_modulo;observacao
+4.23;GIS;Manaus;1302603;4.21|4.22-A|4.22-B1|4.22-B2|4.22-C4|4.22-D|4.22-D2|4.22-E;09_gis;sim;sim;sim;nao;nao;encerrado_com_lacunas_controladas;Modulo GIS Manaus encerrado operacionalmente. Segundo municipio nao foi testado nesta fase. Nao calcula area, densidade, centroide, buffer nem score AIMM final.
