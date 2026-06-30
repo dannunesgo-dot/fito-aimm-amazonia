@@ -1,0 +1,48 @@
+name: rodada-4-22-gis-baseline-preparacao
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/gis_baseline_preparation_rules.yaml"
+      - "data/reference/gis_baseline_control_seed.csv"
+      - "scripts/rodada_4_22_gis_baseline_preparacao.py"
+      - ".github/workflows/rodada_4_22_gis_baseline_preparacao.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  gis-baseline-preparacao:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-A
+        run: python scripts/rodada_4_22_gis_baseline_preparacao.py
+
+      - name: Publicar artefatos da Rodada 4.22-A
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-gis-baseline-preparacao-fito-amazonia
+          path: |
+            data/processed/gis/gis_baseline_control_registry.csv
+            data/processed/gis/gis_baseline_preparation_status.csv
+            data/processed/gis/gis_baseline_open_gaps.csv
+            data/manual/gis/gis_municipality_baseline_manual_template.csv
+            data/manual/gis/gis_layer_submission_manifest_template.csv
+            data/manual/gis/gis_municipality_metric_crs_template.csv
+            data/evidence/evidence_gis_baseline_preparation.csv
+            outputs/reports/RELATORIO_GIS_BASELINE_PREPARACAO.md
+            outputs/reports/GUIA_QGIS_3_40_14_MANAUS_4_22B.md
+            outputs/logs/teste_gis_baseline_preparacao_4_22.txt
+            config/gis_baseline_preparation_rules.yaml
+            data/reference/gis_baseline_control_seed.csv
