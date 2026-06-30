@@ -1,0 +1,10 @@
+tipo;id;codigo_ibge;municipio;uf;item;formato_preferencial;campos_obrigatorios;status;destino;observacao
+municipio;MUN_001;1302603;Manaus;AM;baseline_municipal;;;pendente_gis;data/manual/gis;exemplo preferencial para 4.22-B
+municipio;MUN_002;1300607;Benjamin Constant;AM;baseline_municipal;;;pendente_gis;data/manual/gis;município preparado sem processamento real
+municipio;MUN_003;1501402;Belém;PA;baseline_municipal;;;pendente_gis;data/manual/gis;município preparado sem processamento real
+municipio;MUN_004;1506807;Santarém;PA;baseline_municipal;;;pendente_gis;data/manual/gis;município preparado sem processamento real
+requisito;GIS_REQ_001;;;;malha municipal oficial;GPKG ou ZIP Shapefile;codigo_ibge,municipio,uf,geometry;pendente;data/raw/gis;preferir malha municipal IBGE
+requisito;GIS_REQ_002;;;;manifesto de camada GIS;CSV separado por ponto e vírgula;layer_id,arquivo,origem,crs,campo_chave,status_revisao;pendente;data/manual/gis;obrigatório antes de rodar exemplo real
+requisito;GIS_REQ_003;;;;tabela população municipal;CSV separado por ponto e vírgula;codigo_ibge,ano,populacao,fonte,status_conferencia;pendente;data/manual/gis;pode vir de IBGE SIDRA ou base já processada
+requisito;GIS_REQ_004;;;;baseline municipal manual;CSV separado por ponto e vírgula;codigo_ibge,municipio,uf,area_km2,populacao,ano_populacao,centroide_lat,centroide_lon,status_revisao;pendente;data/manual/gis;template gerado pela rodada
+requisito;GIS_REQ_005;;;;CRS métrico por município;CSV separado por ponto e vírgula;codigo_ibge,crs_metrico,justificativa,status_conferencia;pendente;data/manual/gis;obrigatório antes de área, distância e buffer
