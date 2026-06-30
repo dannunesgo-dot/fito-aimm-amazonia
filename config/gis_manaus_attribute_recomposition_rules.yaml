@@ -1,0 +1,28 @@
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.22-C"
+  objetivo: "Recompor atributos municipais da camada isolada de Manaus sem cálculo espacial"
+  status_esperado: "atributos_recompostos_com_travas"
+
+arquivo_gis_entrada:
+  caminho: "data/raw/gis/municipio_manaus_1302603.gpkg"
+  municipio: "Manaus"
+  codigo_ibge: "1302603"
+  crs_esperado: "EPSG:4674"
+  feicoes_esperadas: 1
+
+atributos_a_recompor:
+  NM_MUN: "Manaus"
+  NM_UF: "Amazonas"
+  CD_UF: "13"
+  SIGLA_UF: "AM"
+  AREA_KM2: 11401.092
+
+travas:
+  - "não calcular área"
+  - "não calcular densidade"
+  - "não calcular centroide"
+  - "não calcular buffer"
+  - "não alterar geometria"
+  - "não liberar score AIMM final"
+  - "AREA_KM2 é atributo informado/recomposto, não área recalculada nesta rodada"
