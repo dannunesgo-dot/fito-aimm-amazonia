@@ -1,0 +1,7 @@
+dimensao;variavel_manifesto;peso;criterio_ok;descricao
+gis_territorial;pacote_gis_validado;25;sim;Valida se o módulo GIS Manaus foi registrado e validado
+ingestao_arquivos;pacote_ingestao_validado;20;sim;Valida se o módulo de ingestão de arquivos foi criado e testado
+benchmarks_fontes;pacote_benchmark_validado;20;sim;Valida se o módulo de benchmarks, fontes e normalização foi criado
+drive_api_oauth;drive_api_oauth_validada;20;sim;Valida se a integração GitHub-Drive via OAuth foi confirmada
+metadados_municipais;metadados_minimos;10;sim;Valida código IBGE, município, UF, sigla e área
+governanca_travas;travas_operacionais;5;sim;Valida que o cálculo é preliminar e não libera score final automaticamente
