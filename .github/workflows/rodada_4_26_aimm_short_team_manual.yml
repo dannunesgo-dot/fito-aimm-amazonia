@@ -1,0 +1,38 @@
+name: rodada-4-26-aimm-short-team-manual
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aimm-short-team-manual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar manual curto ilustrado AIMM 4.26
+        shell: bash
+        run: python scripts/rodada_4_26_aimm_short_team_manual.py
+
+      - name: Publicar artefatos da Rodada 4.26
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-26-aimm-short-team-manual-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_26_manual_curto_equipe
+            data/processed/aimm/aimm_short_team_manual_registry_4_26.csv
+            data/processed/aimm/aimm_short_team_manual_status_4_26.csv
+            data/evidence/evidence_aimm_short_team_manual_4_26.csv
+            outputs/reports/RELATORIO_AIMM_MANUAL_CURTO_EQUIPE_4_26.md
+            outputs/logs/teste_aimm_manual_curto_equipe_4_26.txt
