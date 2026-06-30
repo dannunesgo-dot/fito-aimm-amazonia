@@ -1,0 +1,45 @@
+name: rodada-4-19-c-closure
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/round_4_19_closure_rules.yaml"
+      - "data/reference/round_4_19_archive_expected_seed.csv"
+      - "scripts/rodada_4_19_c_closure.py"
+      - ".github/workflows/rodada_4_19_c_closure.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.19-C
+        run: python scripts/rodada_4_19_c_closure.py
+
+      - name: Publicar artefatos da Rodada 4.19-C
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-19-c-closure-fito-amazonia
+          path: |
+            data/processed/drive_archive_verification_4_19.csv
+            data/processed/round_4_19_closure_status.csv
+            data/processed/open_gaps_after_4_19.csv
+            data/processed/next_rounds_after_4_19.csv
+            data/evidence/evidence_round_4_19_closure.csv
+            outputs/reports/ENCERRAMENTO_FORMAL_RODADA_4_19.md
+            outputs/logs/teste_round_4_19_closure.txt
+            config/round_4_19_closure_rules.yaml
+            data/reference/round_4_19_archive_expected_seed.csv
