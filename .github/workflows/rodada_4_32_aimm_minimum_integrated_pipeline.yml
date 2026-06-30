@@ -1,0 +1,55 @@
+name: rodada-4-32-aimm-minimum-integrated-pipeline
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py"
+      - ".github/workflows/rodada_4_32_aimm_minimum_integrated_pipeline.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  aimm-minimum-integrated-pipeline:
+    name: aimm-minimum-integrated-pipeline
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar pipeline mínimo integrado AIMM 4.32
+        shell: bash
+        run: python scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py
+
+      - name: Publicar artefatos da Rodada 4.32
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-32-aimm-minimum-integrated-pipeline-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_32_pipeline_minimo_integrado
+            data/processed/aimm/aimm_minimum_integrated_pipeline_registry_4_32.csv
+            data/evidence/evidence_aimm_minimum_integrated_pipeline_4_32.csv
+            outputs/reports/RELATORIO_AIMM_PIPELINE_MINIMO_INTEGRADO_4_32.md
+            outputs/logs/teste_aimm_pipeline_minimo_integrado_4_32.txt
