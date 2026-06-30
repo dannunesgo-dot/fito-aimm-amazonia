@@ -1,0 +1,54 @@
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.22-B1"
+  objetivo: "Registrar controladamente o exemplo GIS Manaus a partir de malha municipal IBGE e anexos conferidos"
+  status_esperado: "registro_controlado_validado_com_limitacoes"
+
+fonte_territorial:
+  fonte: "IBGE"
+  produto: "Malha Municipal"
+  ano_dado_informado: "2024"
+  data_download_informada_usuario: "2025"
+
+arquivo_gis:
+  nome_informado: "municipio_manaus.gpkg"
+  interpretacao_corrigida: "arquivo contém malha municipal completa, não apenas Manaus"
+  camada_interna: "br_municipios_2024"
+  crs: "EPSG:4674"
+  tipo_geometria: "MultiPolygon"
+  total_feicoes_arquivo: 5573
+  feicoes_manaus: 1
+  status: "insumo_bruto_valido_para_extracao_futura"
+
+campos_confirmados:
+  codigo_municipio:
+    campo: "CD_MUN"
+    valor_manaus: "1302603"
+  municipio:
+    campo: "NM_MUN"
+    valor_manaus: "Manaus"
+  uf_nome:
+    campo: "NM_UF"
+    valor_manaus: "Amazonas"
+  uf_codigo:
+    campo: "CD_UF"
+    valor_manaus: "13"
+  uf_sigla:
+    campo: "SIGLA_UF"
+    valor_manaus: "AM"
+  area_km2:
+    campo: "AREA_KM2"
+    valor_manaus: 11401.002
+
+expressao_qgis_recomendada:
+  selecao_principal: "\"CD_MUN\" = '1302603'"
+  selecao_alternativa: "\"CD_CONCU\" = '1302603'"
+
+travas:
+  - "não calcular área nesta subrodada"
+  - "não calcular densidade nesta subrodada"
+  - "não calcular centroide nesta subrodada"
+  - "não calcular buffer nesta subrodada"
+  - "não tratar o GeoPackage completo como camada final isolada de Manaus"
+  - "não liberar score AIMM final"
+  - "extrair camada isolada de Manaus somente na 4.22-B2 ou posterior"
