@@ -23,6 +23,9 @@ FILES = {
     "log": Path("outputs/logs/teste_aimm_diagnostico_automacoes_4_27.txt"),
 }
 
+def write_text(path: Path, lines: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
