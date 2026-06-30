@@ -1,0 +1,55 @@
+name: rodada-4-31b-drive-api-oauth-real-test
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_31b_drive_api_oauth_real_test.py"
+      - ".github/workflows/rodada_4_31b_drive_api_oauth_real_test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  drive-api-oauth-real-test:
+    name: drive-api-oauth-real-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar teste real Drive API OAuth AIMM 4.31-B
+        shell: bash
+        run: python scripts/rodada_4_31b_drive_api_oauth_real_test.py
+
+      - name: Publicar artefatos da Rodada 4.31-B
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-31b-drive-api-oauth-real-test-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_31b_drive_api_oauth_real
+            data/processed/aimm/aimm_drive_api_oauth_registry_4_31b.csv
+            data/evidence/evidence_aimm_drive_api_oauth_4_31b.csv
+            outputs/reports/RELATORIO_DRIVE_API_OAUTH_4_31B.md
+            outputs/logs/teste_drive_api_oauth_4_31b.txt
