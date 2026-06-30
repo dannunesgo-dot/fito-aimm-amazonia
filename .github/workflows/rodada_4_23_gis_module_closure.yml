@@ -1,0 +1,40 @@
+name: rodada-4-23-gis-module-closure
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gis-module-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar encerramento GIS 4.23
+        shell: bash
+        run: python scripts/rodada_4_23_gis_module_closure.py
+
+      - name: Publicar artefatos da Rodada 4.23
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-23-gis-module-closure-fito-amazonia
+          if-no-files-found: error
+          path: |
+            data/manual/gis/gis_module_closure_4_23_seed.csv
+            data/processed/gis/gis_module_closure_registry_4_23.csv
+            data/processed/gis/gis_module_closure_status_4_23.csv
+            data/processed/gis/gis_module_closure_gaps_4_23.csv
+            data/processed/gis/gis_to_aimm_integration_map_4_23.csv
+            data/evidence/evidence_gis_module_closure_4_23.csv
+            outputs/reports/RELATORIO_GIS_MODULO_MANAUS_4_23.md
+            outputs/logs/teste_gis_modulo_manaus_4_23.txt
