@@ -1,0 +1,40 @@
+name: rodada-4-19-b-visual-review
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/reference/aimm_visual_review_checklist_seed.csv"
+      - "data/manual/aimm_visual_review_checklist_completed.csv"
+      - "scripts/rodada_4_19_b_visual_review.py"
+      - ".github/workflows/rodada_4_19_b_visual_review.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  visual-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.19-B
+        run: python scripts/rodada_4_19_b_visual_review.py
+
+      - name: Publicar artefatos da Rodada 4.19-B
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-19-b-visual-review-fito-amazonia
+          path: |
+            data/processed/aimm_visual_review_final_status.csv
+            data/processed/aimm_visual_review_acceptance_report.csv
+            outputs/review/REVISAO_VISUAL_RESULTADO.md
+            outputs/logs/teste_aimm_visual_review_4_19_b.txt
