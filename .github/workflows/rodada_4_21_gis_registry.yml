@@ -1,0 +1,47 @@
+name: rodada-4-21-gis-registry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/gis_territory_rules.yaml"
+      - "data/reference/gis_layer_registry_seed.csv"
+      - "data/reference/gis_indicator_registry_seed.csv"
+      - "scripts/rodada_4_21_gis_registry.py"
+      - ".github/workflows/rodada_4_21_gis_registry.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  gis-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.21
+        run: python scripts/rodada_4_21_gis_registry.py
+
+      - name: Publicar artefatos da Rodada 4.21
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-21-gis-registry-fito-amazonia
+          path: |
+            data/processed/gis/gis_layer_registry.csv
+            data/processed/gis/gis_indicator_registry.csv
+            data/processed/gis/gis_readiness_report.csv
+            data/processed/gis/gis_gap_register.csv
+            data/evidence/evidence_gis_registry.csv
+            outputs/reports/RELATORIO_GIS_ESTRUTURAL.md
+            outputs/logs/teste_gis_registry_4_21.txt
+            config/gis_territory_rules.yaml
+            data/reference/gis_layer_registry_seed.csv
+            data/reference/gis_indicator_registry_seed.csv
