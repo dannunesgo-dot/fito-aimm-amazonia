@@ -1,0 +1,8 @@
+chave;valor;descricao
+titulo_relatorio;Relatório executivo AIMM 4.35;Título do relatório executivo controlado
+publico_alvo;equipe_gestora;Público-alvo do relatório
+limiar_apto;90;Score mínimo para piloto controlado apto
+limiar_alerta;70;Score mínimo para piloto controlado com alertas
+score_final_liberado;nao;Trava obrigatória desta rodada
+municipio_base;Manaus;Município do caso controlado
+codigo_ibge_base;1302603;Código IBGE do caso controlado
