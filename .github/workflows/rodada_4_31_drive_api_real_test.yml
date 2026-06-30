@@ -1,0 +1,53 @@
+name: rodada-4-31-drive-api-real-test
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_31_drive_api_real_test.py"
+      - ".github/workflows/rodada_4_31_drive_api_real_test.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  drive-api-real-test:
+    name: drive-api-real-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth
+
+      - name: Executar teste real Drive API AIMM 4.31
+        shell: bash
+        run: python scripts/rodada_4_31_drive_api_real_test.py
+
+      - name: Publicar artefatos da Rodada 4.31
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-31-drive-api-real-test-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_31_drive_api_real
+            data/processed/aimm/aimm_drive_api_real_registry_4_31.csv
+            data/evidence/evidence_aimm_drive_api_real_4_31.csv
+            outputs/reports/RELATORIO_DRIVE_API_REAL_4_31.md
+            outputs/logs/teste_drive_api_real_4_31.txt
