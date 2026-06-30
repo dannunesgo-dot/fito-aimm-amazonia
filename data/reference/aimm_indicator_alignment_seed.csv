@@ -1,0 +1,16 @@
+indicator_id;nome_indicador;dimensao_canonica;subdimensao;eixo_analitico;tema_transversal;benchmark_status;status_uso;justificativa_uso
+AIMMPROJ_001;Agricultores beneficiados;project_outcomes;stakeholder_effects;intensity;economic_inclusion;proxy_documentado;calculavel_preliminar;Mede alcance direto do projeto sobre beneficiários produtivos.
+AIMMPROJ_002;Incremento de renda familiar rural;project_outcomes;stakeholder_effects;impact_potential;economic_inclusion;proxy_documentado;calculavel_preliminar;Mede resultado direto esperado sobre renda.
+AIMMPROJ_003;Cooperativas apoiadas;project_outcomes;stakeholder_effects;intensity;community;proxy_documentado;calculavel_preliminar;Mede fortalecimento organizacional direto.
+AIMMPROJ_004;Farmácias Vivas estruturadas;project_outcomes;stakeholder_effects;intensity;health;proxy_documentado;calculavel_preliminar;Mede infraestrutura direta para acesso no SUS.
+AIMMPROJ_005;Laboratórios e ICTs mobilizados;project_outcomes;economy_wide_effects;intensity;innovation;proxy_documentado;calculavel_preliminar;Mede capacidade técnica e científica mobilizada.
+AIMMPROJ_006;Produtos herbais desenvolvidos;project_outcomes;economy_wide_effects;impact_potential;innovation;proxy_baixa_confianca;proxy_baixa_confianca;Depende de validação regulatória e tecnológica.
+AIMMPROJ_007;Produtos com requisitos de qualidade documentados;project_outcomes;environmental_social_effects;monitoring;health;proxy_documentado;apenas_monitoramento;Deve apoiar monitoramento, não score final isolado.
+AIMMPROJ_008;Adoção de práticas sustentáveis de cultivo ou extrativismo;project_outcomes;environmental_social_effects;intensity;environment;proxy_documentado;calculavel_preliminar;Mede contribuição ambiental direta.
+AIMMMKT_001;Substituição potencial de importações;market_outcomes;competitiveness;impact_potential;innovation;bloqueado_sem_benchmark;bloqueado_sem_benchmark;Requer benchmark comercial por NCM, produto e período.
+AIMMMKT_002;Diversificação de produtos e mercados;market_outcomes;resilience;impact_potential;economic_inclusion;proxy_baixa_confianca;proxy_baixa_confianca;Proxy preliminar até análise de mercado.
+AIMMMKT_003;Rastreabilidade e certificação de cadeia;market_outcomes;sustainability;intensity;environment;proxy_documentado;calculavel_preliminar;Mede avanço sistêmico de qualidade e confiança.
+AIMMMKT_004;Fortalecimento de compras públicas no SUS;market_outcomes;competitiveness;gap;public_procurement;bloqueado_sem_benchmark;bloqueado_sem_benchmark;Requer base de compras públicas e demanda SUS.
+AIMMMKT_005;Redução de risco de suprimento de IFAV ou insumos herbais;market_outcomes;resilience;risk_assessment;health;proxy_baixa_confianca;proxy_baixa_confianca;Requer dados de fornecedores, volumes e dependência externa.
+AIMMMKT_006;Mercado territorial estruturado para cadeias de valor herbais;market_outcomes;sustainability;impact_potential;territorial_development;proxy_baixa_confianca;proxy_baixa_confianca;Indicador sintético preliminar dependente de GIS, orçamento e mercado.
+AIMMBLOCK_001;Score AIMM final;project_outcomes;stakeholder_effects;monitoring;cross_cutting;bloqueado_sem_benchmark;bloqueado_revisao_humana;Score final bloqueado por revisão humana, benchmarks e validações pendentes.
