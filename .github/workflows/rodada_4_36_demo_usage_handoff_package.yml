@@ -1,0 +1,55 @@
+name: rodada-4-36-demo-usage-handoff-package
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_36_demo_usage_handoff_package.py"
+      - ".github/workflows/rodada_4_36_demo_usage_handoff_package.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  demo-usage-handoff-package:
+    name: demo-usage-handoff-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar pacote congelado AIMM 4.36
+        shell: bash
+        run: python scripts/rodada_4_36_demo_usage_handoff_package.py
+
+      - name: Publicar artefatos da Rodada 4.36
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-36-demo-usage-handoff-package-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_36_demo_usage_handoff
+            data/processed/aimm/aimm_demo_usage_handoff_registry_4_36.csv
+            data/evidence/evidence_aimm_demo_usage_handoff_4_36.csv
+            outputs/reports/RELATORIO_AIMM_PACOTE_CONGELADO_4_36.md
+            outputs/logs/teste_aimm_pacote_congelado_4_36.txt
