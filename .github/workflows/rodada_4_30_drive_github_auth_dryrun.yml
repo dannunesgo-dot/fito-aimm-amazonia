@@ -1,0 +1,52 @@
+name: rodada-4-30-drive-github-auth-dryrun
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_30_drive_github_auth_dryrun.py"
+      - ".github/workflows/rodada_4_30_drive_github_auth_dryrun.yml"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  drive-github-auth-dryrun:
+    name: drive-github-auth-dryrun
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
+      GOOGLE_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER }}
+      GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GDRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GDRIVE_SERVICE_ACCOUNT_JSON }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar teste seco API Drive-GitHub AIMM 4.30
+        shell: bash
+        run: python scripts/rodada_4_30_drive_github_auth_dryrun.py
+
+      - name: Publicar artefatos da Rodada 4.30
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-30-drive-github-auth-dryrun-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_30_api_drive_github_dryrun
+            data/processed/aimm/aimm_drive_github_auth_dryrun_registry_4_30.csv
+            data/processed/aimm/aimm_drive_github_auth_dryrun_status_4_30.csv
+            data/evidence/evidence_aimm_drive_github_auth_dryrun_4_30.csv
+            outputs/reports/RELATORIO_API_DRIVE_GITHUB_DRYRUN_4_30.md
+            outputs/logs/teste_api_drive_github_dryrun_4_30.txt
