@@ -1,0 +1,2 @@
+codigo_ibge;nm_mun;nm_uf;sigla_uf;area_km2;pacote_gis_validado;pacote_ingestao_validado;pacote_benchmark_validado;drive_api_oauth_validada;observacao
+1302603;Manaus;Amazonas;AM;11401.092;sim;sim;sim;sim;Entrada controlada inicial para teste operacional AIMM 4.33
