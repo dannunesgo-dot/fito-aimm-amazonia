@@ -1,0 +1,58 @@
+name: rodada-4-35-end-to-end-controlled-executive-report
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "data/manual/aimm/aimm_operational_input_manifest_4_33.csv"
+      - "data/manual/aimm/aimm_preliminary_score_weights_4_34.csv"
+      - "data/manual/aimm/aimm_executive_report_config_4_35.csv"
+      - "scripts/rodada_4_35_end_to_end_controlled_executive_report.py"
+      - ".github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  end-to-end-controlled-executive-report:
+    name: end-to-end-controlled-executive-report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+      GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+      GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+      GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_ROOT_FOLDER_ID }}
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências Google Drive API
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install google-api-python-client google-auth google-auth-oauthlib
+
+      - name: Executar teste ponta a ponta controlado AIMM 4.35
+        shell: bash
+        run: python scripts/rodada_4_35_end_to_end_controlled_executive_report.py
+
+      - name: Publicar artefatos da Rodada 4.35
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-35-end-to-end-controlled-executive-report-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_35_end_to_end_controlled
+            outputs/reports/RELATORIO_EXECUTIVO_AIMM_4_35.md
+            data/processed/aimm/aimm_end_to_end_controlled_registry_4_35.csv
+            data/evidence/evidence_aimm_end_to_end_controlled_4_35.csv
+            outputs/logs/teste_aimm_ponta_a_ponta_controlado_4_35.txt
