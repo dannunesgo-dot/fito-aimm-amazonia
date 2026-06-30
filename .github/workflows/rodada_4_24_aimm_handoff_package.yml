@@ -1,0 +1,38 @@
+name: rodada-4-24-aimm-handoff-package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aimm-handoff-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar pacote de retomada AIMM 4.24
+        shell: bash
+        run: python scripts/rodada_4_24_aimm_handoff_package.py
+
+      - name: Publicar artefatos da Rodada 4.24
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-24-aimm-handoff-package-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_24_pacote_retomada
+            data/processed/aimm/aimm_handoff_package_registry_4_24.csv
+            data/processed/aimm/aimm_handoff_package_status_4_24.csv
+            data/evidence/evidence_aimm_handoff_package_4_24.csv
+            outputs/reports/RELATORIO_AIMM_RETOMADA_4_24.md
+            outputs/logs/teste_aimm_retomada_4_24.txt
