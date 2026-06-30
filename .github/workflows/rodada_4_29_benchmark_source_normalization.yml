@@ -1,0 +1,43 @@
+name: rodada-4-29-benchmark-source-normalization
+
+"on":
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/rodada_4_29_benchmark_source_normalization.py"
+      - ".github/workflows/rodada_4_29_benchmark_source_normalization.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark-source-normalization:
+    name: benchmark-source-normalization
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar módulo de benchmarks AIMM 4.29
+        shell: bash
+        run: python scripts/rodada_4_29_benchmark_source_normalization.py
+
+      - name: Publicar artefatos da Rodada 4.29
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-29-benchmark-source-normalization-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_29_benchmarks_fontes_normalizacao
+            data/processed/aimm/aimm_benchmark_registry_4_29.csv
+            data/processed/aimm/aimm_benchmark_status_4_29.csv
+            data/evidence/evidence_aimm_benchmark_normalization_4_29.csv
+            outputs/reports/RELATORIO_BENCHMARK_FONTES_NORMALIZACAO_AIMM_4_29.md
+            outputs/logs/teste_aimm_benchmark_normalizacao_4_29.txt
