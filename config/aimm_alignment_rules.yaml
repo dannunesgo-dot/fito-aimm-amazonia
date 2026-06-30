@@ -1,0 +1,61 @@
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.20"
+  objetivo: "Alinhar indicadores, dimensões, eixos analíticos, benchmarks e travas da calculadora AIMM"
+  status_esperado: "alinhamento_estrutural_preliminar"
+
+fontes_conceituais:
+  - id_fonte: "IFC_AIMM_PAGE"
+    instituicao: "International Finance Corporation"
+    titulo: "Anticipated Impact Measurement and Monitoring"
+    url: "https://www.ifc.org/en/our-impact/measuring-and-monitoring"
+    uso: "Base conceitual para dimensões, parâmetros de mensuração, frameworks setoriais e monitoramento AIMM"
+
+dimensoes_canonicas_permitidas:
+  - "project_outcomes"
+  - "market_outcomes"
+
+subdimensoes_permitidas:
+  - "stakeholder_effects"
+  - "economy_wide_effects"
+  - "environmental_social_effects"
+  - "competitiveness"
+  - "resilience"
+  - "sustainability"
+
+eixos_analiticos_permitidos:
+  - "gap"
+  - "intensity"
+  - "impact_potential"
+  - "risk_assessment"
+  - "monitoring"
+  - "benchmark"
+  - "cross_cutting"
+
+temas_transversais:
+  - "environment"
+  - "climate"
+  - "economic_inclusion"
+  - "community"
+  - "gender"
+  - "biodiversity"
+  - "health"
+  - "innovation"
+  - "public_procurement"
+  - "territorial_development"
+
+status_uso_permitidos:
+  - "calculavel_preliminar"
+  - "proxy_baixa_confianca"
+  - "bloqueado_sem_benchmark"
+  - "bloqueado_revisao_humana"
+  - "apenas_monitoramento"
+
+travas:
+  - "A Rodada 4.20 não calcula score AIMM final."
+  - "A Rodada 4.20 corrige arquitetura conceitual e classificação dos indicadores."
+  - "Indicadores sem dimensão AIMM canônica devem ser bloqueados."
+  - "Indicadores sem benchmark ou proxy documentado devem ser bloqueados para score final."
+  - "Indicadores com proxy de baixa confiança podem entrar apenas em score estrutural preliminar com penalidade futura."
+  - "Revisão visual humana pendente continua bloqueando circulação externa."
+  - "AIMMM gap, intensity, impact_potential, risk_assessment e monitoring são eixos analíticos, não dimensões finais equivalentes."
