@@ -1,0 +1,46 @@
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.22-A"
+  objetivo: "Preparar baseline GIS territorial para QGIS/GitHub/Drive sem processamento real de geometrias"
+  status_esperado: "validada_com_lacunas_controladas"
+
+software:
+  qgis_usuario: "QGIS 3.40.14 - Bratislava"
+  idioma_operacional: "Português do Brasil"
+
+crs:
+  entrada_padrao: "EPSG:4674"
+  descricao_entrada: "SIRGAS 2000 geográfico"
+  saida_web: "EPSG:4326"
+  regra_metrica: "Área, distância, centroide métrico e buffer só podem ser calculados após definição e registro de CRS métrico adequado."
+
+territorios_alvo:
+  - codigo_ibge: "1302603"
+    municipio: "Manaus"
+    uf: "AM"
+  - codigo_ibge: "1300607"
+    municipio: "Benjamin Constant"
+    uf: "AM"
+  - codigo_ibge: "1501402"
+    municipio: "Belém"
+    uf: "PA"
+  - codigo_ibge: "1506807"
+    municipio: "Santarém"
+    uf: "PA"
+
+travas:
+  - "não processa geometria real"
+  - "não calcula área"
+  - "não calcula densidade"
+  - "não calcula centroide"
+  - "não calcula distância"
+  - "não calcula buffer"
+  - "não gera GeoJSON real"
+  - "não seleciona OSCs"
+  - "não seleciona espécies"
+  - "não seleciona produtos"
+  - "não libera score AIMM final"
+
+proxima_etapa:
+  rodada: "4.22-B"
+  condicao: "fornecer GeoPackage, GeoJSON, ZIP Shapefile validado no QGIS ou preencher templates manuais gerados pela 4.22-A"
