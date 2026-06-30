@@ -1,0 +1,16 @@
+id_registro;tipo;codigo;nome_ptbr;descricao_ptbr;fonte_base;status
+DIM_001;dimensao_canonica;project_outcomes;Resultados do projeto;Efeitos diretos do projeto sobre stakeholders, economia, sociedade e ambiente.;IFC_AIMM_PAGE;ativo
+DIM_002;dimensao_canonica;market_outcomes;Resultados de mercado;Potencial do projeto para gerar mudanças sistêmicas setoriais em competitividade, resiliência e sustentabilidade.;IFC_AIMM_PAGE;ativo
+SUB_001;subdimensao;stakeholder_effects;Efeitos sobre stakeholders;Efeitos sobre trabalhadores, agricultores, fornecedores, cooperativas, SUS, consumidores e comunidades.;IFC_AIMM_PAGE;ativo
+SUB_002;subdimensao;economy_wide_effects;Efeitos econômicos amplos;Efeitos diretos, indiretos e induzidos sobre renda, produção, compras, inovação, substituição de importações e economia territorial.;IFC_AIMM_PAGE;ativo
+SUB_003;subdimensao;environmental_social_effects;Efeitos ambientais e sociais;Efeitos sobre sustentabilidade, biodiversidade, uso sustentável, inclusão e salvaguardas socioambientais.;IFC_AIMM_PAGE;ativo
+SUB_004;subdimensao;competitiveness;Competitividade;Mudanças sistêmicas que ampliam eficiência, qualidade, produtividade, inserção de mercado e concorrência.;IFC_AIMM_PAGE;ativo
+SUB_005;subdimensao;resilience;Resiliência;Mudanças sistêmicas que reduzem vulnerabilidades produtivas, institucionais, sanitárias, logísticas e de suprimento.;IFC_AIMM_PAGE;ativo
+SUB_006;subdimensao;sustainability;Sustentabilidade;Mudanças sistêmicas que favorecem sustentabilidade econômica, ambiental, social, regulatória e institucional.;IFC_AIMM_PAGE;ativo
+AXIS_001;eixo_analitico;gap;Lacuna;Tamanho e relevância do problema que o projeto busca enfrentar.;IFC_AIMM_PAGE;ativo
+AXIS_002;eixo_analitico;intensity;Intensidade;Contribuição esperada do projeto para responder à lacuna identificada.;IFC_AIMM_PAGE;ativo
+AXIS_003;eixo_analitico;impact_potential;Potencial de impacto;Potencial de entrega de efeitos desejados combinando lacuna e contribuição.;IFC_AIMM_PAGE;ativo
+AXIS_004;eixo_analitico;risk_assessment;Avaliação de risco;Riscos estimados para atingir metas de desenvolvimento.;IFC_AIMM_PAGE;ativo
+AXIS_005;eixo_analitico;monitoring;Monitoramento;Indicadores acompanhados durante a implementação e supervisão.;IFC_AIMM_PAGE;ativo
+AXIS_006;eixo_analitico;benchmark;Benchmark/proxy;Referência objetiva ou proxy documentado para avaliar lacuna e contribuição.;IFC_AIMM_PAGE;ativo
+AXIS_007;eixo_analitico;cross_cutting;Tema transversal;Temas como ambiente, clima, inclusão econômica, comunidade, gênero, biodiversidade e saúde.;IFC_AIMM_PAGE;ativo
