@@ -1,0 +1,63 @@
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.21"
+  objetivo: "Implementar estrutura GIS da calculadora AIMM"
+  status_esperado: "gis_estrutural_preliminar"
+
+territorios_alvo:
+  - codigo_ibge: "1302603"
+    municipio: "Manaus"
+    uf: "AM"
+    bioma: "Amazônia"
+  - codigo_ibge: "1300607"
+    municipio: "Benjamin Constant"
+    uf: "AM"
+    bioma: "Amazônia"
+  - codigo_ibge: "1501402"
+    municipio: "Belém"
+    uf: "PA"
+    bioma: "Amazônia"
+  - codigo_ibge: "1506807"
+    municipio: "Santarém"
+    uf: "PA"
+    bioma: "Amazônia"
+
+crs:
+  entrada_padrao: "EPSG:4674"
+  descricao_entrada: "SIRGAS 2000 geográfico"
+  processamento_metrico_preferencial: "UTM por zona, a definir por município ou camada"
+  saida_web: "EPSG:4326"
+  regra: "Nunca calcular área, distância ou buffer em coordenadas geográficas sem reprojeção métrica."
+
+camadas_obrigatorias:
+  - "municipios_ibge"
+  - "pontos_oscs_cooperativas"
+  - "farmacias_vivas"
+  - "laboratorios_icts"
+  - "hidrografia"
+  - "vias_logistica"
+  - "portos_aeroportos"
+  - "unidades_conservacao"
+  - "terras_indigenas"
+  - "uso_cobertura_terra"
+
+buffers_padrao_km:
+  - 10
+  - 50
+  - 100
+
+saidas_gis_esperadas:
+  - "data/processed/gis/gis_layer_registry.csv"
+  - "data/processed/gis/gis_indicator_registry.csv"
+  - "data/processed/gis/gis_readiness_report.csv"
+  - "data/processed/gis/gis_gap_register.csv"
+  - "data/evidence/evidence_gis_registry.csv"
+  - "outputs/reports/RELATORIO_GIS_ESTRUTURAL.md"
+
+travas:
+  - "A Rodada 4.21 não processa geometrias reais."
+  - "A Rodada 4.21 não calcula distância, área, buffer ou interseção."
+  - "A Rodada 4.21 não seleciona OSCs, cooperativas, municípios, laboratórios ou espécies."
+  - "A Rodada 4.21 apenas cria e valida a arquitetura GIS."
+  - "O processamento espacial real ocorrerá na Rodada 4.22."
+  - "Score AIMM final permanece bloqueado."
