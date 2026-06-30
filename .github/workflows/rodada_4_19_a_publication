@@ -1,0 +1,51 @@
+name: rodada-4-19-a-publication
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/aimm_publication_rules.yaml"
+      - "data/reference/aimm_publication_drive_map_seed.csv"
+      - "data/reference/aimm_visual_review_checklist_seed.csv"
+      - "scripts/rodada_4_19_a_publication.py"
+      - ".github/workflows/rodada_4_19_a_publication.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  publication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.19-A
+        run: python scripts/rodada_4_19_a_publication.py
+
+      - name: Publicar artefatos da Rodada 4.19-A
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-19-a-publication-fito-amazonia
+          path: |
+            data/processed/aimm_drive_publication_map.csv
+            data/processed/aimm_visual_review_checklist.csv
+            data/processed/aimm_publication_readiness_report.csv
+            data/processed/aimm_publication_manifest.csv
+            data/evidence/evidence_aimm_publication.csv
+            outputs/publication/README_PUBLICACAO_DRIVE.md
+            outputs/publication/REVISAO_VISUAL_HUMANA.md
+            outputs/publication/PACOTE_PUBLICACAO_INDEX.html
+            outputs/publication/drive_upload_instructions.md
+            outputs/publication/aimm_publication_payload.json
+            config/aimm_publication_rules.yaml
+            data/reference/aimm_publication_drive_map_seed.csv
+            data/reference/aimm_visual_review_checklist_seed.csv
+            outputs/logs/teste_aimm_publication_4_19_a.txt
