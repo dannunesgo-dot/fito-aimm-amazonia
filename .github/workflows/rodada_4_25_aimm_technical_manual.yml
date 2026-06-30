@@ -1,0 +1,38 @@
+name: rodada-4-25-aimm-technical-manual
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  aimm-technical-manual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar manual técnico operacional AIMM 4.25
+        shell: bash
+        run: python scripts/rodada_4_25_aimm_technical_manual.py
+
+      - name: Publicar artefatos da Rodada 4.25
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-25-aimm-technical-manual-fito-amazonia
+          if-no-files-found: error
+          path: |
+            outputs/aimm/rodada_4_25_manual_tecnico_operacional
+            data/processed/aimm/aimm_technical_manual_registry_4_25.csv
+            data/processed/aimm/aimm_technical_manual_status_4_25.csv
+            data/evidence/evidence_aimm_technical_manual_4_25.csv
+            outputs/reports/RELATORIO_AIMM_MANUAL_TECNICO_4_25.md
+            outputs/logs/teste_aimm_manual_tecnico_4_25.txt
