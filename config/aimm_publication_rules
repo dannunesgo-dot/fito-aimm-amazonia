@@ -1,0 +1,41 @@
+# Rodada 4.19-A — publicação/Drive/checklist
+# Entrega sem ZIP, sem Drive e sem arquivo externo.
+# Finalidade: gerar mapa de arquivamento, checklist visual e pacote operacional.
+
+projeto:
+  nome: "Fito+ Amazônia"
+  rodada: "4.19-A"
+  base_calculo: "Rodada 4.18 — aimm-communication"
+  status_pacote: "publicacao_preliminar_para_drive"
+  pasta_raiz_drive: "Fito_Mais_Amazonia"
+
+pastas_drive:
+  configuracao: "Fito_Mais_Amazonia/00_configuracao"
+  evidencias: "Fito_Mais_Amazonia/02_evidencias"
+  bases_processadas: "Fito_Mais_Amazonia/04_bases_processadas"
+  relatorios: "Fito_Mais_Amazonia/05_relatorios"
+  logs: "Fito_Mais_Amazonia/06_logs"
+  versoes_congeladas: "Fito_Mais_Amazonia/07_versoes_congeladas"
+  revisao_visual: "Fito_Mais_Amazonia/08_revisao_visual"
+
+travas:
+  - "A Rodada 4.19-A não calcula score AIMM final."
+  - "A Rodada 4.19-A não aprova decisões executivas."
+  - "A Rodada 4.19-A não aprova orçamento."
+  - "A Rodada 4.19-A não aprova OSCs."
+  - "A Rodada 4.19-A não aprova espécies."
+  - "A Rodada 4.19-A não aprova produtos."
+  - "A Rodada 4.19-A não aprova rotas regulatórias."
+  - "A revisão visual humana é obrigatória antes de circulação externa."
+  - "O checklist começa como pendente."
+  - "O arquivamento no Drive é etapa operacional externa ao GitHub Actions."
+
+criterios_revisao_visual:
+  - "Legibilidade"
+  - "Ausência de texto truncado"
+  - "Contraste suficiente"
+  - "Travas metodológicas visíveis"
+  - "Arquivos editáveis"
+  - "Sem sobreposição de elementos"
+  - "Mensagem executiva sem ambiguidade"
+  - "Bloqueios/lacunas visíveis"
