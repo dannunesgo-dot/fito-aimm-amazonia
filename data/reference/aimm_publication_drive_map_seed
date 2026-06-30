@@ -1,0 +1,26 @@
+arquivo;destino_drive;tipo;descricao;obrigatoriedade
+aimm-communication-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;zip_artefato;versão congelada da Rodada 4.18;obrigatorio
+aimm_communication_messages.csv;Fito_Mais_Amazonia/04_bases_processadas;csv_base;matriz de mensagens executivas;obrigatorio
+aimm_visual_outputs_index.csv;Fito_Mais_Amazonia/04_bases_processadas;csv_base;índice de outputs visuais;obrigatorio
+aimm_communication_package_manifest.csv;Fito_Mais_Amazonia/04_bases_processadas;csv_manifesto;manifesto do pacote 4.18;obrigatorio
+evidence_aimm_communication.csv;Fito_Mais_Amazonia/02_evidencias;csv_evidencia;evidência da Rodada 4.18;obrigatorio
+aimm_dashboard_executivo.html;Fito_Mais_Amazonia/05_relatorios;html_editavel;painel executivo autocontido;obrigatorio_revisao_visual
+aimm_dashboard_cards.svg;Fito_Mais_Amazonia/05_relatorios;svg_editavel;painel visual editável;obrigatorio_revisao_visual
+aimm_dashboard_flow.mmd;Fito_Mais_Amazonia/05_relatorios;mermaid_editavel;fluxo editável da calculadora;obrigatorio_revisao_visual
+aimm_communication_brief.md;Fito_Mais_Amazonia/05_relatorios;markdown_editavel;briefing executivo de comunicação;obrigatorio_revisao_textual
+aimm_communication_payload.json;Fito_Mais_Amazonia/05_relatorios;json_payload;payload para visualização futura;obrigatorio
+aimm_communication_rules.yaml;Fito_Mais_Amazonia/00_configuracao;yaml_config;regras da Rodada 4.18;obrigatorio
+aimm_communication_messages_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed da matriz de mensagens;obrigatorio
+aimm_visual_layout_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed de layout visual;obrigatorio
+teste_aimm_communication.txt;Fito_Mais_Amazonia/06_logs;log;log do workflow 4.18;obrigatorio
+aimm_visual_review_checklist.csv;Fito_Mais_Amazonia/08_revisao_visual;csv_revisao;checklist de revisão visual humana;obrigatorio
+aimm_publication_readiness_report.csv;Fito_Mais_Amazonia/08_revisao_visual;csv_revisao;relatório de prontidão de publicação;obrigatorio
+README_PUBLICACAO_DRIVE.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_publicacao;orientações de publicação no Drive;obrigatorio
+REVISAO_VISUAL_HUMANA.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_revisao;orientações de revisão visual;obrigatorio
+PACOTE_PUBLICACAO_INDEX.html;Fito_Mais_Amazonia/08_revisao_visual;html_indice;índice local do pacote de publicação;obrigatorio
+drive_upload_instructions.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_instrucoes;instruções de upload para o Drive;obrigatorio
+aimm_publication_payload.json;Fito_Mais_Amazonia/08_revisao_visual;json_payload;payload da Rodada 4.19-A;obrigatorio
+aimm_publication_rules.yaml;Fito_Mais_Amazonia/00_configuracao;yaml_config;regras da Rodada 4.19-A;obrigatorio
+aimm_publication_drive_map_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed do mapa Drive;obrigatorio
+aimm_visual_review_checklist_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed do checklist visual;obrigatorio
+teste_aimm_publication_4_19_a.txt;Fito_Mais_Amazonia/06_logs;log;log do workflow 4.19-A;obrigatorio
