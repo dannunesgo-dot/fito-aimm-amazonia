@@ -1,0 +1,12 @@
+id_item;rodada;arquivo;destino_drive;status_verificacao;fonte_verificacao;observacao
+ARC_419A_001;4.19-A;rodada-4-19-a-publication-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;pendente_confirmacao;nao_verificado_nesta_rodada;A 4.19-A foi executada no GitHub, mas o arquivamento Drive não foi confirmado nesta verificação.
+ARC_419A_002;4.19-A;aimm_drive_publication_map.csv;Fito_Mais_Amazonia/04_bases_processadas;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+ARC_419A_003;4.19-A;aimm_visual_review_checklist.csv;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+ARC_419A_004;4.19-A;aimm_publication_readiness_report.csv;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+ARC_419A_005;4.19-A;README_PUBLICACAO_DRIVE.md;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+ARC_419A_006;4.19-A;REVISAO_VISUAL_HUMANA.md;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+ARC_419B_001;4.19-B;rodada-4-19-b-visual-review-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;verificado;conector_google_drive;Arquivo encontrado em 07_versoes_congeladas.
+ARC_419B_002;4.19-B;aimm_visual_review_final_status.csv;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+ARC_419B_003;4.19-B;aimm_visual_review_acceptance_report.csv;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+ARC_419B_004;4.19-B;REVISAO_VISUAL_RESULTADO.md;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+ARC_419B_005;4.19-B;teste_aimm_visual_review_4_19_b.txt;Fito_Mais_Amazonia/06_logs;verificado;conector_google_drive;Arquivo encontrado em 06_logs.
