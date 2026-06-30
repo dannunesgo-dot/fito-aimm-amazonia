@@ -1,0 +1,46 @@
+name: rodada-4-22-c-gis-manaus-attribute-recompose
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/gis_manaus_attribute_recomposition_rules.yaml"
+      - "data/manual/gis/gis_manaus_attribute_recomposition_seed.csv"
+      - "data/raw/gis/municipio_manaus_1302603.gpkg"
+      - "scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py"
+      - ".github/workflows/rodada_4_22_c_gis_manaus_attribute_recompose.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  gis-manaus-attribute-recompose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-C
+        run: python scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py
+
+      - name: Publicar artefatos da Rodada 4.22-C
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-c-gis-manaus-attribute-recompose-fito-amazonia
+          path: |
+            outputs/gis/municipio_manaus_1302603_atributos.gpkg
+            data/processed/gis/gis_manaus_attribute_recomposition_registry.csv
+            data/processed/gis/gis_manaus_attribute_recomposition_status.csv
+            data/processed/gis/gis_manaus_attribute_recomposition_gaps.csv
+            data/evidence/evidence_gis_manaus_attribute_recomposition.csv
+            outputs/reports/RELATORIO_GIS_MANAUS_4_22_C.md
+            outputs/logs/teste_gis_manaus_4_22_c.txt
+            config/gis_manaus_attribute_recomposition_rules.yaml
+            data/manual/gis/gis_manaus_attribute_recomposition_seed.csv
