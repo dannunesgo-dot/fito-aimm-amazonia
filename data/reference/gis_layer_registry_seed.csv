@@ -1,0 +1,13 @@
+layer_id;nome_camada;tipo_geometria;fonte_preferencial;uso_calculadora;status_dado;campo_chave;crs_esperado;obrigatoria;observacao
+GIS_LYR_001;Municípios IBGE;poligono;IBGE Malhas Territoriais;recorte territorial, área, centroide e chave municipal;pendente_download;codigo_ibge;EPSG:4674;sim;Base territorial oficial para Manaus, Benjamin Constant, Belém e Santarém.
+GIS_LYR_002;Pontos OSCs e cooperativas;ponto;Mapa das OSCs/Ipea e validação manual;screening espacial de organizações candidatas;pendente_validacao;cnpj;EPSG:4674;sim;Depende de geocodificação ou coordenadas validadas.
+GIS_LYR_003;Farmácias Vivas;ponto;entrada manual e bases SUS/municipais;proximidade de capacidade assistencial e produção pública;pendente_manual;id_farmacia_viva;EPSG:4674;sim;Uma Farmácia Viva prevista por município.
+GIS_LYR_004;Laboratórios e ICTs;ponto;entrada manual, universidades, ICTs e laboratórios oficiais;capacidade de P&D, qualidade e ensaios;pendente_manual;id_laboratorio;EPSG:4674;sim;Inclui laboratório prestador, universidade, ICT e laboratório oficial.
+GIS_LYR_005;Hidrografia;linha_poligono;ANA ou IBGE;risco/logística fluvial e disponibilidade territorial;pendente_download;id_hidrografia;EPSG:4674;sim;Relevante para Amazônia e transporte fluvial.
+GIS_LYR_006;Vias e logística;linha;público oficial ou OpenStreetMap validado;acessibilidade, distância e risco logístico;pendente_download;id_via;EPSG:4674;sim;Rodovias, vias urbanas e ligações relevantes.
+GIS_LYR_007;Portos e aeroportos;ponto;público oficial, ANAC, autoridade portuária ou base validada;escoamento, suprimento e acesso;pendente_download;id_infra;EPSG:4674;sim;Inclui porto, aeroporto e terminal logístico.
+GIS_LYR_008;Unidades de Conservação;poligono;MMA/ICMBio;restrição, salvaguarda e oportunidade de uso sustentável;pendente_download;id_uc;EPSG:4674;sim;Camada crítica para governança territorial.
+GIS_LYR_009;Terras Indígenas;poligono;FUNAI ou base oficial;restrição, salvaguarda e governança territorial;pendente_download;id_ti;EPSG:4674;sim;Uso exige cautela jurídica e ética.
+GIS_LYR_010;Uso e cobertura da terra;poligono;raster_vetor_oficial_ou_mapbiomas_validado;adequação produtiva e risco ambiental;pendente_download;classe_uso;EPSG:4674;sim;Pode ser usado como insumo de sustentabilidade, não como decisão automática.
+GIS_LYR_011;Áreas de produção candidatas;poligono_ponto;entrada manual/campo;análise de aptidão e logística produtiva;pendente_manual;id_area;EPSG:4674;nao;Será preenchida após campo e estudos específicos.
+GIS_LYR_012;Compradores e demandantes;ponto;entrada manual e bases comerciais públicas;análise de mercado, demanda e distância;pendente_manual;id_comprador;EPSG:4674;nao;Inclui SUS, B2B, indústria, varejo e exportação.
