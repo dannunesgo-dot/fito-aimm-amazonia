@@ -1,0 +1,507 @@
+name: rodada-4-22-c4-gis-manaus-attribute-table
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gis-manaus-attribute-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Preparar script relacional seguro
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > /tmp/rodada_422c4_attribute_table.py <<'PY'
+          from __future__ import annotations
+
+          import csv
+          import shutil
+          import sqlite3
+          from pathlib import Path
+          from typing import Any
+
+
+          SEED = Path("data/manual/gis/gis_manaus_attribute_recomposition_seed.csv")
+          GPKG_IN = Path("data/raw/gis/municipio_manaus_1302603.gpkg")
+
+          OUT_GPKG = Path("outputs/gis/municipio_manaus_1302603_atributos_relacional.gpkg")
+          OUT_REGISTRY = Path("data/processed/gis/gis_manaus_attribute_table_registry_c4.csv")
+          OUT_STATUS = Path("data/processed/gis/gis_manaus_attribute_table_status_c4.csv")
+          OUT_GAPS = Path("data/processed/gis/gis_manaus_attribute_table_gaps_c4.csv")
+          OUT_EVIDENCE = Path("data/evidence/evidence_gis_manaus_attribute_table_c4.csv")
+          OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_C4.md")
+          OUT_LOG = Path("outputs/logs/teste_gis_manaus_4_22_c4.txt")
+
+
+          REQUIRED_COLUMNS = {
+              "registro_id",
+              "arquivo_entrada",
+              "arquivo_saida",
+              "codigo_ibge",
+              "campo_codigo",
+              "nm_mun",
+              "nm_uf",
+              "cd_uf",
+              "sigla_uf",
+              "area_km2",
+              "fonte_atributos",
+              "status",
+              "observacao",
+          }
+
+
+          def qident(name: str) -> str:
+              return '"' + str(name).replace('"', '""') + '"'
+
+
+          def parse_area(value: str) -> float:
+              value = str(value).strip()
+              if "," in value:
+                  value = value.replace(".", "").replace(",", ".")
+              return float(value)
+
+
+          def read_seed(path: Path) -> dict[str, str]:
+              if not path.exists():
+                  raise FileNotFoundError(f"Arquivo obrigatório ausente: {path}")
+
+              with path.open("r", encoding="utf-8-sig", newline="") as file:
+                  rows = list(csv.DictReader(file, delimiter=";"))
+
+              if not rows:
+                  raise ValueError(f"Arquivo vazio: {path}")
+
+              missing = REQUIRED_COLUMNS.difference(rows[0].keys())
+              if missing:
+                  raise ValueError(f"Colunas ausentes no seed: {sorted(missing)}")
+
+              return rows[0]
+
+
+          def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              fieldnames = list(rows[0].keys()) if rows else []
+
+              with path.open("w", encoding="utf-8-sig", newline="") as file:
+                  writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
+                  writer.writeheader()
+                  writer.writerows(rows)
+
+
+          def table_columns(cur: sqlite3.Cursor, table_name: str) -> list[str]:
+              return [
+                  row[1]
+                  for row in cur.execute(f"pragma table_info({qident(table_name)})").fetchall()
+              ]
+
+
+          def inspect_feature_layer(conn: sqlite3.Connection) -> dict[str, Any]:
+              cur = conn.cursor()
+
+              content = cur.execute(
+                  """
+                  select table_name, data_type, identifier, srs_id
+                  from gpkg_contents
+                  where data_type = 'features'
+                  limit 1
+                  """
+              ).fetchone()
+
+              if content is None:
+                  raise ValueError("GeoPackage sem camada vetorial em gpkg_contents.")
+
+              table_name, data_type, identifier, srs_id = content
+
+              geom = cur.execute(
+                  """
+                  select table_name, column_name, geometry_type_name, srs_id
+                  from gpkg_geometry_columns
+                  where table_name = ?
+                  limit 1
+                  """,
+                  (table_name,),
+              ).fetchone()
+
+              if geom is None:
+                  raise ValueError("GeoPackage sem gpkg_geometry_columns para a camada vetorial.")
+
+              _, geom_column, geometry_type, geom_srs = geom
+
+              feature_count = cur.execute(
+                  f"select count(*) from {qident(table_name)}"
+              ).fetchone()[0]
+
+              geometry_blob_count = cur.execute(
+                  f"""
+                  select count(*)
+                  from {qident(table_name)}
+                  where {qident(geom_column)} is not null
+                    and length({qident(geom_column)}) > 0
+                  """
+              ).fetchone()[0]
+
+              columns = table_columns(cur, table_name)
+
+              return {
+                  "feature_table": table_name,
+                  "data_type": data_type,
+                  "identifier": identifier,
+                  "srs_id": str(srs_id),
+                  "geom_column": geom_column,
+                  "geometry_type": str(geometry_type).upper(),
+                  "geom_srs": str(geom_srs),
+                  "feature_count": int(feature_count),
+                  "geometry_blob_count": int(geometry_blob_count),
+                  "feature_columns": columns,
+              }
+
+
+          def create_attribute_table(conn: sqlite3.Connection, seed: dict[str, str]) -> None:
+              cur = conn.cursor()
+
+              cur.execute("drop table if exists aimm_manaus_atributos")
+
+              cur.execute(
+                  """
+                  create table aimm_manaus_atributos (
+                      codigo_ibge text primary key,
+                      campo_codigo text not null,
+                      nm_mun text not null,
+                      nm_uf text not null,
+                      cd_uf text not null,
+                      sigla_uf text not null,
+                      area_km2 real not null,
+                      fonte_atributos text not null,
+                      status_recomposicao text not null,
+                      observacao text
+                  )
+                  """
+              )
+
+              cur.execute(
+                  """
+                  insert into aimm_manaus_atributos (
+                      codigo_ibge,
+                      campo_codigo,
+                      nm_mun,
+                      nm_uf,
+                      cd_uf,
+                      sigla_uf,
+                      area_km2,
+                      fonte_atributos,
+                      status_recomposicao,
+                      observacao
+                  )
+                  values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                  """,
+                  (
+                      seed["codigo_ibge"],
+                      seed["campo_codigo"],
+                      seed["nm_mun"],
+                      seed["nm_uf"],
+                      seed["cd_uf"],
+                      seed["sigla_uf"],
+                      parse_area(seed["area_km2"]),
+                      seed["fonte_atributos"],
+                      "recomposto_em_tabela_relacional_interna",
+                      "Tabela interna criada sem alterar a camada geométrica do GeoPackage.",
+                  ),
+              )
+
+              conn.commit()
+
+
+          def validate_attribute_table(conn: sqlite3.Connection, seed: dict[str, str]) -> tuple[dict[str, Any], list[str]]:
+              cur = conn.cursor()
+              errors: list[str] = []
+
+              row = cur.execute(
+                  """
+                  select
+                      codigo_ibge,
+                      campo_codigo,
+                      nm_mun,
+                      nm_uf,
+                      cd_uf,
+                      sigla_uf,
+                      area_km2,
+                      status_recomposicao
+                  from aimm_manaus_atributos
+                  where codigo_ibge = ?
+                  """,
+                  (seed["codigo_ibge"],),
+              ).fetchone()
+
+              if row is None:
+                  errors.append("atributo_manaus_nao_encontrado")
+                  row = ("", "", "", "", "", "", 0.0, "")
+
+              codigo_ibge, campo_codigo, nm_mun, nm_uf, cd_uf, sigla_uf, area_km2, status_recomposicao = row
+
+              if str(codigo_ibge) != seed["codigo_ibge"]:
+                  errors.append("codigo_ibge_divergente")
+
+              if str(campo_codigo) != seed["campo_codigo"]:
+                  errors.append("campo_codigo_divergente")
+
+              if str(nm_mun) != seed["nm_mun"]:
+                  errors.append("nm_mun_divergente")
+
+              if str(nm_uf) != seed["nm_uf"]:
+                  errors.append("nm_uf_divergente")
+
+              if str(cd_uf) != seed["cd_uf"]:
+                  errors.append("cd_uf_divergente")
+
+              if str(sigla_uf) != seed["sigla_uf"]:
+                  errors.append("sigla_uf_divergente")
+
+              if abs(float(area_km2) - parse_area(seed["area_km2"])) > 0.000001:
+                  errors.append("area_km2_divergente")
+
+              detected = {
+                  "codigo_ibge": str(codigo_ibge),
+                  "campo_codigo": str(campo_codigo),
+                  "nm_mun": str(nm_mun),
+                  "nm_uf": str(nm_uf),
+                  "cd_uf": str(cd_uf),
+                  "sigla_uf": str(sigla_uf),
+                  "area_km2": str(float(area_km2)),
+                  "status_recomposicao": str(status_recomposicao),
+              }
+
+              return detected, errors
+
+
+          def main() -> None:
+              seed = read_seed(SEED)
+
+              if not GPKG_IN.exists():
+                  raise FileNotFoundError(f"GeoPackage obrigatório ausente: {GPKG_IN}")
+
+              OUT_GPKG.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(GPKG_IN, OUT_GPKG)
+
+              errors: list[str] = []
+              alerts: list[str] = []
+              gaps: list[dict[str, str]] = []
+
+              conn = sqlite3.connect(OUT_GPKG)
+
+              feature_info = inspect_feature_layer(conn)
+
+              if feature_info["srs_id"] != "4674":
+                  errors.append("crs_diferente_epsg_4674")
+
+              if feature_info["geom_srs"] != "4674":
+                  errors.append("crs_geometria_diferente_epsg_4674")
+
+              if feature_info["geometry_type"] != "MULTIPOLYGON":
+                  errors.append("tipo_geometrico_diferente_multipolygon")
+
+              if feature_info["feature_count"] != 1:
+                  errors.append("numero_feicoes_diferente_de_1")
+
+              if feature_info["geometry_blob_count"] != 1:
+                  errors.append("geometria_nula_ou_sem_blob")
+
+              if seed["campo_codigo"] not in feature_info["feature_columns"]:
+                  errors.append("campo_codigo_ausente_na_camada_geometrica")
+
+              if not errors:
+                  cur = conn.cursor()
+                  codigo_detectado = cur.execute(
+                      f"""
+                      select cast({qident(seed["campo_codigo"])} as text)
+                      from {qident(feature_info["feature_table"])}
+                      limit 1
+                      """
+                  ).fetchone()[0]
+
+                  if str(codigo_detectado) != seed["codigo_ibge"]:
+                      errors.append("codigo_ibge_divergente_na_camada_geometrica")
+
+              if not errors:
+                  create_attribute_table(conn, seed)
+
+              detected, attr_errors = validate_attribute_table(conn, seed)
+              errors.extend(attr_errors)
+
+              conn.close()
+
+              alerts.append("atributos_recompostos_em_tabela_relacional_sem_alterar_geometria")
+
+              gaps.append(
+                  {
+                      "gap_id": "GAP_422C4_JOIN_VISUAL_QGIS",
+                      "tipo": "validacao_visual",
+                      "criticidade": "baixa",
+                      "descricao": "Atributos foram recompostos em tabela interna. A união visual com a camada geométrica deve ser validada no QGIS.",
+                      "acao_recomendada": "No QGIS, abrir o GeoPackage, carregar a camada geométrica e a tabela aimm_manaus_atributos, e fazer join por CD_MUN = codigo_ibge.",
+                      "bloqueia_score_final": "nao",
+                  }
+              )
+
+              registry = {
+                  "rodada": "4.22-C4",
+                  "arquivo_entrada": str(GPKG_IN),
+                  "arquivo_saida": str(OUT_GPKG),
+                  "feature_table": feature_info["feature_table"],
+                  "attribute_table": "aimm_manaus_atributos",
+                  "crs_detectado": f"EPSG:{feature_info['srs_id']}",
+                  "geometry_type": feature_info["geometry_type"],
+                  "feature_count": str(feature_info["feature_count"]),
+                  "geometry_blob_count": str(feature_info["geometry_blob_count"]),
+                  "codigo_ibge": detected["codigo_ibge"],
+                  "NM_MUN": detected["nm_mun"],
+                  "NM_UF": detected["nm_uf"],
+                  "CD_UF": detected["cd_uf"],
+                  "SIGLA_UF": detected["sigla_uf"],
+                  "AREA_KM2": detected["area_km2"],
+                  "status_recomposicao": detected["status_recomposicao"],
+                  "erros": "|".join(errors),
+                  "alertas": "|".join(alerts),
+              }
+
+              status = {
+                  "rodada": "4.22-C4",
+                  "arquivo_saida": str(OUT_GPKG),
+                  "modo_recomposicao": "tabela_relacional_interna",
+                  "atributos_recompostos": "5",
+                  "feicoes_geometricas_preservadas": str(feature_info["feature_count"]),
+                  "erros_estruturais": str(len(errors)),
+                  "alertas": str(len(alerts)),
+                  "lacunas_registradas": str(len(gaps)),
+                  "status_rodada": "erro" if errors else "validada_com_alerta_controlado",
+                  "trava": "nao_altera_geometria_nao_calcula_area_densidade_centroide_buffer_nem_score_final",
+              }
+
+              evidence = {
+                  "id_evidencia": "EVD_GIS_MANAUS_ATTR_4_22_C4",
+                  "tipo_evidencia": "recomposicao_atributaria_relacional",
+                  "arquivo_entrada": str(GPKG_IN),
+                  "arquivo_saida": str(OUT_GPKG),
+                  "feature_table": feature_info["feature_table"],
+                  "attribute_table": "aimm_manaus_atributos",
+                  "codigo_ibge": detected["codigo_ibge"],
+                  "municipio": detected["nm_mun"],
+                  "uf": detected["sigla_uf"],
+                  "area_km2": detected["area_km2"],
+                  "status": "validado_estruturalmente" if not errors else "erro",
+                  "limitacao": "Atributos recompostos em tabela interna; join visual no QGIS fica para validação posterior.",
+              }
+
+              report = "\n".join(
+                  [
+                      "# Rodada 4.22-C4 — Recomposição relacional de atributos municipais de Manaus",
+                      "",
+                      "## Resultado",
+                      "",
+                      f"- Arquivo de entrada: `{GPKG_IN}`",
+                      f"- Arquivo de saída: `{OUT_GPKG}`",
+                      f"- Camada geométrica preservada: `{feature_info['feature_table']}`",
+                      "- Tabela de atributos criada: `aimm_manaus_atributos`",
+                      f"- CRS detectado: `EPSG:{feature_info['srs_id']}`",
+                      f"- Tipo geométrico: `{feature_info['geometry_type']}`",
+                      f"- Feições geométricas: `{feature_info['feature_count']}`",
+                      f"- Geometrias com blob: `{feature_info['geometry_blob_count']}`",
+                      f"- Código IBGE: `{detected['codigo_ibge']}`",
+                      f"- Município: `{detected['nm_mun']}`",
+                      f"- UF: `{detected['nm_uf']}`",
+                      f"- Sigla UF: `{detected['sigla_uf']}`",
+                      f"- Área recomposta como atributo: `{detected['area_km2']}` km²",
+                      f"- Erros estruturais: `{len(errors)}`",
+                      f"- Alertas: `{len(alerts)}`",
+                      "",
+                      "## Travas",
+                      "",
+                      "- A tabela geométrica do GeoPackage não foi alterada.",
+                      "- Não houve cálculo espacial.",
+                      "- Não houve cálculo de área.",
+                      "- Não houve cálculo de densidade.",
+                      "- Não houve cálculo de centroide.",
+                      "- Não houve cálculo de buffer.",
+                      "- Score AIMM final permanece bloqueado.",
+                  ]
+              )
+
+              write_csv(OUT_REGISTRY, [registry])
+              write_csv(OUT_STATUS, [status])
+              write_csv(OUT_GAPS, gaps)
+              write_csv(OUT_EVIDENCE, [evidence])
+
+              OUT_REPORT.parent.mkdir(parents=True, exist_ok=True)
+              OUT_REPORT.write_text(report, encoding="utf-8")
+
+              OUT_LOG.parent.mkdir(parents=True, exist_ok=True)
+
+              log = "\n".join(
+                  [
+                      "TESTE GIS_MANAUS_4_22_C4 — Fito+ Amazônia",
+                      "=" * 86,
+                      f"Arquivo de entrada: {GPKG_IN}",
+                      f"Arquivo de saída: {OUT_GPKG}",
+                      f"Camada geométrica preservada: {feature_info['feature_table']}",
+                      "Tabela relacional criada: aimm_manaus_atributos",
+                      "Atributos recompostos: 5",
+                      f"Município: {detected['nm_mun']}",
+                      f"UF: {detected['sigla_uf']}",
+                      f"Área km² recomposta: {detected['area_km2']}",
+                      f"Erros estruturais: {len(errors)}",
+                      f"Alertas: {len(alerts)}",
+                      f"Lacunas registradas: {len(gaps)}",
+                      "",
+                      "Resultado: SUCESSO." if not errors else "Resultado: ERRO.",
+                      "Atributos municipais recompostos em tabela relacional interna sem alterar a camada geométrica.",
+                      "",
+                      "Trava: não altera geometria, não calcula área, densidade, centroide, buffer nem score AIMM final.",
+                  ]
+              )
+
+              OUT_LOG.write_text(log, encoding="utf-8")
+              print(log)
+
+              if errors:
+                  raise ValueError(f"Rodada 4.22-C4 contém {len(errors)} erro(s) estrutural(is).")
+
+
+          if __name__ == "__main__":
+              main()
+          PY
+
+          echo "Script relacional criado em /tmp/rodada_422c4_attribute_table.py"
+          echo "OK: este script não altera a tabela geométrica do GeoPackage."
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Executar Rodada 4.22-C4
+        run: python /tmp/rodada_422c4_attribute_table.py
+
+      - name: Publicar artefatos da Rodada 4.22-C4
+        uses: actions/upload-artifact@v4
+        with:
+          name: rodada-4-22-c4-gis-manaus-attribute-table-fito-amazonia
+          path: |
+            outputs/gis/municipio_manaus_1302603_atributos_relacional.gpkg
+            data/processed/gis/gis_manaus_attribute_table_registry_c4.csv
+            data/processed/gis/gis_manaus_attribute_table_status_c4.csv
+            data/processed/gis/gis_manaus_attribute_table_gaps_c4.csv
+            data/evidence/evidence_gis_manaus_attribute_table_c4.csv
+            outputs/reports/RELATORIO_GIS_MANAUS_4_22_C4.md
+            outputs/logs/teste_gis_manaus_4_22_c4.txt
+            data/manual/gis/gis_manaus_attribute_recomposition_seed.csv
