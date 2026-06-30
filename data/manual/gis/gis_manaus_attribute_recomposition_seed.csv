@@ -1,0 +1,2 @@
+registro_id;arquivo_entrada;arquivo_saida;codigo_ibge;campo_codigo;nm_mun;nm_uf;cd_uf;sigla_uf;area_km2;fonte_atributos;status;observacao
+GIS_MANAUS_ATTR_001;data/raw/gis/municipio_manaus_1302603.gpkg;outputs/gis/municipio_manaus_1302603_atributos.gpkg;1302603;CD_MUN;Manaus;Amazonas;13;AM;11401.092;atributos_informados_pelo_usuario_a_partir_da_malha_IBGE;pendente_recomposicao;AREA_KM2 é atributo da malha/registro informado, não cálculo espacial desta rodada.
