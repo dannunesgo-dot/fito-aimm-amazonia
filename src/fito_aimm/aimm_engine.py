@@ -238,6 +238,19 @@ def generate_validation(errors: list[str], indicator_scores, dimension_scores, o
 
 
 def generate_evidence(indicator_scores, dimension_scores, overall, blockers):
+    # CORRIGIDO em refactor/phase1: Strings truncadas expandidas
+    score_estrutural = overall.get("score_estrutural_preliminar", "N/A")
+    num_indicators = len(indicator_scores)
+    num_dimensions = len(dimension_scores)
+    num_blockers = len(blockers)
+    
+    descricao = (
+        f"Indicadores processados: {num_indicators}; "
+        f"dimensões: {num_dimensions}; "
+        f"bloqueios: {num_blockers}; "
+        f"score estrutural preliminar: {score_estrutural}"
+    )
+    
     return [{
         "id_evidencia": "EVD_AIMM_ENGINE_4_16",
         "id_fonte": "AIMM_ENGINE_INITIAL",
@@ -247,7 +260,7 @@ def generate_evidence(indicator_scores, dimension_scores, overall, blockers):
         "url_ou_arquivo": "data/processed/aimm_indicator_scores.csv; data/processed/aimm_dimension_scores.csv; data/processed/aimm_overall_score.csv",
         "titulo_documento": "Motor de cálculo inicial da calculadora AIMM — Rodada 4.16",
         "pagina_tabela_secao": "indicator_scores; dimension_scores; overall_score; blockers",
-        "trecho_original_ou_descricao": f"Indicadores processados: {len(indicator_scores)}; dimensões: {len(dimension_scores)}; bloqueios: {len(blockers)}; score estrutural preliminar: {overall.get('score_estrutural_preliminar')}.",
+        "trecho_original_ou_descricao": descricao,
         "resumo_ptbr": "Evidência de funcionamento estrutural do motor inicial da calculadora; não representa score AIMM final.",
         "valor_extraido": overall.get("score_estrutural_preliminar", ""),
         "unidade": "score 0-100",
