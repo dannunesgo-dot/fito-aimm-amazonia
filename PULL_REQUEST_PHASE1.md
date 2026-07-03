@@ -2,13 +2,13 @@
 
 ## 🎯 Objetivo
 
-Remover módulos obsoletos, consolidar código duplicado e corrigir bugs de data que causam CSVs inválidas.
+Remover módulos obsoletos, consolidar código duplicado e corrigir bugs que causam CSVs inválidas.
 
 ## 📋 Mudanças Principais
 
 ### 🔴 Módulos Removidos (5 arquivos)
 Movidos para `docs/deprecated/` com documentação:
-- **`buscador.py`** — Interface vazia; conectores real em coletores especializados
+- **`buscador.py`** — Interface vazia; conectores reais em coletores especializados
 - **`extrator.py`** — Função trivial nunca usada; lógica em coletores
 - **`conferidor.py`** — Validação real em `pre_diligencia_manual_validator.py`
 - **`sincroniza_drive.py`** — Placeholder; Drive API real em scripts
@@ -111,11 +111,12 @@ python -c "from src.fito_aimm.utils.normalization import *; print('OK')"
 
 ---
 
-## 🔗 Referência
+## 🔗 Referências
 
-- **Auditoria completa:** `AUDIT_FUNCIONALIDADES.md`
-- **Fase anterior:** N/A (primeira fase)
-- **Próxima fase:** FASE 2 - Refatoração Arquitetural (validadores, models, testes)
+- **Auditoria completa:** [AUDIT_FUNCIONALIDADES.md](./AUDIT_FUNCIONALIDADES.md)
+- **Arquivos deprecated:** [docs/deprecated/README.md](./docs/deprecated/README.md)
+- **Novo módulo utils:** [src/fito_aimm/utils/normalization.py](./src/fito_aimm/utils/normalization.py)
+- **Próxima fase:** FASE 2 - Refatoração Arquitetural (branch: `refactor/phase2`)
 
 ---
 
@@ -129,3 +130,14 @@ python -c "from src.fito_aimm.utils.normalization import *; print('OK')"
 - [x] Nenhuma nova dependência adicionada
 - [ ] Merge aprovado por 2 reviewers (aguardando)
 
+---
+
+## 📊 Impacto Geral
+
+| Métrica | Antes | Depois | Mudança |
+|---------|-------|--------|----------|
+| Módulos obsoletos ativos | 5 | 0 | ✅ Removidos |
+| Funções normalizador dispersas | 6+ | 1 módulo | ✅ Consolidadas |
+| Código sem docstrings | Sim | Não | ✅ 100% documentado |
+| Strings truncadas | 2 | 0 | ✅ Corrigidas |
+| Diretório utils/ | Não | Sim | ✅ Criado |
