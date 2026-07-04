@@ -58,9 +58,9 @@ tratamento_prontidao_benchmark:
 
 # Bandas de leitura preliminar (fonte secundária citando AIMM oficial)
 faixas_score:
-  low: [0, 34.99]
-  good: [35, 49.99]
-  strong: [50, 59.99]
+  low: [0, 34]
+  good: [35, 49]
+  strong: [50, 59]
   excellent: [60, 100]
 
 regras_liberacao_final:

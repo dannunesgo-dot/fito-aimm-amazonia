@@ -12,6 +12,8 @@ INPUTS = Path("data/reference/aimm_engine_indicator_inputs_seed.csv")
 DIM_POLICY = Path("data/reference/aimm_engine_dimension_policy_seed.csv")
 BLOCKERS = Path("data/reference/aimm_engine_blockers_seed.csv")
 ALIGNMENT = Path("data/reference/aimm_indicator_alignment_seed.csv")
+BLOCKED_READINESS_STATUSES = {"bloqueado", "bloqueado_sem_benchmark"}
+BLOCKED_REVIEW_STATUS = "bloqueado_revisao_humana"
 
 OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
 OUT_DIMENSION = Path("data/processed/aimm_dimension_scores.csv")
@@ -136,7 +138,7 @@ def validate_inputs(
         usage_status = alignment_by_id[iid].get("status_uso", "")
         raw = row.get("score_bruto_preliminar", "")
         is_blocked_usage = usage_status.startswith("bloqueado")
-        if row.get("status_prontidao_benchmark") in {"bloqueado", "bloqueado_sem_benchmark"} or is_blocked_usage:
+        if row.get("status_prontidao_benchmark") in BLOCKED_READINESS_STATUSES or is_blocked_usage:
             # bloqueado pode ficar vazio
             pass
         else:
@@ -186,7 +188,7 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         adjusted = raw * confidence_factor * readiness_factor
 
         blocked_usage = row.get("status_uso", "").startswith("bloqueado")
-        blocked_readiness = row["status_prontidao_benchmark"] in {"bloqueado", "bloqueado_sem_benchmark"}
+        blocked_readiness = row["status_prontidao_benchmark"] in BLOCKED_READINESS_STATUSES
         blocked_confidence = row["nivel_confianca"] == "bloqueado"
         bloqueado = blocked_usage or blocked_readiness or blocked_confidence
         invalid_or_missing = parse_issue and not bloqueado
@@ -310,7 +312,7 @@ def evaluate_release_gate(
         if any((b.get("criticidade") or "").strip().lower() == "alta" for b in blockers):
             reasons.append("bloqueios_criticos")
     if gate.get("exige_sem_bloqueio_revisao_humana", True):
-        if any((r.get("status_uso") or "").strip() == "bloqueado_revisao_humana" for r in indicator_scores):
+        if any((r.get("status_uso") or "").strip() == BLOCKED_REVIEW_STATUS for r in indicator_scores):
             reasons.append("revisao_humana_pendente")
 
     permissao_explicita = bool(gate.get("permitir_score_final", False))
