@@ -58,6 +58,7 @@ def to_float(value: Any, default: float | None = None) -> float | None:
 
 def score_band(score: float, rules: dict[str, Any]) -> str:
     bands = rules.get("faixas_score", {})
+    ordered_bands: list[tuple[float, float, str]] = []
     for label, raw_range in bands.items():
         if not isinstance(raw_range, list) or len(raw_range) != 2:
             continue
@@ -65,8 +66,12 @@ def score_band(score: float, rules: dict[str, Any]) -> str:
         max_val = to_float(raw_range[1], None)
         if min_val is None or max_val is None:
             continue
+        ordered_bands.append((min_val, max_val, str(label)))
+    ordered_bands.sort(key=lambda r: r[0])
+
+    for min_val, max_val, label in ordered_bands:
         if min_val <= score <= max_val:
-            return str(label)
+            return label
     return "sem_faixa"
 
 
@@ -197,9 +202,10 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         if bloqueado:
             adjusted = 0.0
 
-        limitation = row.get("limitacao", "")
+        limitation_parts = [str(row.get("limitacao", "")).strip()]
         if invalid_or_missing:
-            limitation = f"{limitation} | score_bruto_invalido_ou_ausente".strip(" |")
+            limitation_parts.append("score_bruto_invalido_ou_ausente")
+        limitation = " | ".join(p for p in limitation_parts if p)
 
         rows.append({
             "id_indicador": row["id_indicador"],
@@ -264,8 +270,14 @@ def calculate_overall(
 
     risk_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == "risk_assessment"]
     monitoring_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == "monitoring"]
-    risk_penalty = sum(float(r["score_ajustado_preliminar"]) for r in risk_indicators) / (len(risk_indicators) or 1)
-    monitor_factor_raw = sum(float(r["score_ajustado_preliminar"]) for r in monitoring_indicators) / (len(monitoring_indicators) or 1)
+    if risk_indicators:
+        risk_penalty = sum(float(r["score_ajustado_preliminar"]) for r in risk_indicators) / len(risk_indicators)
+    else:
+        risk_penalty = 0.0
+    if monitoring_indicators:
+        monitor_factor_raw = sum(float(r["score_ajustado_preliminar"]) for r in monitoring_indicators) / len(monitoring_indicators)
+    else:
+        monitor_factor_raw = 100.0
     monitor_factor = monitor_factor_raw / 100
 
     score_risk_adjusted = score_bruto * (1 - risk_penalty / 100)
@@ -315,11 +327,11 @@ def evaluate_release_gate(
         if any((r.get("status_uso") or "").strip() == BLOCKED_REVIEW_STATUS for r in indicator_scores):
             reasons.append("revisao_humana_pendente")
 
-    permissao_explicita = bool(gate.get("permitir_score_final", False))
-    if not permissao_explicita:
+    explicit_permission = bool(gate.get("permitir_score_final", False))
+    if not explicit_permission:
         reasons.append("gate_desabilitado_por_config")
 
-    return ("sim" if permissao_explicita and not reasons else "não"), reasons
+    return ("sim" if explicit_permission and not reasons else "não"), reasons
 
 
 def generate_validation(errors: list[str], indicator_scores, dimension_scores, overall, blockers, rules, gate_reasons: list[str]) -> list[dict[str, str]]:
