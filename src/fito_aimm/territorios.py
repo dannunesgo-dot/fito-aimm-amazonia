@@ -6,7 +6,8 @@ from pathlib import Path
 import yaml
 
 
-TERRITORIOS_PATH = Path("config/territorios.yaml")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+TERRITORIOS_PATH = REPO_ROOT / "config/territorios.yaml"
 
 
 @lru_cache(maxsize=1)

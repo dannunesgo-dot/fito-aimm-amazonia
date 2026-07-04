@@ -13,6 +13,7 @@ import requests
 
 SIDRA_BASE_URL = "https://apisidra.ibge.gov.br/values"
 LOCALIDADES_BASE_URL = "https://servicodados.ibge.gov.br/api/v1/localidades"
+MAX_CONCURRENT_LOCALIDADES_REQUESTS = 4
 
 from .territorios import (
     carregar_municipios_projeto,
@@ -294,7 +295,7 @@ def coletar_localidades_municipios(
         return codigo, transformar_localidade_municipio(dados_json)
 
     try:
-        max_workers = max(1, min(4, len(codigos)))
+        max_workers = max(1, min(MAX_CONCURRENT_LOCALIDADES_REQUESTS, len(codigos)))
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futuros = [
                 executor.submit(coletar_localidade, codigo, urls[codigo])

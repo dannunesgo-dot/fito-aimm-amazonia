@@ -19,7 +19,7 @@ class DriveUploadResult:
 def require_env(name: str) -> str:
     value = os.getenv(name, "").strip()
     if not value:
-        raise RuntimeError(f"Secret/variavel obrigatorio ausente: {name}")
+        raise RuntimeError(f"Segredo/variável obrigatória ausente: {name}")
     return value
 
 
@@ -36,14 +36,14 @@ def load_service_account_info_from_env(name: str = "GDRIVE_SERVICE_ACCOUNT_JSON"
     try:
         info = json.loads(raw)
     except json.JSONDecodeError as exc:
-        raise RuntimeError(f"{name} nao e JSON valido.") from exc
+        raise RuntimeError(f"{name} não é JSON válido.") from exc
 
     required = {"type", "project_id", "private_key", "client_email", "token_uri"}
     missing = sorted(required - set(info.keys()))
     if missing:
-        raise RuntimeError(f"{name} incompleto: {','.join(missing)}")
+        raise RuntimeError(f"{name} incompleto: {', '.join(missing)}")
     if info.get("type") != "service_account":
-        raise RuntimeError(f"{name} nao e credencial service_account.")
+        raise RuntimeError(f"{name} não é uma credencial service_account.")
 
     return info
 
