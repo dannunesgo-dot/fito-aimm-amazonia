@@ -277,14 +277,14 @@ def calculate_overall(
     if monitoring_indicators:
         monitor_factor_raw = sum(float(r["score_ajustado_preliminar"]) for r in monitoring_indicators) / len(monitoring_indicators)
     else:
-        monitor_factor_raw = 100.0
+        monitor_factor_raw = 0.0
     monitor_factor = monitor_factor_raw / 100
 
     score_risk_adjusted = score_bruto * (1 - risk_penalty / 100)
     score_confidence_adjusted = score_risk_adjusted * monitor_factor
 
     return {
-        "id_resultado": "AIMM_ENGINE_PRELIMINAR_4_16",
+        "id_resultado": "AIMM_ENGINE_PRELIMINAR_4_20",
         "score_project_outcomes_preliminar": f"{project_score:.2f}",
         "score_market_outcomes_preliminar": f"{market_score:.2f}",
         "score_bruto_beneficio_preliminar": f"{score_bruto:.2f}",
@@ -386,13 +386,13 @@ def generate_evidence(indicator_scores, dimension_scores, overall, blockers):
         "tipo_evidencia": "motor_calculo_preliminar",
         "pergunta_ou_lacuna": "O motor canônico consegue integrar project_outcomes e market_outcomes, com eixos de risco/monitoramento e bloqueios, em score estrutural preliminar?",
         "url_ou_arquivo": "data/processed/aimm_indicator_scores.csv; data/processed/aimm_dimension_scores.csv; data/processed/aimm_overall_score.csv",
-        "titulo_documento": "Motor de cálculo inicial da calculadora AIMM — Rodada 4.16",
+        "titulo_documento": "Motor de cálculo canônico preliminar da calculadora AIMM — Rodada 4.20",
         "pagina_tabela_secao": "indicator_scores; dimension_scores; overall_score; blockers",
         "trecho_original_ou_descricao": f"Indicadores processados: {len(indicator_scores)}; dimensões: {len(dimension_scores)}; bloqueios: {len(blockers)}; score estrutural preliminar: {overall.get('score_estrutural_preliminar')}.",
         "resumo_ptbr": "Evidência de funcionamento estrutural do motor inicial da calculadora; não representa score AIMM final.",
         "valor_extraido": overall.get("score_estrutural_preliminar", ""),
         "unidade": "score 0-100",
-        "periodo_referencia": "Rodada 4.16",
+        "periodo_referencia": "Rodada 4.20",
         "territorio": "Fito+ Amazônia",
         "metodo_extracao": "cálculo automatizado com indicadores seed, fatores de confiança, prontidão de benchmark, penalização de risco e fator de monitoramento",
         "nivel_confianca": "baixo_para_decisao; médio_para_teste_estrutural",
