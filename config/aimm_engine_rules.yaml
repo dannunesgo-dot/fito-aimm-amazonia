@@ -1,4 +1,4 @@
-# Rodada 4.16 — motor de cálculo canônico preliminar da calculadora AIMM
+# Rodada 4.20 — motor de cálculo canônico preliminar da calculadora AIMM
 # Objetivo: calcular score estrutural preliminar alinhado ao modelo canônico
 # (project_outcomes + market_outcomes), mantendo travas e governança.
 
@@ -7,6 +7,8 @@ projeto:
   investimento_total_brl: 80000000
   moeda: "BRL"
   status_calculo: "preliminar_estrutural_canonico"
+
+id_resultado_preliminar: "AIMM_ENGINE_PRELIMINAR_4_20"
 
 # Dimensões canônicas AIMM (IFC)
 dimensoes_canonicas:

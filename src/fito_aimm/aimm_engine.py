@@ -14,6 +14,7 @@ BLOCKERS = Path("data/reference/aimm_engine_blockers_seed.csv")
 ALIGNMENT = Path("data/reference/aimm_indicator_alignment_seed.csv")
 BLOCKED_READINESS_STATUSES = {"bloqueado", "bloqueado_sem_benchmark"}
 BLOCKED_REVIEW_STATUS = "bloqueado_revisao_humana"
+HIGH_CRITICALITY = "alta"
 
 OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
 OUT_DIMENSION = Path("data/processed/aimm_dimension_scores.csv")
@@ -47,7 +48,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
         return yaml.safe_load(f) or {}
 
 
-def to_float(value: Any, default: float | None = None) -> float | None:
+def to_float(value: Any, default: float | None = 0.0) -> float | None:
     try:
         if value is None or str(value).strip() == "":
             return default
@@ -142,7 +143,7 @@ def validate_inputs(
 
         usage_status = alignment_by_id[iid].get("status_uso", "")
         raw = row.get("score_bruto_preliminar", "")
-        is_blocked_usage = usage_status.startswith("bloqueado")
+        is_blocked_usage = str(usage_status).startswith("bloqueado")
         if row.get("status_prontidao_benchmark") in BLOCKED_READINESS_STATUSES or is_blocked_usage:
             # bloqueado pode ficar vazio
             pass
@@ -192,7 +193,7 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         readiness_factor = float(readiness_map[row["status_prontidao_benchmark"]])
         adjusted = raw * confidence_factor * readiness_factor
 
-        blocked_usage = row.get("status_uso", "").startswith("bloqueado")
+        blocked_usage = str(row.get("status_uso", "")).startswith("bloqueado")
         blocked_readiness = row["status_prontidao_benchmark"] in BLOCKED_READINESS_STATUSES
         blocked_confidence = row["nivel_confianca"] == "bloqueado"
         bloqueado = blocked_usage or blocked_readiness or blocked_confidence
@@ -284,7 +285,7 @@ def calculate_overall(
     score_confidence_adjusted = score_risk_adjusted * monitor_factor
 
     return {
-        "id_resultado": "AIMM_ENGINE_PRELIMINAR_4_20",
+        "id_resultado": str(rules.get("id_resultado_preliminar", "AIMM_ENGINE_PRELIMINAR_4_20")),
         "score_project_outcomes_preliminar": f"{project_score:.2f}",
         "score_market_outcomes_preliminar": f"{market_score:.2f}",
         "score_bruto_beneficio_preliminar": f"{score_bruto:.2f}",
@@ -321,7 +322,7 @@ def evaluate_release_gate(
         if any(r.get("bloqueado_para_score_final") == "sim" for r in indicator_scores):
             reasons.append("indicadores_bloqueados")
     if gate.get("exige_sem_bloqueios_criticos", True):
-        if any((b.get("criticidade") or "").strip().lower() == "alta" for b in blockers):
+        if any((b.get("criticidade") or "").strip().lower() == HIGH_CRITICALITY for b in blockers):
             reasons.append("bloqueios_criticos")
     if gate.get("exige_sem_bloqueio_revisao_humana", True):
         if any((r.get("status_uso") or "").strip() == BLOCKED_REVIEW_STATUS for r in indicator_scores):
@@ -380,7 +381,7 @@ def generate_validation(errors: list[str], indicator_scores, dimension_scores, o
 
 def generate_evidence(indicator_scores, dimension_scores, overall, blockers):
     return [{
-        "id_evidencia": "EVD_AIMM_ENGINE_4_16",
+        "id_evidencia": "EVD_AIMM_ENGINE_4_20",
         "id_fonte": "AIMM_ENGINE_INITIAL",
         "id_indicador": "PROJECT_OUTCOMES; MARKET_OUTCOMES",
         "tipo_evidencia": "motor_calculo_preliminar",
