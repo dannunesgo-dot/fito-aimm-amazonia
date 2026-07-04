@@ -1,0 +1,21 @@
+pesos_dimensao:
+  territorial_gis: 12
+  desenho_projeto_ifc: 16
+  mercado_cadeia_valor: 16
+  evidencias_benchmarks: 16
+  risco_socioambiental: 14
+  financeiro_operacional: 16
+  governanca_execucao: 10
+
+hints_tipo_documento_dimensao:
+  gis: territorial_gis
+  planilha: financeiro_operacional
+  google_docs: desenho_projeto_ifc
+
+classificacao_confianca:
+  pontuacao_baixa_max: 1
+  margem_media_max: 1
+
+penalidade_confianca_score_final:
+  limiar_proporcao_baixa: 0.4
+  fator_penalizacao: 0.9

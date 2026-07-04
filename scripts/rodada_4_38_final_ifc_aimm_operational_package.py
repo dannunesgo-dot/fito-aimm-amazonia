@@ -10,13 +10,29 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+import yaml
 
-from pypdf import PdfReader
-from docx import Document
+try:
+    from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
+    from googleapiclient.discovery import build
+    from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+except ImportError:  # pragma: no cover - dependência opcional para execução real no workflow
+    Credentials = None
+    Request = None
+    build = None
+    MediaFileUpload = None
+    MediaIoBaseDownload = None
+
+try:
+    from pypdf import PdfReader
+except ImportError:  # pragma: no cover - dependência opcional para execução real no workflow
+    PdfReader = None
+
+try:
+    from docx import Document
+except ImportError:  # pragma: no cover - dependência opcional para execução real no workflow
+    Document = None
 
 
 BASE = Path("outputs/aimm/rodada_4_38_final_ifc_aimm_operational_package")
@@ -125,6 +141,20 @@ DOC_TYPE_DIMENSION_HINTS = {
     "google_docs": "desenho_projeto_ifc",
 }
 
+TRIAGE_RULES_PATH = Path("config/rodada_4_38_triagem_rules.yaml")
+DEFAULT_TRIAGE_RULES = {
+    "pesos_dimensao": {dim["dimensao"]: dim["peso"] for dim in DIMENSIONS},
+    "hints_tipo_documento_dimensao": DOC_TYPE_DIMENSION_HINTS,
+    "classificacao_confianca": {
+        "pontuacao_baixa_max": 1,
+        "margem_media_max": 1,
+    },
+    "penalidade_confianca_score_final": {
+        "limiar_proporcao_baixa": 0.4,
+        "fator_penalizacao": 0.9,
+    },
+}
+
 
 def require_env(name: str) -> str:
     value = os.getenv(name, "").strip()
@@ -135,6 +165,35 @@ def require_env(name: str) -> str:
 
 def env(name: str, default: str = "") -> str:
     return os.getenv(name, default).strip()
+
+
+def load_triage_rules(path: Path = TRIAGE_RULES_PATH) -> dict[str, Any]:
+    rules = {
+        "pesos_dimensao": dict(DEFAULT_TRIAGE_RULES["pesos_dimensao"]),
+        "hints_tipo_documento_dimensao": dict(DEFAULT_TRIAGE_RULES["hints_tipo_documento_dimensao"]),
+        "classificacao_confianca": dict(DEFAULT_TRIAGE_RULES["classificacao_confianca"]),
+        "penalidade_confianca_score_final": dict(DEFAULT_TRIAGE_RULES["penalidade_confianca_score_final"]),
+    }
+
+    if not path.exists():
+        return rules
+
+    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    if not isinstance(loaded, dict):
+        return rules
+
+    for key in ("pesos_dimensao", "hints_tipo_documento_dimensao", "classificacao_confianca", "penalidade_confianca_score_final"):
+        if isinstance(loaded.get(key), dict):
+            rules[key].update(loaded[key])
+
+    return rules
+
+
+TRIAGE_RULES = load_triage_rules()
+DIMENSION_WEIGHTS = TRIAGE_RULES["pesos_dimensao"]
+DOC_TYPE_DIMENSION_HINTS = TRIAGE_RULES["hints_tipo_documento_dimensao"]
+CONFIDENCE_CLASSIFICATION_RULES = TRIAGE_RULES["classificacao_confianca"]
+CONFIDENCE_SCORE_PENALTY_RULES = TRIAGE_RULES["penalidade_confianca_score_final"]
 
 
 def norm_bool(value: Any) -> str:
@@ -183,6 +242,8 @@ def extract_drive_id(value: str) -> str:
 
 
 def drive_service():
+    if not all([Credentials, Request, build]):
+        raise RuntimeError("Dependências Google ausentes. Instale google-api-python-client e google-auth.")
     creds = Credentials(
         token=None,
         refresh_token=require_env("GOOGLE_OAUTH_REFRESH_TOKEN"),
@@ -352,9 +413,12 @@ def classify(name: str, mime: str, text: str) -> dict[str, Any]:
     second_score = ordered_scores[1] if len(ordered_scores) > 1 else 0
     margin = max(0, hits[best] - second_score)
 
-    if hits[best] <= 1:
+    max_low_score = int(CONFIDENCE_CLASSIFICATION_RULES.get("pontuacao_baixa_max", 1))
+    max_medium_margin = int(CONFIDENCE_CLASSIFICATION_RULES.get("margem_media_max", 1))
+
+    if hits[best] <= max_low_score:
         confidence = "baixa"
-    elif margin <= 1:
+    elif margin <= max_medium_margin:
         confidence = "media"
     else:
         confidence = "alta"
@@ -370,17 +434,45 @@ def classify(name: str, mime: str, text: str) -> dict[str, Any]:
     }
 
 
+def avaliar_confianca_operacional(document_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    total = len(document_rows)
+    counts = {"alta": 0, "media": 0, "baixa": 0}
+
+    for row in document_rows:
+        confianca = str(row.get("classificacao_confianca", "baixa")).strip().lower()
+        if confianca not in counts:
+            confianca = "baixa"
+        counts[confianca] += 1
+
+    baixa_ratio = (counts["baixa"] / total) if total else 0.0
+    limiar = float(CONFIDENCE_SCORE_PENALTY_RULES.get("limiar_proporcao_baixa", 0.4))
+    fator_penalizacao = float(CONFIDENCE_SCORE_PENALTY_RULES.get("fator_penalizacao", 0.9))
+    aplicar_penalizacao = total > 0 and baixa_ratio >= limiar and fator_penalizacao < 1.0
+    fator_aplicado = fator_penalizacao if aplicar_penalizacao else 1.0
+
+    return {
+        "contagens": counts,
+        "total_documentos": total,
+        "proporcao_baixa": round(baixa_ratio, 4),
+        "limiar_proporcao_baixa": limiar,
+        "fator_penalizacao_configurado": fator_penalizacao,
+        "fator_aplicado": fator_aplicado,
+        "penalizacao_aplicada": "sim" if aplicar_penalizacao else "nao",
+    }
+
+
 def build_scores(document_rows: list[dict[str, Any]], codigo_ibge: str, usar_gis: str) -> tuple[list[dict[str, Any]], float, str]:
     total_docs = len(document_rows)
     extracted_docs = sum(1 for r in document_rows if "extraido" in str(r.get("status_extracao", "")) or "exportado" in str(r.get("status_extracao", "")))
     gis_docs = sum(1 for r in document_rows if r.get("tipo_documento") == "gis")
+    confidence_state = avaliar_confianca_operacional(document_rows)
 
     rows: list[dict[str, Any]] = []
     total = 0.0
 
     for dim in DIMENSIONS:
         dim_name = dim["dimensao"]
-        peso = float(dim["peso"])
+        peso = float(DIMENSION_WEIGHTS.get(dim_name, dim["peso"]))
         docs_dim = sum(1 for r in document_rows if r.get("dimensao_aimm_predominante") == dim_name)
 
         if dim_name == "territorial_gis":
@@ -427,6 +519,7 @@ def build_scores(document_rows: list[dict[str, Any]], codigo_ibge: str, usar_gis
             }
         )
 
+    total *= float(confidence_state["fator_aplicado"])
     total = round(total, 2)
 
     if total >= 80:
@@ -440,6 +533,8 @@ def build_scores(document_rows: list[dict[str, Any]], codigo_ibge: str, usar_gis
 
 
 def upload_file(service, folder_id: str, path: Path, mime: str, prefix: str, run_id: str) -> dict[str, Any]:
+    if not MediaFileUpload:
+        raise RuntimeError("Dependência Google ausente. Instale google-api-python-client.")
     metadata_in = {
         "name": f"{prefix}_{run_id}_{path.name}",
         "parents": [folder_id],
@@ -516,6 +611,7 @@ def main() -> None:
             }
         )
 
+    confidence_state = avaliar_confianca_operacional(document_rows)
     dimension_rows, score, classification = build_scores(document_rows, codigo_ibge, usar_gis)
 
     gis_docs = [r for r in document_rows if r["tipo_documento"] == "gis"]
@@ -568,6 +664,8 @@ def main() -> None:
             "status_gis": gis_status,
             "score_final_preliminar": score,
             "classificacao": classification,
+            "classificacao_confianca_documental": confidence_state["penalizacao_aplicada"],
+            "fator_confianca_aplicado": confidence_state["fator_aplicado"],
             "relatorio_tecnico_profissional": "sim",
             "relatorio_executivo_ifc": "sim",
             "guia_uso": "sim",
@@ -584,6 +682,8 @@ def main() -> None:
             "case_id": case_id,
             "score_final_preliminar": score,
             "classificacao": classification,
+            "penalizacao_confianca_documental": confidence_state["penalizacao_aplicada"],
+            "fator_confianca_aplicado": confidence_state["fator_aplicado"],
             "score_final_liberado": "nao",
             "observacao": "Resultado profissional preliminar; decisão final exige revisão humana e validação GIS/documental.",
         }
@@ -620,6 +720,8 @@ def main() -> None:
         "",
         f"- Score final preliminar: **{score} / 100**",
         f"- Classificação: **{classification}**",
+        f"- Confiança documental (alta/média/baixa): **{confidence_state['contagens']['alta']} / {confidence_state['contagens']['media']} / {confidence_state['contagens']['baixa']}**",
+        f"- Penalização por baixa confiança aplicada: **{confidence_state['penalizacao_aplicada']}** (fator `{confidence_state['fator_aplicado']}`)",
         "- Score final liberado: **não**",
         "",
         "## 4. Base documental processada",
@@ -651,7 +753,7 @@ def main() -> None:
 
     for row in document_rows[:80]:
         tecnico.append(
-            f"- `{row['nome_arquivo']}` — tipo `{row['tipo_documento']}` — dimensão `{row['dimensao_aimm_predominante']}` — extração `{row['status_extracao']}`."
+            f"- `{row['nome_arquivo']}` — tipo `{row['tipo_documento']}` — dimensão `{row['dimensao_aimm_predominante']}` — confiança `{row['classificacao_confianca']}` — extração `{row['status_extracao']}`."
         )
 
     tecnico.extend(
@@ -686,12 +788,16 @@ def main() -> None:
         f"- Documentos detectados: **{len(document_rows)}**",
         f"- Score final preliminar: **{score} / 100**",
         f"- Classificação: **{classification}**",
+        f"- Confiança documental (alta/média/baixa): **{confidence_state['contagens']['alta']} / {confidence_state['contagens']['media']} / {confidence_state['contagens']['baixa']}**",
+        f"- Penalização por baixa confiança aplicada: **{confidence_state['penalizacao_aplicada']}** (fator `{confidence_state['fator_aplicado']}`)",
         f"- Status GIS: **{gis_status}**",
         "- Score final liberado: **não**",
         "",
         "## Interpretação",
         "",
         "A ferramenta já apoia triagem, extração, organização metodológica, leitura por dimensões AIMM e geração de relatórios. O resultado não deve ser tratado como decisão automática. Ele deve orientar a revisão técnica, a complementação documental e a preparação profissional do projeto.",
+        "",
+        "Regra operacional de confiança: quando a proporção de documentos com confiança baixa atinge o limiar configurado, aplica-se penalização automática no score preliminar.",
         "",
         "## Decisão operacional recomendada",
         "",
