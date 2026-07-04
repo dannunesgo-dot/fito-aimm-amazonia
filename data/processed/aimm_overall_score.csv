@@ -1,0 +1,2 @@
+﻿id_resultado;score_bruto_beneficio_preliminar;risk_penalty_preliminar;monitoring_factor_preliminar;score_ajustado_risco_preliminar;score_estrutural_preliminar;faixa_score_estrutural;status_resultado;validacao_metodologica_concluida;sem_bloqueadores_criticos;pode_ser_usado_como_score_final;interpretacao
+AIMM_ENGINE_PRELIMINAR_4_16;7.69;23.59;0.41;5.88;2.40;muito_baixo;preliminar_com_bloqueios;não;não;não;"Score estrutural inicial com bloqueadores críticos ativos; não representa AIMM final validado."

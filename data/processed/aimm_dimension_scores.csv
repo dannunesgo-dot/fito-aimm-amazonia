@@ -1,0 +1,6 @@
+﻿dimensao_aimm;papel;peso;indicadores_considerados;indicadores_bloqueados_ou_baixa_prontidao;score_dimensao_preliminar;faixa_score_dimensao;status_dimensao;limitacao
+gap;beneficio;0.25;2;2;8.12;muito_baixo;preliminar_com_bloqueios;"Mede lacuna/necessidade; maior lacuna com intervenção endereçável aumenta potencial, mas exige evidência."
+intensidade;beneficio;0.25;3;3;7.08;muito_baixo;preliminar_com_bloqueios;"Mede magnitude do resultado esperado; depende de beneficiários, orçamento e metas reais."
+mercado;beneficio;0.20;3;3;7.92;muito_baixo;preliminar_com_bloqueios;Mede potencial de mercado, substituição de importações, diversificação e funcionamento da cadeia.
+risco;penalizador;0.20;2;1;23.59;baixo;preliminar_com_bloqueios;"Risco reduz score líquido; não deve ser somado como benefício."
+monitoramento;confianca;0.10;2;0;40.78;medio;preliminar;"Mede rastreabilidade, evidências e capacidade de monitoramento; ajusta robustez."

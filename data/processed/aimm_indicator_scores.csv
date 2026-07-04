@@ -1,0 +1,13 @@
+﻿id_indicador;dimensao_aimm;id_benchmark;score_bruto_preliminar;nivel_confianca;fator_confianca;status_prontidao_benchmark;fator_prontidao;score_ajustado_preliminar;faixa_score_ajustado;bloqueado_para_score_final;limitacao
+IND_GAP_TERR_001;gap;BMK_001;45.00;baixo;0.50;proxy_baixa_confianca;0.50;11.25;muito_baixo;sim;Área/densidade ainda depende de confirmação final da Rodada 4.3.
+IND_GAP_ORG_001;gap;BMK_002;20.00;baixo;0.50;proxy_baixa_confianca;0.50;5.00;muito_baixo;sim;"Pré-diligência manual não executada; OSCs não aptas."
+IND_INT_BEN_001;intensidade;BMK_003;35.00;baixo;0.50;proxy_baixa_confianca;0.50;8.75;muito_baixo;sim;Metas de beneficiários ainda preliminares.
+IND_INT_INV_001;intensidade;BMK_004;50.00;baixo;0.50;proxy_baixa_confianca;0.50;12.50;muito_baixo;sim;Orçamento preliminar sem pesquisa de preços/memória de cálculo.
+IND_MKT_IMP_001;mercado;BMK_005;40.00;baixo;0.50;proxy_baixa_confianca;0.50;10.00;muito_baixo;sim;Produtos/NCM ainda não definidos.
+IND_MKT_DIV_001;mercado;BMK_006;55.00;baixo;0.50;proxy_baixa_confianca;0.50;13.75;muito_baixo;sim;Mercados/clientes reais ainda não cadastrados.
+IND_RISK_OSC_001;risco;BMK_007;55.00;medio;0.75;proxy_utilizavel_com_validacao;0.75;30.94;baixo;não;Risco OSC sem validação documental real.
+IND_RISK_REG_001;risco;BMK_008;65.00;baixo;0.50;proxy_baixa_confianca;0.50;16.25;muito_baixo;sim;Rotas regulatórias ainda conceituais.
+IND_MON_EVD_001;monitoramento;BMK_009;70.00;medio;0.75;proxy_utilizavel_com_validacao;0.75;39.38;baixo;não;Mede completude documental, não validade substantiva.
+IND_MON_LOG_001;monitoramento;BMK_010;75.00;medio;0.75;proxy_utilizavel_com_validacao;0.75;42.19;medio;não;Depende de disciplina de logs e artefatos.
+AIMM_INTERNAL_MARKET_OUTCOME;mercado;BMK_011;0.00;bloqueado;0.00;bloqueado;0.00;0.00;muito_baixo;sim;Benchmark IFC/AIMM interno não público bloqueado.
+AIMM_INTERNAL_PROJECT_OUTCOME;intensidade;BMK_012;0.00;bloqueado;0.00;bloqueado;0.00;0.00;muito_baixo;sim;Benchmark IFC/AIMM interno não público bloqueado.

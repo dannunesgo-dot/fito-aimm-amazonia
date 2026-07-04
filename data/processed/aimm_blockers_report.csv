@@ -1,0 +1,8 @@
+﻿id_bloqueio;bloqueio;criticidade;area;efeito_no_score
+BLK_001;Pré-diligência manual OSC não executada;alta;organizações;bloqueia aptidão/seleção de executoras
+BLK_002;Benchmarks IFC/AIMM internos não públicos;alta;benchmarks;bloqueia comparação AIMM/IFC direta
+BLK_003;Produtos/NCM/mercados reais não definidos;alta;mercado;bloqueia substituição de importações e diversificação real
+BLK_004;Rotas regulatórias não validadas;alta;regulação;bloqueia aprovação de produto e risco regulatório robusto
+BLK_005;Orçamento sem pesquisa de preços e memória de cálculo;alta;orçamento;bloqueia custo-efetividade e intensidade robusta
+BLK_006;Cadastro real de beneficiários ausente;alta;beneficiários;bloqueia cálculo real por beneficiário
+BLK_007;Área/densidade Rodada 4.3 pendente de confirmação;média;território;bloqueia indicador territorial definitivo

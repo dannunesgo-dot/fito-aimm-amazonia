@@ -1,0 +1,21 @@
+TESTE AIMM_ENGINE — Fito+ Amazônia
+======================================================================================
+Indicadores processados: 12
+Dimensões processadas: 5
+Bloqueios/lacunas ativos: 7
+Penalidade de risco preliminar: 23.59
+Fator de monitoramento preliminar: 0.41
+Score estrutural preliminar: 2.40
+
+Arquivos gerados:
+- data/processed/aimm_indicator_scores.csv
+- data/processed/aimm_dimension_scores.csv
+- data/processed/aimm_overall_score.csv
+- data/processed/aimm_blockers_report.csv
+- data/processed/aimm_engine_validation_report.csv
+- data/evidence/evidence_aimm_engine.csv
+
+Resultado: SUCESSO.
+O motor inicial da calculadora AIMM foi executado e validado estruturalmente.
+
+Trava: o score é estrutural, preliminar e não pode ser usado como score AIMM final validado.

@@ -1,0 +1,8 @@
+﻿checagem;status;valor;mensagem
+erros_validacao;ok;0;Sem erros estruturais.
+indicadores_processados;ok;12;Indicadores processados pelo motor.
+dimensoes_processadas;ok;5;Dimensões AIMM processadas.
+resultado_final_bloqueado;trava;não;Resultado ainda não pode ser usado como score final validado.
+validacao_metodologica;trava;não;Validação metodológica pendente.
+bloqueadores_criticos;trava;não;Há bloqueadores críticos ativos.
+bloqueios_registrados;ok;7;Bloqueios/lacunas ativos registrados.

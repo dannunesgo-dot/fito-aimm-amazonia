@@ -11,6 +11,7 @@ from fito_aimm.coletor_ibge_geociencias import (
     obter_xls_area_cacheado,
 )
 from fito_aimm.mapaosc.fetcher import MAPAOSC_DICIONARIO_URL
+from fito_aimm.mapaosc import fetcher as mapaosc_fetcher
 
 
 def _read_csv(path: Path):
@@ -19,14 +20,18 @@ def _read_csv(path: Path):
 
 
 @responses.activate
-def test_mapaosc_pipeline_uses_local_base_and_mocked_dictionary(tmp_path: Path, fixtures_dir: Path):
+def test_mapaosc_pipeline_uses_local_base_and_mocked_dictionary(tmp_path: Path, fixtures_dir: Path, monkeypatch):
     raw_output = tmp_path / "raw.csv"
     processed_output = tmp_path / "processed.csv"
     summary_output = tmp_path / "summary.csv"
     log_output = tmp_path / "fetch_log.csv"
     dictionary_output = tmp_path / "dictionary.xlsx"
+    local_base = tmp_path / "mapaosc_base.csv"
     evidence_output = Path("data/evidence/evidence_mapaosc_triagem.csv")
     original_evidence = evidence_output.read_bytes() if evidence_output.exists() else None
+
+    local_base.write_text((fixtures_dir / "sample_mapaosc.csv").read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setattr(mapaosc_fetcher, "LOCAL_BASE_CANDIDATES", [local_base])
 
     responses.add(
         responses.GET,
