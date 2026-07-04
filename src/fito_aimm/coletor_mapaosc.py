@@ -480,6 +480,48 @@ def gerar_evidencias_mapaosc(
     return evidencias
 
 
+def deduplicar_oscs(linhas: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Remove duplicatas de OSCs, mantendo o registro de maior score por CNPJ/ID.
+
+    Uma OSC pode aparecer múltiplas vezes na base (diferentes chunks ou linhas com
+    o mesmo CNPJ em municípios distintos). Para registros sem CNPJ, a deduplicação
+    usa a combinação nome + município + UF como chave.
+
+    Args:
+        linhas: Lista de organizações já padronizadas.
+
+    Returns:
+        Lista sem duplicatas, com o registro de maior score_triagem por chave.
+    """
+    indice: dict[str, dict[str, str]] = {}
+
+    for linha in linhas:
+        cnpj = str(linha.get("cnpj_ou_id") or "").strip()
+        if cnpj:
+            chave = cnpj
+        else:
+            nome = str(linha.get("nome_organizacao") or "").strip().lower()
+            municipio = str(linha.get("municipio") or "").strip().lower()
+            uf = str(linha.get("uf") or "").strip().upper()
+            chave = f"__sem_cnpj__{nome}|{municipio}|{uf}"
+
+        if not chave or chave == "__sem_cnpj__||":
+            # Sem chave identificável: mantém sem dedup
+            indice[f"__sem_chave__{id(linha)}"] = linha
+            continue
+
+        existente = indice.get(chave)
+        if existente is None:
+            indice[chave] = linha
+        else:
+            score_novo = int(float(linha.get("score_triagem") or 0))
+            score_existente = int(float(existente.get("score_triagem") or 0))
+            if score_novo > score_existente:
+                indice[chave] = linha
+
+    return list(indice.values())
+
+
 def coletar_mapaosc_municipios(
     arquivo_saida_raw: Path = Path("data/raw/mapaosc/mapaosc_base_principal_filtrada_municipios.csv"),
     arquivo_saida_processado: Path = Path("data/processed/organizacoes_candidatas_mapaosc.csv"),
@@ -545,20 +587,22 @@ def coletar_mapaosc_municipios(
                 linhas_processadas = linhas_processadas[:max_linhas_saida]
                 break
 
+        linhas_deduplicadas = deduplicar_oscs(linhas_processadas)
+
         campos = [
             "cnpj_ou_id","nome_organizacao","municipio","uf","codigo_municipio_ibge",
             "natureza_juridica_ou_classe","situacao_cadastral_ou_status",
             "area_atuacao_ou_atividade","email","telefone","endereco",
             "score_triagem","classificacao_triagem","marcadores_triagem","fonte","limitacao"
         ]
-        salvar_csv(arquivo_saida_raw, linhas_processadas, campos=campos)
+        salvar_csv(arquivo_saida_raw, linhas_deduplicadas, campos=campos)
         salvar_csv(
             arquivo_saida_processado,
-            sorted(linhas_processadas, key=lambda x: int(x.get("score_triagem") or 0), reverse=True),
+            sorted(linhas_deduplicadas, key=lambda x: int(x.get("score_triagem") or 0), reverse=True),
             campos=campos
         )
 
-        resumo = gerar_resumo_por_municipio(linhas_processadas)
+        resumo = gerar_resumo_por_municipio(linhas_deduplicadas)
         salvar_csv(arquivo_resumo, resumo)
         evidencias = gerar_evidencias_mapaosc(resumo)
 
@@ -581,18 +625,25 @@ def coletar_mapaosc_municipios(
                 territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
                 status_http=status_http,
                 status_coleta="sucesso",
-                linhas_extraidas=len(linhas_processadas),
+                linhas_extraidas=len(linhas_deduplicadas),
                 arquivo_saida=str(arquivo_saida_processado),
-                observacoes=f"Triagem Mapa OSCs concluída. Método: {metodo_obtencao}. Encoding: {encoding}. Linhas lidas: {total_linhas_lidas}. Linhas filtradas: {len(linhas_processadas)}.",
+                observacoes=(
+                    f"Triagem Mapa OSCs concluída. Método: {metodo_obtencao}. "
+                    f"Encoding: {encoding}. Linhas lidas: {total_linhas_lidas}. "
+                    f"Antes dedup: {len(linhas_processadas)}. "
+                    f"Após dedup: {len(linhas_deduplicadas)}."
+                ),
             ),
         )
 
         return {
-            "linhas": linhas_processadas,
+            "linhas": linhas_deduplicadas,
             "resumo": resumo,
             "evidencias": evidencias,
             "colunas_detectadas": colmap_final,
             "total_linhas_lidas": total_linhas_lidas,
+            "total_antes_dedup": len(linhas_processadas),
+            "total_apos_dedup": len(linhas_deduplicadas),
             "delimitador": delimitador,
             "encoding": encoding,
             "metodo_obtencao_base": metodo_obtencao,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -420,11 +421,128 @@ def gerar_evidencias_ibge_territorios(
     return evidencias
 
 
+def _coletar_localidade_municipio_unico(codigo: str) -> tuple[str, dict[str, str]]:
+    """Coleta dados de localidade de um único município. Usado em paralelo."""
+    url = montar_url_localidade_municipio(codigo)
+    _, dados_json = requisitar_json(url)
+    return url, transformar_localidade_municipio(dados_json)
+
+
+def coletar_localidades_municipios_paralelo(
+    arquivo_saida: Path = Path("data/raw/ibge/localidades_municipios.csv"),
+    arquivo_log: Path = Path("data/reference/fetch_log.csv"),
+    max_workers: int = 4,
+) -> list[dict[str, str]]:
+    """Coleta localidades de todos os municípios do projeto em paralelo.
+
+    Cada município é consultado em uma thread separada, reduzindo o tempo
+    total de I/O de rede comparado à versão sequencial.
+
+    Args:
+        arquivo_saida: Caminho para o CSV de saída.
+        arquivo_log: Caminho para o log de coleta.
+        max_workers: Número máximo de threads paralelas.
+
+    Returns:
+        Lista de dicionários com dados de localidade por município.
+    """
+    id_coleta = f"IBGE_LOCALIDADES_MUNICIPIOS_PAR_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
+    linhas: list[dict[str, str]] = []
+    urls: list[str] = []
+    erros: list[str] = []
+
+    codigos = list(MUNICIPIOS_PROJETO.keys())
+
+    try:
+        with ThreadPoolExecutor(max_workers=min(max_workers, len(codigos))) as executor:
+            futuros = {
+                executor.submit(_coletar_localidade_municipio_unico, codigo): codigo
+                for codigo in codigos
+            }
+            for futuro in as_completed(futuros):
+                codigo = futuros[futuro]
+                try:
+                    url, dados = futuro.result()
+                    urls.append(url)
+                    linhas.append(dados)
+                except Exception as exc:
+                    erros.append(f"{codigo}: {exc}")
+
+        if erros:
+            raise RuntimeError(f"Falhas ao coletar localidades em paralelo: {erros}")
+
+        codigos_obtidos = {linha["codigo_municipio_ibge"] for linha in linhas}
+        codigos_esperados = set(MUNICIPIOS_PROJETO.keys())
+        faltantes = sorted(codigos_esperados - codigos_obtidos)
+        if faltantes:
+            raise ValueError(f"Municípios ausentes na resposta Localidades: {faltantes}")
+
+        # Ordena para saída determinística
+        linhas.sort(key=lambda x: x.get("codigo_municipio_ibge", ""))
+
+        salvar_csv(arquivo_saida, linhas)
+
+        registrar_fetch_log(
+            arquivo_log,
+            ResultadoColeta(
+                id_coleta=id_coleta,
+                fonte="SRC_IBGE_API",
+                endpoint=" | ".join(sorted(urls)),
+                parametros=json.dumps(
+                    {"municipios": codigos, "modo": "paralelo", "max_workers": max_workers},
+                    ensure_ascii=False,
+                ),
+                indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
+                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                status_http=200,
+                status_coleta="sucesso",
+                linhas_extraidas=len(linhas),
+                arquivo_saida=str(arquivo_saida),
+                observacoes=f"Coleta paralela IBGE Localidades ({max_workers} workers).",
+            ),
+        )
+
+        return linhas
+
+    except Exception as erro:
+        registrar_fetch_log(
+            arquivo_log,
+            ResultadoColeta(
+                id_coleta=id_coleta,
+                fonte="SRC_IBGE_API",
+                endpoint=" | ".join(urls) if urls else "API Localidades",
+                parametros=json.dumps(
+                    {"municipios": codigos, "modo": "paralelo", "max_workers": max_workers},
+                    ensure_ascii=False,
+                ),
+                indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
+                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                status_http="erro",
+                status_coleta="falha",
+                linhas_extraidas=len(linhas),
+                arquivo_saida=str(arquivo_saida),
+                mensagem_erro=str(erro),
+                observacoes="Falha na coleta paralela IBGE Localidades.",
+            ),
+        )
+        raise
+
+
 def executar_pipeline_baseline_ibge(
     arquivo_log: Path = Path("data/reference/fetch_log.csv"),
+    paralelo: bool = True,
 ) -> dict[str, Any]:
+    """Executa o pipeline completo de baseline IBGE/SIDRA.
+
+    Args:
+        arquivo_log: Caminho para o log de coleta.
+        paralelo: Se True, usa coleta paralela de localidades por município.
+    """
     populacao = coletar_populacao_estimada_municipios(arquivo_log=arquivo_log)
-    localidades = coletar_localidades_municipios(arquivo_log=arquivo_log)
+    if paralelo:
+        localidades = coletar_localidades_municipios_paralelo(arquivo_log=arquivo_log)
+    else:
+        localidades = coletar_localidades_municipios(arquivo_log=arquivo_log)
     baseline = montar_baseline_territorial_ibge()
     evidencias = gerar_evidencias_ibge_territorios(baseline)
 

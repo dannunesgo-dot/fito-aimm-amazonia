@@ -7,3 +7,7 @@ lxml>=5.0
 pandas>=2.2
 xlrd>=2.0.1
 openpyxl>=3.1
+pyarrow>=23.0.1
+google-api-python-client>=2.131.0
+google-auth-oauthlib>=1.2.1
+google-auth-httplib2>=0.2.0
