@@ -1,38 +1,46 @@
-# Rodada 4.16 — motor de cálculo inicial da calculadora AIMM
-# Objetivo: criar o primeiro motor de cálculo estrutural da calculadora Fito+ Amazônia AIMM,
-# usando os registros validados das rodadas 4.10 a 4.15.
-#
-# Atenção:
-# - Esta rodada calcula score PRELIMINAR estrutural.
-# - Não calcula impacto econômico final.
-# - Não elimina lacunas.
-# - Não usa benchmarks IFC internos não públicos.
-# - Não substitui validação científica, regulatória, orçamentária ou documental.
+# Rodada 4.16 — motor de cálculo canônico preliminar da calculadora AIMM
+# Objetivo: calcular score estrutural preliminar alinhado ao modelo canônico
+# (project_outcomes + market_outcomes), mantendo travas e governança.
 
 projeto:
   nome: "Fito+ Amazônia"
   investimento_total_brl: 80000000
   moeda: "BRL"
-  status_calculo: "preliminar_estrutural"
+  status_calculo: "preliminar_estrutural_canonico"
 
-dimensoes:
+# Dimensões canônicas AIMM (IFC)
+dimensoes_canonicas:
+  - "project_outcomes"
+  - "market_outcomes"
+
+subdimensoes_permitidas:
+  - "stakeholder_effects"
+  - "economy_wide_effects"
+  - "environmental_social_effects"
+  - "competitiveness"
+  - "resilience"
+  - "sustainability"
+
+eixos_analiticos_permitidos:
   - "gap"
-  - "intensidade"
-  - "mercado"
-  - "risco"
-  - "monitoramento"
+  - "intensity"
+  - "impact_potential"
+  - "risk_assessment"
+  - "monitoring"
+  - "benchmark"
+  - "cross_cutting"
 
-pesos_dimensao:
-  gap: 0.25
-  intensidade: 0.25
-  mercado: 0.20
-  risco: 0.20
-  monitoramento: 0.10
+status_uso_permitidos:
+  - "calculavel_preliminar"
+  - "proxy_baixa_confianca"
+  - "bloqueado_sem_benchmark"
+  - "bloqueado_revisao_humana"
+  - "apenas_monitoramento"
 
 tratamento_risco:
   modo: "penalizador"
-  formula: "score_liquido = score_bruto * (1 - risco_penalty / 100)"
-  observacao: "Risco não é benefício. Risco reduz ou bloqueia robustez do score."
+  formula: "score_liquido = score_canonico * (1 - risco_penalty / 100)"
+  observacao: "Risco é eixo analítico e reduz robustez do score preliminar."
 
 tratamento_confianca:
   alto: 1.00
@@ -45,29 +53,32 @@ tratamento_prontidao_benchmark:
   proxy_utilizavel_com_validacao: 0.75
   proxy_baixa_confianca: 0.50
   bloqueado: 0.00
+  bloqueado_sem_benchmark: 0.00
   revisar: 0.25
 
+# Bandas de leitura preliminar (fonte secundária citando AIMM oficial)
 faixas_score:
-  muito_baixo: [0, 20]
-  baixo: [21, 40]
-  medio: [41, 60]
-  alto: [61, 80]
-  muito_alto: [81, 100]
+  low: [0, 34.99]
+  good: [35, 49.99]
+  strong: [50, 59.99]
+  excellent: [60, 100]
+
+regras_liberacao_final:
+  permitir_score_final: false
+  exige_sem_erros_validacao: true
+  exige_dimensoes_canonicas_completas: true
+  exige_sem_indicador_bloqueado: true
+  exige_sem_bloqueios_criticos: true
+  exige_sem_bloqueio_revisao_humana: true
 
 fontes_estruturais_esperadas:
-  - "data/processed/calculator_schema.csv"
-  - "data/processed/scoring_model_spec.csv"
-  - "data/processed/budget_summary.csv"
+  - "data/processed/aimm_canonical_dimension_registry.csv"
+  - "data/processed/aimm_indicator_alignment_registry.csv"
   - "data/processed/benchmark_readiness_matrix.csv"
   - "data/processed/benchmark_gap_report.csv"
-  - "data/processed/species_priority_ranking.csv"
-  - "data/processed/product_pathway_priority_matrix.csv"
 
 travas:
-  - "O motor inicial calcula score estrutural preliminar, não score AIMM final validado."
-  - "Indicador com benchmark bloqueado não alimenta score final."
-  - "Benchmark IFC interno não público permanece bloqueado."
-  - "Proxy de baixa confiança reduz fator de confiança."
-  - "Lacuna operacional ativa deve aparecer no relatório de bloqueios."
-  - "Score final robusto depende de buscas, evidências, validação regulatória, orçamento detalhado e dados reais."
-  - "Nenhuma OSC, espécie, produto ou orçamento fica aprovado pela Rodada 4.16."
+  - "O motor calcula score estrutural preliminar, não score AIMM final validado."
+  - "Sem liberação explícita no gate, o score final permanece bloqueado."
+  - "Indicador bloqueado por benchmark ou revisão humana não libera score final."
+  - "Lacunas operacionais devem permanecer explícitas no relatório de bloqueios."

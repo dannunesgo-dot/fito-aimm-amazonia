@@ -1,13 +1,16 @@
-﻿id_indicador;dimensao_aimm;score_bruto_preliminar;nivel_confianca;status_prontidao_benchmark;id_benchmark;limitacao
-IND_GAP_TERR_001;gap;45;baixo;proxy_baixa_confianca;BMK_001;Área/densidade ainda depende de confirmação final da Rodada 4.3.
-IND_GAP_ORG_001;gap;20;baixo;proxy_baixa_confianca;BMK_002;"Pré-diligência manual não executada; OSCs não aptas."
-IND_INT_BEN_001;intensidade;35;baixo;proxy_baixa_confianca;BMK_003;Metas de beneficiários ainda preliminares.
-IND_INT_INV_001;intensidade;50;baixo;proxy_baixa_confianca;BMK_004;Orçamento preliminar sem pesquisa de preços/memória de cálculo.
-IND_MKT_IMP_001;mercado;40;baixo;proxy_baixa_confianca;BMK_005;Produtos/NCM ainda não definidos.
-IND_MKT_DIV_001;mercado;55;baixo;proxy_baixa_confianca;BMK_006;Mercados/clientes reais ainda não cadastrados.
-IND_RISK_OSC_001;risco;55;medio;proxy_utilizavel_com_validacao;BMK_007;Risco OSC sem validação documental real.
-IND_RISK_REG_001;risco;65;baixo;proxy_baixa_confianca;BMK_008;Rotas regulatórias ainda conceituais.
-IND_MON_EVD_001;monitoramento;70;medio;proxy_utilizavel_com_validacao;BMK_009;Mede completude documental, não validade substantiva.
-IND_MON_LOG_001;monitoramento;75;medio;proxy_utilizavel_com_validacao;BMK_010;Depende de disciplina de logs e artefatos.
-AIMM_INTERNAL_MARKET_OUTCOME;mercado;;bloqueado;bloqueado;BMK_011;Benchmark IFC/AIMM interno não público bloqueado.
-AIMM_INTERNAL_PROJECT_OUTCOME;intensidade;;bloqueado;bloqueado;BMK_012;Benchmark IFC/AIMM interno não público bloqueado.
+﻿id_indicador;score_bruto_preliminar;nivel_confianca;status_prontidao_benchmark;id_benchmark;limitacao
+AIMMPROJ_001;52;medio;proxy_utilizavel_com_validacao;BMK_AIMM_001;Proxy documentado com validação pendente de campo.
+AIMMPROJ_002;48;medio;proxy_utilizavel_com_validacao;BMK_AIMM_002;Renda estimada ainda sem linha de base completa.
+AIMMPROJ_003;45;baixo;proxy_baixa_confianca;BMK_AIMM_003;Base de cooperativas ainda incompleta por território.
+AIMMPROJ_004;54;medio;benchmark_utilizavel;BMK_AIMM_004;Infraestrutura validada parcialmente com evidência documental.
+AIMMPROJ_005;50;medio;proxy_utilizavel_com_validacao;BMK_AIMM_005;Mobilização técnica sem mensuração consolidada de desempenho.
+AIMMPROJ_006;42;baixo;proxy_baixa_confianca;BMK_AIMM_006;Desenvolvimento tecnológico depende de validação regulatória futura.
+AIMMPROJ_007;58;medio;proxy_utilizavel_com_validacao;BMK_AIMM_007;Indicador útil para monitoramento e qualidade, não para liberação final isolada.
+AIMMPROJ_008;55;medio;proxy_utilizavel_com_validacao;BMK_AIMM_008;Adoção sustentável depende de auditoria de campo periódica.
+AIMMMKT_001;;bloqueado;bloqueado_sem_benchmark;BMK_AIMM_009;Benchmark comercial por NCM inexistente no ciclo atual.
+AIMMMKT_002;44;baixo;proxy_baixa_confianca;BMK_AIMM_010;Diversificação de mercado ainda estimada por proxy documental.
+AIMMMKT_003;51;medio;proxy_utilizavel_com_validacao;BMK_AIMM_011;Rastreabilidade evolutiva sem série histórica completa.
+AIMMMKT_004;;bloqueado;bloqueado_sem_benchmark;BMK_AIMM_012;Dados de compras públicas SUS ainda não consolidados.
+AIMMMKT_005;39;baixo;proxy_baixa_confianca;BMK_AIMM_013;Risco de suprimento depende de contratos e volumes reais.
+AIMMMKT_006;43;baixo;proxy_baixa_confianca;BMK_AIMM_014;Indicador sintético territorial ainda em maturação de evidências.
+AIMMBLOCK_001;;bloqueado;revisar;BMK_AIMM_015;Score final bloqueado por revisão humana e validações pendentes.
