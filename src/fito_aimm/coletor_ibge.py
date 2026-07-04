@@ -285,18 +285,28 @@ def coletar_localidades_municipios(
     arquivo_log: Path = Path("data/reference/fetch_log.csv"),
 ) -> list[dict[str, str]]:
     id_coleta = f"IBGE_LOCALIDADES_MUNICIPIOS_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
-    linhas: list[dict[str, str]] = []
-    urls = []
+    codigos = CODIGOS_MUNICIPIOS_PROJETO
+    urls = {codigo: montar_url_localidade_municipio(codigo) for codigo in codigos}
+    linhas_por_codigo: dict[str, dict[str, str]] = {}
+
+    def coletar_localidade(codigo: str, url: str) -> tuple[str, dict[str, str]]:
+        _, dados_json = requisitar_json(url)
+        return codigo, transformar_localidade_municipio(dados_json)
 
     try:
-        for codigo in CODIGOS_MUNICIPIOS_PROJETO:
-            url = montar_url_localidade_municipio(codigo)
-            urls.append(url)
-            _, dados_json = requisitar_json(url)
-            linhas.append(transformar_localidade_municipio(dados_json))
+        max_workers = max(1, min(4, len(codigos)))
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futuros = [
+                executor.submit(coletar_localidade, codigo, urls[codigo])
+                for codigo in codigos
+            ]
+            for futuro in futuros:
+                codigo, linha = futuro.result()
+                linhas_por_codigo[codigo] = linha
 
-        codigos_obtidos = {linha["codigo_municipio_ibge"] for linha in linhas}
-        codigos_esperados = set(MUNICIPIOS_PROJETO.keys())
+        linhas = [linhas_por_codigo[codigo] for codigo in codigos]
+        codigos_obtidos = set(linhas_por_codigo)
+        codigos_esperados = set(codigos)
         faltantes = sorted(codigos_esperados - codigos_obtidos)
         if faltantes:
             raise ValueError(f"Municípios ausentes na resposta Localidades: {faltantes}")
@@ -308,7 +318,7 @@ def coletar_localidades_municipios(
             ResultadoColeta(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_API",
-                endpoint=" | ".join(urls),
+                endpoint=" | ".join(urls.values()),
                 parametros=json.dumps({"municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
                 territorio=TERRITORIO_PROJETO,
@@ -316,7 +326,7 @@ def coletar_localidades_municipios(
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
                 arquivo_saida=str(arquivo_saida),
-                observacoes="Coleta automatizada IBGE Localidades dos municípios do projeto.",
+                observacoes=f"Coleta automatizada IBGE Localidades em paralelo ({max_workers} workers).",
             )
         )
 
@@ -328,7 +338,7 @@ def coletar_localidades_municipios(
             ResultadoColeta(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_API",
-                endpoint=" | ".join(urls) if urls else "API Localidades",
+                endpoint=" | ".join(urls.values()) if urls else "API Localidades",
                 parametros=json.dumps({"municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
                 territorio=TERRITORIO_PROJETO,
