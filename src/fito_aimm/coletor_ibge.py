@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -294,17 +294,17 @@ def coletar_localidades_municipios(
         try:
             _, dados_json = requisitar_json(url)
         except Exception as erro:
-            raise RuntimeError(f"Falha ao consultar município {codigo} em {url}") from erro
+            raise RuntimeError(f"Falha ao consultar município {codigo}") from erro
         return codigo, transformar_localidade_municipio(dados_json)
 
     try:
         max_workers = max(1, min(MAX_CONCURRENT_LOCALIDADES_REQUESTS, len(codigos)))
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futuros = [
-                executor.submit(coletar_localidade, codigo, urls[codigo])
+            futuros = {
+                executor.submit(coletar_localidade, codigo, urls[codigo]): codigo
                 for codigo in codigos
-            ]
-            for futuro in futuros:
+            }
+            for futuro in as_completed(futuros):
                 codigo, linha = futuro.result()
                 linhas_por_codigo[codigo] = linha
 

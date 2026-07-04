@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from dataclasses import dataclass
@@ -25,9 +26,9 @@ def require_env(name: str) -> str:
 
 def mask_identifier(value: str) -> str:
     text = str(value or "")
-    if len(text) <= 16:
+    if not text:
         return "mascarado"
-    return f"{text[:4]}...{text[-2:]}"
+    return f"hash_{hashlib.sha256(text.encode('utf-8')).hexdigest()[:10]}"
 
 
 def load_service_account_info_from_env(name: str = "GDRIVE_SERVICE_ACCOUNT_JSON") -> dict[str, Any]:
