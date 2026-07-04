@@ -8,6 +8,18 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import sys
+
+sys.path.insert(0, str(Path("src").resolve()))
+
+from fito_aimm.drive_sync import (
+    build_service_account_drive_service,
+    load_service_account_info_from_env,
+    mask_identifier,
+    require_env,
+    upload_file,
+)
+
 
 BASE = Path("outputs/aimm/rodada_4_31_drive_api_real")
 
@@ -48,64 +60,19 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(normalized)
 
 
-def mask_id(value: str) -> str:
-    text = str(value or "")
-    if len(text) <= 12:
-        return "mascarado"
-    return f"{text[:6]}...{text[-4:]}"
-
-
-def require_env(name: str) -> str:
-    value = os.getenv(name, "").strip()
-    if not value:
-        raise RuntimeError(f"Secret/variavel obrigatorio ausente: {name}")
-    return value
-
-
-def load_service_account_json() -> tuple[dict[str, Any], Path]:
-    raw = require_env("GDRIVE_SERVICE_ACCOUNT_JSON")
-
-    try:
-        info = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("GDRIVE_SERVICE_ACCOUNT_JSON nao e JSON valido.") from exc
-
-    required = {"type", "project_id", "private_key", "client_email", "token_uri"}
-    missing = sorted(required - set(info.keys()))
-    if missing:
-        raise RuntimeError("GDRIVE_SERVICE_ACCOUNT_JSON incompleto: " + ",".join(missing))
-
-    if info.get("type") != "service_account":
-        raise RuntimeError("GDRIVE_SERVICE_ACCOUNT_JSON nao e credencial service_account.")
-
-    key_path = Path(os.getenv("RUNNER_TEMP", "/tmp")) / "aimm_gdrive_service_account_4_31.json"
-    key_path.write_text(json.dumps(info), encoding="utf-8")
-
-    return info, key_path
-
-
 def main() -> None:
-    from google.oauth2 import service_account
-    from googleapiclient.discovery import build
-    from googleapiclient.http import MediaFileUpload
 
     test_folder_id = require_env("GOOGLE_DRIVE_TEST_FOLDER_ID")
     root_folder_id = require_env("GOOGLE_DRIVE_ROOT_FOLDER_ID")
 
-    info, key_path = load_service_account_json()
+    info = load_service_account_info_from_env()
 
     service_account_email = info.get("client_email", "")
     run_id = os.getenv("GITHUB_RUN_ID", "sem_run_id")
     run_number = os.getenv("GITHUB_RUN_NUMBER", "sem_run_number")
     created_at = datetime.now(timezone.utc).isoformat()
 
-    scopes = ["https://www.googleapis.com/auth/drive"]
-    credentials = service_account.Credentials.from_service_account_file(
-        str(key_path),
-        scopes=scopes,
-    )
-
-    service = build("drive", "v3", credentials=credentials, cache_discovery=False)
+    service = build_service_account_drive_service(info=info)
 
     test_file_name = f"AIMM_4_31_TESTE_DRIVE_API_{run_id}.txt"
 
@@ -120,40 +87,17 @@ def main() -> None:
 
     write_text(FILES["arquivo_teste"], test_lines)
 
-    file_metadata = {
-        "name": test_file_name,
-        "parents": [test_folder_id],
-        "description": "Teste real controlado da Rodada 4.31 AIMM. Pode ser mantido como evidencia.",
-    }
-
-    media = MediaFileUpload(
-        str(FILES["arquivo_teste"]),
+    upload = upload_file(
+        service=service,
+        local_path=FILES["arquivo_teste"],
+        parent_folder_id=test_folder_id,
+        file_name=test_file_name,
+        description="Teste real controlado da Rodada 4.31 AIMM. Pode ser mantido como evidencia.",
         mimetype="text/plain",
-        resumable=False,
     )
 
-    created = (
-        service.files()
-        .create(
-            body=file_metadata,
-            media_body=media,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
-
-    file_id = created["id"]
-
-    metadata = (
-        service.files()
-        .get(
-            fileId=file_id,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
+    file_id = upload.file_id
+    metadata = upload.metadata
 
     status_rows = [
         {
@@ -167,7 +111,7 @@ def main() -> None:
             "drive_root_folder_id_presente": "sim",
             "service_account_json_presente": "sim",
             "service_account_email": service_account_email,
-            "file_id_mascarado": mask_id(file_id),
+            "file_id_mascarado": mask_identifier(file_id),
             "nome_arquivo_drive": metadata.get("name", ""),
             "tamanho_bytes": metadata.get("size", ""),
             "webViewLink": metadata.get("webViewLink", ""),
@@ -181,7 +125,7 @@ def main() -> None:
         {
             "rodada": "4.31",
             "file_id": file_id,
-            "file_id_mascarado": mask_id(file_id),
+            "file_id_mascarado": mask_identifier(file_id),
             "name": metadata.get("name", ""),
             "size": metadata.get("size", ""),
             "mimeType": metadata.get("mimeType", ""),
@@ -233,7 +177,7 @@ def main() -> None:
             "upload_drive_real": "sim",
             "consulta_metadata_real": "sim",
             "download_real": "nao",
-            "file_id_mascarado": mask_id(file_id),
+            "file_id_mascarado": mask_identifier(file_id),
             "erros_estruturais": "0",
             "alertas": "1",
             "status": "validado",
@@ -247,7 +191,7 @@ def main() -> None:
             "id_evidencia": "EVD_AIMM_DRIVE_API_REAL_4_31",
             "tipo": "upload_consulta_drive_api",
             "descricao": "Arquivo pequeno enviado ao Google Drive e metadata consultado via Drive API.",
-            "file_id_mascarado": mask_id(file_id),
+            "file_id_mascarado": mask_identifier(file_id),
             "nome_arquivo_drive": metadata.get("name", ""),
             "status": "gerado",
             "limitacao": "nao executa download, nao processa benchmark real, nao processa GIS e nao libera score final",
@@ -264,11 +208,11 @@ def main() -> None:
         "## Evidência principal",
         "",
         f"- Arquivo criado no Drive: `{metadata.get('name', '')}`",
-        f"- File ID mascarado: `{mask_id(file_id)}`",
+        f"- File ID mascarado: `{mask_identifier(file_id)}`",
         f"- Tamanho informado pelo Drive: `{metadata.get('size', '')}` bytes",
         f"- Service Account: `{service_account_email}`",
-        f"- Pasta teste ID mascarado: `{mask_id(test_folder_id)}`",
-        f"- Pasta raiz ID mascarado: `{mask_id(root_folder_id)}`",
+        f"- Pasta teste ID mascarado: `{mask_identifier(test_folder_id)}`",
+        f"- Pasta raiz ID mascarado: `{mask_identifier(root_folder_id)}`",
         "",
         "## Travas",
         "",
@@ -291,7 +235,7 @@ def main() -> None:
         "GOOGLE_DRIVE_TEST_FOLDER_ID presente: sim",
         "GOOGLE_DRIVE_ROOT_FOLDER_ID presente: sim",
         f"Arquivo enviado ao Drive: {metadata.get('name', '')}",
-        f"File ID mascarado: {mask_id(file_id)}",
+        f"File ID mascarado: {mask_identifier(file_id)}",
         f"Tamanho bytes Drive: {metadata.get('size', '')}",
         "Upload Drive real: sim",
         "Consulta metadata real: sim",

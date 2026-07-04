@@ -5,6 +5,7 @@ import sys
 
 sys.path.insert(0, str(Path("src").resolve()))
 
+from fito_aimm.territorios import carregar_municipios_projeto
 from fito_aimm.coletor_mapaosc import coletar_mapaosc_municipios
 
 ARQUIVO_PROCESSADO = Path("data/processed/organizacoes_candidatas_mapaosc.csv")
@@ -12,6 +13,8 @@ ARQUIVO_RESUMO = Path("data/processed/resumo_organizacoes_mapaosc_municipios.csv
 ARQUIVO_EVIDENCIAS = Path("data/evidence/evidence_mapaosc_triagem.csv")
 ARQUIVO_LOG = Path("data/reference/fetch_log.csv")
 RELATORIO = Path("outputs/logs/teste_mapaosc_triagem.txt")
+
+EXPECTED_MUNICIPIOS = len(carregar_municipios_projeto())
 
 def ler_csv(caminho: Path):
     with caminho.open("r", encoding="utf-8-sig", newline="") as arquivo:
@@ -24,10 +27,10 @@ def main():
     evidencias = ler_csv(ARQUIVO_EVIDENCIAS)
     fetch_log = ler_csv(ARQUIVO_LOG)
 
-    if len(resumo) != 4:
-        raise ValueError(f"Resumo municipal deveria conter 4 linhas; contém {len(resumo)}.")
-    if len(evidencias) != 4:
-        raise ValueError(f"Evidências deveriam conter 4 linhas; contêm {len(evidencias)}.")
+    if len(resumo) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Resumo municipal deveria conter {EXPECTED_MUNICIPIOS} linhas; contém {len(resumo)}.")
+    if len(evidencias) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Evidências deveriam conter {EXPECTED_MUNICIPIOS} linhas; contêm {len(evidencias)}.")
 
     campos = ["nome_organizacao","municipio","uf","codigo_municipio_ibge","score_triagem","classificacao_triagem","fonte","limitacao"]
     for numero, linha in enumerate(processado[:20], start=2):

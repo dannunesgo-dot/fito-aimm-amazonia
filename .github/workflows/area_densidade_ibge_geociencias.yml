@@ -6,6 +6,8 @@ on:
     paths:
       - "requirements.txt"
       - "src/fito_aimm/coletor_ibge_geociencias.py"
+      - "src/fito_aimm/territorios.py"
+      - "config/territorios.yaml"
       - "scripts/testar_area_densidade_ibge.py"
       - "data/reference/geociencias_query_catalog.csv"
       - "data/reference/source_registry_append_area_geociencias.csv"
@@ -24,6 +26,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Instalar dependências
         run: |

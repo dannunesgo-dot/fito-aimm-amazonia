@@ -7,10 +7,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+import sys
+
+sys.path.insert(0, str(Path("src").resolve()))
+
+from fito_aimm.drive_sync import build_oauth_drive_service, mask_identifier as mask, require_env, upload_file
 
 
 BASE = Path("outputs/aimm/rodada_4_31b_drive_api_oauth_real")
@@ -24,13 +25,6 @@ FILES = {
     "report": Path("outputs/reports/RELATORIO_DRIVE_API_OAUTH_4_31B.md"),
     "log": Path("outputs/logs/teste_drive_api_oauth_4_31b.txt"),
 }
-
-
-def require_env(name: str) -> str:
-    value = os.getenv(name, "").strip()
-    if not value:
-        raise RuntimeError(f"Secret obrigatorio ausente: {name}")
-    return value
 
 
 def write_text(path: Path, lines: list[str]) -> None:
@@ -55,13 +49,6 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer.writerows(normalized)
 
 
-def mask(value: str) -> str:
-    text = str(value or "")
-    if len(text) <= 12:
-        return "mascarado"
-    return f"{text[:6]}...{text[-4:]}"
-
-
 def main() -> None:
     client_id = require_env("GOOGLE_OAUTH_CLIENT_ID")
     client_secret = require_env("GOOGLE_OAUTH_CLIENT_SECRET")
@@ -69,20 +56,7 @@ def main() -> None:
     test_folder_id = require_env("GOOGLE_DRIVE_TEST_FOLDER_ID")
     root_folder_id = require_env("GOOGLE_DRIVE_ROOT_FOLDER_ID")
 
-    scopes = ["https://www.googleapis.com/auth/drive.file"]
-
-    creds = Credentials(
-        token=None,
-        refresh_token=refresh_token,
-        token_uri="https://oauth2.googleapis.com/token",
-        client_id=client_id,
-        client_secret=client_secret,
-        scopes=scopes,
-    )
-
-    creds.refresh(Request())
-
-    service = build("drive", "v3", credentials=creds, cache_discovery=False)
+    service = build_oauth_drive_service()
 
     run_id = os.getenv("GITHUB_RUN_ID", "sem_run_id")
     run_number = os.getenv("GITHUB_RUN_NUMBER", "sem_run_number")
@@ -102,40 +76,17 @@ def main() -> None:
 
     write_text(FILES["arquivo_teste"], local_test_lines)
 
-    media = MediaFileUpload(
-        str(FILES["arquivo_teste"]),
+    upload = upload_file(
+        service=service,
+        local_path=FILES["arquivo_teste"],
+        parent_folder_id=test_folder_id,
+        file_name=drive_file_name,
+        description="Teste real controlado da Rodada 4.31-B AIMM via OAuth usuário.",
         mimetype="text/plain",
-        resumable=False,
     )
 
-    metadata_in = {
-        "name": drive_file_name,
-        "parents": [test_folder_id],
-        "description": "Teste real controlado da Rodada 4.31-B AIMM via OAuth usuário.",
-    }
-
-    created = (
-        service.files()
-        .create(
-            body=metadata_in,
-            media_body=media,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
-
-    file_id = created["id"]
-
-    metadata = (
-        service.files()
-        .get(
-            fileId=file_id,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
+    file_id = upload.file_id
+    metadata = upload.metadata
 
     status_rows = [
         {

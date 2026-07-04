@@ -5,6 +5,7 @@ name: rodada-4-32-aimm-minimum-integrated-pipeline
   push:
     paths:
       - "scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py"
+      - "src/fito_aimm/drive_sync.py"
       - ".github/workflows/rodada_4_32_aimm_minimum_integrated_pipeline.yml"
 
 permissions:

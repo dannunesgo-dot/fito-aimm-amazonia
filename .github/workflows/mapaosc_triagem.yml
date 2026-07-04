@@ -6,7 +6,9 @@ on:
     paths:
       - "requirements.txt"
       - "config/criterios_triagem_mapaosc.yaml"
+      - "config/territorios.yaml"
       - "src/fito_aimm/coletor_mapaosc.py"
+      - "src/fito_aimm/territorios.py"
       - "scripts/testar_mapaosc_triagem.py"
       - "data/reference/mapaosc_query_catalog.csv"
       - "data/reference/source_registry_append_mapaosc.csv"
@@ -26,6 +28,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Instalar dependências
         run: |

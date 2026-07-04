@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import json
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,13 +14,16 @@ import requests
 SIDRA_BASE_URL = "https://apisidra.ibge.gov.br/values"
 LOCALIDADES_BASE_URL = "https://servicodados.ibge.gov.br/api/v1/localidades"
 
-# Códigos municipais IBGE usados no projeto Fito+ Amazônia.
-MUNICIPIOS_PROJETO = {
-    "1302603": {"municipio": "Manaus", "uf": "AM"},
-    "1300607": {"municipio": "Benjamin Constant", "uf": "AM"},
-    "1501402": {"municipio": "Belém", "uf": "PA"},
-    "1506807": {"municipio": "Santarém", "uf": "PA"},
-}
+from .territorios import (
+    carregar_municipios_projeto,
+    descrever_territorios_projeto,
+    listar_codigos_municipios_projeto,
+)
+
+
+MUNICIPIOS_PROJETO = carregar_municipios_projeto()
+CODIGOS_MUNICIPIOS_PROJETO = listar_codigos_municipios_projeto()
+TERRITORIO_PROJETO = descrever_territorios_projeto()
 
 
 @dataclass
@@ -115,7 +119,7 @@ def montar_url_sidra_populacao_estimada(
     codigos_municipios: list[str] | None = None,
     periodo: str = "last",
 ) -> str:
-    codigos = codigos_municipios or list(MUNICIPIOS_PROJETO.keys())
+    codigos = codigos_municipios or CODIGOS_MUNICIPIOS_PROJETO
     municipios = ",".join(codigos)
     return f"{SIDRA_BASE_URL}/t/6579/n6/{municipios}/v/9324/p/{periodo}?formato=json"
 
@@ -173,7 +177,7 @@ def coletar_populacao_estimada_municipios(
         "tabela": "6579",
         "variavel": "9324",
         "periodo": periodo,
-        "municipios": list(MUNICIPIOS_PROJETO.keys()),
+        "municipios": CODIGOS_MUNICIPIOS_PROJETO,
     }, ensure_ascii=False)
 
     try:
@@ -196,7 +200,7 @@ def coletar_populacao_estimada_municipios(
                 endpoint=url,
                 parametros=parametros,
                 indicador_relacionado="GAP_TERR_01",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http=status_http,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
@@ -215,7 +219,7 @@ def coletar_populacao_estimada_municipios(
                 endpoint=url,
                 parametros=parametros,
                 indicador_relacionado="GAP_TERR_01",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http="erro",
                 status_coleta="falha",
                 linhas_extraidas=0,
@@ -285,7 +289,7 @@ def coletar_localidades_municipios(
     urls = []
 
     try:
-        for codigo in MUNICIPIOS_PROJETO:
+        for codigo in CODIGOS_MUNICIPIOS_PROJETO:
             url = montar_url_localidade_municipio(codigo)
             urls.append(url)
             _, dados_json = requisitar_json(url)
@@ -305,9 +309,9 @@ def coletar_localidades_municipios(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_API",
                 endpoint=" | ".join(urls),
-                parametros=json.dumps({"municipios": list(MUNICIPIOS_PROJETO.keys())}, ensure_ascii=False),
+                parametros=json.dumps({"municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http=200,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
@@ -325,9 +329,9 @@ def coletar_localidades_municipios(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_API",
                 endpoint=" | ".join(urls) if urls else "API Localidades",
-                parametros=json.dumps({"municipios": list(MUNICIPIOS_PROJETO.keys())}, ensure_ascii=False),
+                parametros=json.dumps({"municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_01; GAP_TERR_04; GAP_TERR_06",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http="erro",
                 status_coleta="falha",
                 linhas_extraidas=0,

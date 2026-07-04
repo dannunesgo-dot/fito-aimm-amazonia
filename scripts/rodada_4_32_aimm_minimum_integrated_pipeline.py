@@ -7,10 +7,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from google.oauth2.credentials import Credentials
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
+import sys
+
+sys.path.insert(0, str(Path("src").resolve()))
+
+from fito_aimm.drive_sync import build_oauth_drive_service, mask_identifier as mask, require_env, upload_file
 
 
 BASE = Path("outputs/aimm/rodada_4_32_pipeline_minimo_integrado")
@@ -27,13 +28,6 @@ FILES = {
     "report": Path("outputs/reports/RELATORIO_AIMM_PIPELINE_MINIMO_INTEGRADO_4_32.md"),
     "log": Path("outputs/logs/teste_aimm_pipeline_minimo_integrado_4_32.txt"),
 }
-
-
-def require_env(name: str) -> str:
-    value = os.getenv(name, "").strip()
-    if not value:
-        raise RuntimeError(f"Secret obrigatorio ausente: {name}")
-    return value
 
 
 def write_text(path: Path, lines: list[str]) -> None:
@@ -59,13 +53,6 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
         writer = csv.DictWriter(file, fieldnames=fieldnames, delimiter=";")
         writer.writeheader()
         writer.writerows(normalized)
-
-
-def mask(value: str) -> str:
-    text = str(value or "")
-    if len(text) <= 12:
-        return "mascarado"
-    return f"{text[:6]}...{text[-4:]}"
 
 
 def exists_any(patterns: list[str]) -> tuple[bool, str]:
@@ -149,27 +136,6 @@ def detect_components() -> list[dict[str, Any]]:
     return rows
 
 
-def oauth_drive_service():
-    client_id = require_env("GOOGLE_OAUTH_CLIENT_ID")
-    client_secret = require_env("GOOGLE_OAUTH_CLIENT_SECRET")
-    refresh_token = require_env("GOOGLE_OAUTH_REFRESH_TOKEN")
-
-    scopes = ["https://www.googleapis.com/auth/drive.file"]
-
-    creds = Credentials(
-        token=None,
-        refresh_token=refresh_token,
-        token_uri="https://oauth2.googleapis.com/token",
-        client_id=client_id,
-        client_secret=client_secret,
-        scopes=scopes,
-    )
-
-    creds.refresh(Request())
-
-    return build("drive", "v3", credentials=creds, cache_discovery=False)
-
-
 def main() -> None:
     now = datetime.now(timezone.utc).isoformat()
     run_id = os.getenv("GITHUB_RUN_ID", "sem_run_id")
@@ -213,44 +179,21 @@ def main() -> None:
 
     write_text(FILES["pacote_txt"], pacote_lines)
 
-    service = oauth_drive_service()
+    service = build_oauth_drive_service()
 
     drive_file_name = f"AIMM_4_32_PIPELINE_MINIMO_INTEGRADO_{run_id}.txt"
 
-    media = MediaFileUpload(
-        str(FILES["pacote_txt"]),
+    upload = upload_file(
+        service=service,
+        local_path=FILES["pacote_txt"],
+        parent_folder_id=test_folder_id,
+        file_name=drive_file_name,
+        description="Rodada 4.32 AIMM — teste do pipeline minimo integrado com upload real por OAuth.",
         mimetype="text/plain",
-        resumable=False,
     )
 
-    metadata_in = {
-        "name": drive_file_name,
-        "parents": [test_folder_id],
-        "description": "Rodada 4.32 AIMM — teste do pipeline minimo integrado com upload real por OAuth.",
-    }
-
-    created = (
-        service.files()
-        .create(
-            body=metadata_in,
-            media_body=media,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
-
-    file_id = created["id"]
-
-    metadata = (
-        service.files()
-        .get(
-            fileId=file_id,
-            fields="id,name,size,mimeType,parents,createdTime,modifiedTime,webViewLink",
-            supportsAllDrives=True,
-        )
-        .execute()
-    )
+    file_id = upload.file_id
+    metadata = upload.metadata
 
     upload_drive_real = "sim"
     consulta_metadata_real = "sim"

@@ -11,17 +11,20 @@ from typing import Any
 import pandas as pd
 import requests
 
+from .territorios import (
+    carregar_municipios_projeto,
+    descrever_territorios_projeto,
+    listar_codigos_municipios_projeto,
+)
+
 
 AREA_XLS_URL = "https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/areas_territoriais/2025/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls"
 AREA_XLS_RAW = Path("data/raw/ibge/geociencias/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls")
 SIDRA_BASE_URL = "https://apisidra.ibge.gov.br/values"
 
-MUNICIPIOS_PROJETO = {
-    "1302603": {"municipio": "Manaus", "uf": "AM"},
-    "1300607": {"municipio": "Benjamin Constant", "uf": "AM"},
-    "1501402": {"municipio": "Belém", "uf": "PA"},
-    "1506807": {"municipio": "Santarém", "uf": "PA"},
-}
+MUNICIPIOS_PROJETO = carregar_municipios_projeto()
+CODIGOS_MUNICIPIOS_PROJETO = listar_codigos_municipios_projeto()
+TERRITORIO_PROJETO = descrever_territorios_projeto()
 
 
 @dataclass
@@ -285,7 +288,7 @@ def coletar_populacao_estimada(arquivo_saida: Path, arquivo_log: Path) -> list[d
                 endpoint=url,
                 parametros=parametros,
                 indicador_relacionado="GAP_TERR_01",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http=status,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
@@ -303,7 +306,7 @@ def coletar_populacao_estimada(arquivo_saida: Path, arquivo_log: Path) -> list[d
                 endpoint=url,
                 parametros=parametros,
                 indicador_relacionado="GAP_TERR_01",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http="erro",
                 status_coleta="falha",
                 linhas_extraidas=0,
@@ -330,9 +333,9 @@ def coletar_area_territorial_geociencias(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_GEOCIENCIAS_AREAS",
                 endpoint=AREA_XLS_URL,
-                parametros=json.dumps({"ano": "2025", "municipios": list(MUNICIPIOS_PROJETO.keys())}, ensure_ascii=False),
+                parametros=json.dumps({"ano": "2025", "municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_06; baseline_territorial",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http=status,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
@@ -348,9 +351,9 @@ def coletar_area_territorial_geociencias(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_GEOCIENCIAS_AREAS",
                 endpoint=AREA_XLS_URL,
-                parametros=json.dumps({"ano": "2025", "municipios": list(MUNICIPIOS_PROJETO.keys())}, ensure_ascii=False),
+                parametros=json.dumps({"ano": "2025", "municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_06; baseline_territorial",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http="erro",
                 status_coleta="falha",
                 linhas_extraidas=0,

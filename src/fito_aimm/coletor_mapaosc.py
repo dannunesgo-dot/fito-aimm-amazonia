@@ -15,6 +15,12 @@ import pandas as pd
 import requests
 import yaml
 
+from .territorios import (
+    carregar_municipios_projeto,
+    descrever_territorios_projeto,
+    listar_ufs_projeto,
+)
+
 
 MAPAOSC_BASE_URL = "https://mapaosc.ipea.gov.br/download/20260522_MOSC_baseDivulgacao.csv"
 MAPAOSC_DICIONARIO_URL = "https://mapaosc.ipea.gov.br/arquivos/subitems/4038-dicionario-de-dados-mapa-oscs.xlsx"
@@ -25,12 +31,9 @@ LOCAL_BASE_CANDIDATES = [
     Path("data/raw/mapaosc/mapaosc_base_principal.csv"),
 ]
 
-MUNICIPIOS_PROJETO = {
-    "1302603": {"municipio": "Manaus", "uf": "AM"},
-    "1300607": {"municipio": "Benjamin Constant", "uf": "AM"},
-    "1501402": {"municipio": "Belém", "uf": "PA"},
-    "1506807": {"municipio": "Santarém", "uf": "PA"},
-}
+MUNICIPIOS_PROJETO = carregar_municipios_projeto()
+UFS_PROJETO = listar_ufs_projeto()
+TERRITORIO_PROJETO = descrever_territorios_projeto()
 
 
 @dataclass
@@ -269,7 +272,7 @@ def filtrar_chunk_por_municipio(df: pd.DataFrame, colmap: dict[str, str]) -> pd.
         mun_norm = df[col_mun].astype(str).map(normalizar_texto)
         mun_match = mun_norm.isin(alvo_municipios.keys())
         if col_uf and col_uf in df.columns:
-            uf_match = df[col_uf].astype(str).str.upper().str.strip().isin(["AM", "PA"])
+            uf_match = df[col_uf].astype(str).str.upper().str.strip().isin(UFS_PROJETO)
             mask = mask | (mun_match & uf_match)
         else:
             mask = mask | mun_match
@@ -578,7 +581,7 @@ def coletar_mapaosc_municipios(
                     "colunas_detectadas": colmap_final,
                 }, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_05; INT_BEN_05; RISK_OSC_01; MON_02",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http=status_http,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas_processadas),
@@ -608,7 +611,7 @@ def coletar_mapaosc_municipios(
                 endpoint=MAPAOSC_BASE_URL,
                 parametros=json.dumps({"municipios": MUNICIPIOS_PROJETO}, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_05; INT_BEN_05; RISK_OSC_01; MON_02",
-                territorio="Manaus/AM; Benjamin Constant/AM; Belém/PA; Santarém/PA",
+                territorio=TERRITORIO_PROJETO,
                 status_http="erro",
                 status_coleta="falha",
                 linhas_extraidas=0,

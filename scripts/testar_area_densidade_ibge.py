@@ -4,6 +4,7 @@ import sys
 
 sys.path.insert(0, str(Path("src").resolve()))
 
+from fito_aimm.territorios import carregar_municipios_projeto
 from fito_aimm.coletor_ibge_geociencias import executar_pipeline_area_densidade_ibge
 
 
@@ -11,6 +12,8 @@ ARQUIVO_LOG = Path("data/reference/fetch_log.csv")
 ARQUIVO_RESULTADO = Path("data/processed/territorios_ibge_area_densidade.csv")
 ARQUIVO_EVIDENCIA = Path("data/evidence/evidence_ibge_area_densidade.csv")
 RELATORIO = Path("outputs/logs/teste_area_densidade_ibge.txt")
+
+EXPECTED_MUNICIPIOS = len(carregar_municipios_projeto())
 
 
 def ler_csv(caminho: Path):
@@ -25,11 +28,11 @@ def main():
     evidencias = ler_csv(ARQUIVO_EVIDENCIA)
     fetch_log = ler_csv(ARQUIVO_LOG)
 
-    if len(linhas) != 4:
-        raise ValueError(f"Esperadas 4 linhas no resultado; obtidas {len(linhas)}.")
+    if len(linhas) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Esperadas {EXPECTED_MUNICIPIOS} linhas no resultado; obtidas {len(linhas)}.")
 
-    if len(evidencias) != 4:
-        raise ValueError(f"Esperadas 4 evidências; obtidas {len(evidencias)}.")
+    if len(evidencias) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Esperadas {EXPECTED_MUNICIPIOS} evidências; obtidas {len(evidencias)}.")
 
     campos = [
         "codigo_municipio_ibge",

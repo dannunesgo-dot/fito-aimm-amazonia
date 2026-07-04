@@ -5,6 +5,7 @@ name: rodada-4-31-drive-api-real-test
   push:
     paths:
       - "scripts/rodada_4_31_drive_api_real_test.py"
+      - "src/fito_aimm/drive_sync.py"
       - ".github/workflows/rodada_4_31_drive_api_real_test.yml"
 
 permissions:

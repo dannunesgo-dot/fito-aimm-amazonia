@@ -4,6 +4,7 @@ import sys
 
 sys.path.insert(0, str(Path("src").resolve()))
 
+from fito_aimm.territorios import carregar_municipios_projeto
 from fito_aimm.coletor_ibge import executar_pipeline_baseline_ibge
 
 
@@ -11,6 +12,8 @@ ARQUIVO_LOG = Path("data/reference/fetch_log.csv")
 ARQUIVO_BASELINE = Path("data/processed/territorios_ibge_baseline.csv")
 ARQUIVO_EVIDENCIAS = Path("data/evidence/evidence_ibge_territorios.csv")
 RELATORIO = Path("outputs/logs/teste_baseline_ibge.txt")
+
+EXPECTED_MUNICIPIOS = len(carregar_municipios_projeto())
 
 
 def ler_csv(caminho: Path):
@@ -25,11 +28,11 @@ def main():
     evidencias = ler_csv(ARQUIVO_EVIDENCIAS)
     fetch_log = ler_csv(ARQUIVO_LOG)
 
-    if len(baseline) != 4:
-        raise ValueError(f"Baseline deveria conter 4 municípios; contém {len(baseline)}.")
+    if len(baseline) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Baseline deveria conter {EXPECTED_MUNICIPIOS} municípios; contém {len(baseline)}.")
 
-    if len(evidencias) != 4:
-        raise ValueError(f"Evidências territoriais deveriam conter 4 linhas; contêm {len(evidencias)}.")
+    if len(evidencias) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Evidências territoriais deveriam conter {EXPECTED_MUNICIPIOS} linhas; contêm {len(evidencias)}.")
 
     campos_baseline = [
         "codigo_municipio_ibge",

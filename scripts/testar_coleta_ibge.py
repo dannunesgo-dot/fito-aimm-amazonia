@@ -5,12 +5,15 @@ import sys
 # Permite importar src/fito_aimm quando executado pela raiz do repositório.
 sys.path.insert(0, str(Path("src").resolve()))
 
+from fito_aimm.territorios import carregar_municipios_projeto
 from fito_aimm.coletor_ibge import coletar_populacao_estimada_municipios
 
 
 ARQUIVO_SAIDA = Path("data/raw/ibge/populacao_estimada_municipios.csv")
 ARQUIVO_LOG = Path("data/reference/fetch_log.csv")
 RELATORIO = Path("outputs/logs/teste_coleta_ibge.txt")
+
+EXPECTED_MUNICIPIOS = len(carregar_municipios_projeto())
 
 
 def ler_csv(caminho: Path):
@@ -25,8 +28,8 @@ def main():
         periodo="last",
     )
 
-    if len(linhas) != 4:
-        raise ValueError(f"Esperadas 4 linhas de municípios; obtidas {len(linhas)}.")
+    if len(linhas) != EXPECTED_MUNICIPIOS:
+        raise ValueError(f"Esperadas {EXPECTED_MUNICIPIOS} linhas de municípios; obtidas {len(linhas)}.")
 
     campos_obrigatorios = [
         "id_indicador",
