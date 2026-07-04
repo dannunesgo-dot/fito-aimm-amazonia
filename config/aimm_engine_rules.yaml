@@ -44,6 +44,18 @@ tratamento_risco:
   formula: "score_liquido = score_canonico * (1 - risco_penalty / 100)"
   observacao: "Risco é eixo analítico e reduz robustez do score preliminar."
 
+# Eixos especiais: identificam indicadores de risco (penalizador) e monitoramento (rastreio)
+eixo_risco: "risk_assessment"
+eixo_monitoramento: "monitoring"
+
+tratamento_monitoramento:
+  modo: "rastreio"
+  observacao: >
+    Indicadores com eixo 'monitoring' ou status_uso 'apenas_monitoramento' são
+    rastreados como metadata mas não contribuem para o score de dimensão nem
+    multiplicam o score final. Apenas o eixo de risco penaliza o score
+    (conforme tratamento_risco acima).
+
 tratamento_confianca:
   alto: 1.00
   medio: 0.75

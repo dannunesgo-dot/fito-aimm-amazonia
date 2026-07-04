@@ -15,6 +15,7 @@ ALIGNMENT = Path("data/reference/aimm_indicator_alignment_seed.csv")
 BLOCKED_READINESS_STATUSES = {"bloqueado", "bloqueado_sem_benchmark"}
 BLOCKED_REVIEW_STATUS = "bloqueado_revisao_humana"
 BLOCKED_USAGE_STATUSES = {"bloqueado_sem_benchmark", BLOCKED_REVIEW_STATUS}
+MONITORING_ONLY_STATUS = "apenas_monitoramento"
 HIGH_CRITICALITY = "alta"
 
 OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
@@ -201,6 +202,7 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         blocked_usage = is_blocked_usage(row.get("status_uso", ""))
         blocked_readiness = row["status_prontidao_benchmark"] in BLOCKED_READINESS_STATUSES
         blocked_confidence = row["nivel_confianca"] == "bloqueado"
+        monitoring_only = str(row.get("status_uso", "")).strip() == MONITORING_ONLY_STATUS
         bloqueado = blocked_usage or blocked_readiness or blocked_confidence
         invalid_or_missing = parse_issue and not bloqueado
         if invalid_or_missing:
@@ -212,6 +214,9 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         if invalid_or_missing:
             limitation_parts.append("score_bruto_invalido_ou_ausente")
         limitation = " | ".join(p for p in limitation_parts if p)
+
+        # apenas_monitoramento indicators are scored but excluded from score aggregation
+        excluido_do_score = bloqueado or readiness_factor < 0.75 or monitoring_only
 
         rows.append({
             "id_indicador": row["id_indicador"],
@@ -229,7 +234,8 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
             "fator_prontidao": f"{readiness_factor:.2f}",
             "score_ajustado_preliminar": f"{adjusted:.2f}",
             "faixa_score_ajustado": score_band(adjusted, rules),
-            "bloqueado_para_score_final": "sim" if bloqueado or readiness_factor < 0.75 else "não",
+            "bloqueado_para_score_final": "sim" if excluido_do_score else "não",
+            "apenas_monitoramento": "sim" if monitoring_only else "não",
             "dados_invalidos_ou_ausentes": "sim" if invalid_or_missing else "não",
             "limitacao": limitation,
         })
@@ -241,19 +247,20 @@ def calculate_dimension_scores(indicator_scores: list[dict[str, Any]], dim_polic
     rows = []
 
     for dim, policy in policy_by_dim.items():
-        members = [r for r in indicator_scores if r["dimensao_aimm"] == dim]
-        if not members:
+        all_members = [r for r in indicator_scores if r["dimensao_aimm"] == dim]
+        # Exclude monitoring-only indicators from score aggregation (tracked separately)
+        scorable = [r for r in all_members if r.get("apenas_monitoramento") != "sim"]
+        if not scorable:
             avg = 0.0
-            blocked = 0
         else:
-            avg = sum(float(r["score_ajustado_preliminar"]) for r in members) / len(members)
-            blocked = sum(1 for r in members if r["bloqueado_para_score_final"] == "sim")
+            avg = sum(float(r["score_ajustado_preliminar"]) for r in scorable) / len(scorable)
+        blocked = sum(1 for r in all_members if r["bloqueado_para_score_final"] == "sim")
 
         rows.append({
             "dimensao_aimm": dim,
             "papel": policy["papel"],
             "peso": f"{float(policy['peso']):.2f}",
-            "indicadores_considerados": str(len(members)),
+            "indicadores_considerados": str(len(all_members)),
             "indicadores_bloqueados_ou_baixa_prontidao": str(blocked),
             "score_dimensao_preliminar": f"{avg:.2f}",
             "faixa_score_dimensao": score_band(avg, rules),
@@ -286,6 +293,10 @@ def calculate_overall(
         risk_penalty = sum(float(r["score_ajustado_preliminar"]) for r in risk_indicators) / len(risk_indicators)
     else:
         risk_penalty = 0.0
+
+    # Monitoring factor is tracked as metadata only; it does NOT multiply the score.
+    # Per AIMM canonical 4.20, monitoring is an analytical axis tracked alongside
+    # the score but risk (tratamento_risco) is the only penalizer applied.
     if monitoring_indicators:
         monitor_factor_raw = sum(float(r["score_ajustado_preliminar"]) for r in monitoring_indicators) / len(monitoring_indicators)
     else:
@@ -293,7 +304,8 @@ def calculate_overall(
     monitor_factor = monitor_factor_raw / 100
 
     score_risk_adjusted = score_bruto * (1 - risk_penalty / 100)
-    score_confidence_adjusted = score_risk_adjusted * monitor_factor
+    # Canonical formula: score_estrutural = score_liquido after risk penalty only
+    score_estrutural = score_risk_adjusted
 
     return {
         "id_resultado": str(rules.get("id_resultado_preliminar", "AIMM_ENGINE_PRELIMINAR_4_20")),
@@ -303,8 +315,8 @@ def calculate_overall(
         "risk_penalty_preliminar": f"{risk_penalty:.2f}",
         "monitoring_factor_preliminar": f"{monitor_factor:.2f}",
         "score_ajustado_risco_preliminar": f"{score_risk_adjusted:.2f}",
-        "score_estrutural_preliminar": f"{score_confidence_adjusted:.2f}",
-        "faixa_score_estrutural": score_band(score_confidence_adjusted, rules),
+        "score_estrutural_preliminar": f"{score_estrutural:.2f}",
+        "faixa_score_estrutural": score_band(score_estrutural, rules),
         "status_resultado": "preliminar",
         "pode_ser_usado_como_score_final": "não",
         "gate_liberacao_final": "",
