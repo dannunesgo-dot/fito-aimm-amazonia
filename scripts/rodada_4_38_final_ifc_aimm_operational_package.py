@@ -240,6 +240,7 @@ def safe_decode(data: bytes) -> str:
 
 
 def normalize_for_match(value: str) -> str:
+    """Normaliza texto para comparação sem sensibilidade a acentos."""
     text = str(value or "").lower()
     text = unicodedata.normalize("NFD", text)
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
