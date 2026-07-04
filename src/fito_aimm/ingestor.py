@@ -21,6 +21,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import tempfile
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -74,6 +75,12 @@ try:
     _BS4_OK = True
 except ImportError:
     _BS4_OK = False
+
+try:
+    import lxml  # noqa: F401
+    _LXML_OK = True
+except ImportError:
+    _LXML_OK = False
 
 try:
     import geopandas as gpd
@@ -449,7 +456,8 @@ def _parsear_url(url: str, caminho_download: Path | None = None) -> dict[str, An
         # Arquivo binário — salva temporariamente e parseia
         if caminho_download is None:
             nome = Path(parsed_url.path).name or "download"
-            caminho_download = Path(f"/tmp/fito_aimm_download_{nome}")
+            tmp_dir = tempfile.gettempdir()
+            caminho_download = Path(tmp_dir) / f"fito_aimm_download_{nome}"
         caminho_download.write_bytes(resp.content)
         resultado = _parsear_arquivo(caminho_download)
         resultado["url_origem"] = url
@@ -459,7 +467,8 @@ def _parsear_url(url: str, caminho_download: Path | None = None) -> dict[str, An
     # Página HTML ou texto
     if "html" in content_type or ext in ("", ".html", ".htm"):
         if _BS4_OK:
-            soup = BeautifulSoup(resp.content, "lxml")
+            _parser = "lxml" if _LXML_OK else "html.parser"
+            soup = BeautifulSoup(resp.content, _parser)
             titulo = soup.find("title")
             titulo_texto = titulo.get_text(strip=True) if titulo else ""
             # Remove scripts e styles

@@ -84,7 +84,7 @@ def _print_aviso(mensagem: str) -> None:
     print(f"  ⚠  {mensagem}")
 
 
-def _print_resultado(resultado: "ResultadoIngestao") -> None:  # type: ignore[name-defined]  # noqa: F821
+def _print_resultado(resultado: Any) -> None:
     _print_sep()
     print(f"  Fonte    : {resultado.fonte}")
     print(f"  Tipo     : {resultado.tipo_fonte}")
