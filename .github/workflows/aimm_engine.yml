@@ -9,6 +9,10 @@ on:
       - "data/reference/aimm_engine_dimension_policy_seed.csv"
       - "data/reference/aimm_engine_blockers_seed.csv"
       - "src/fito_aimm/aimm_engine.py"
+      - "src/fito_aimm/validators/**/*.py"
+      - "tests/unit/test_aimm_engine.py"
+      - "tests/unit/test_schema_validator.py"
+      - "pytest.ini"
       - "scripts/testar_aimm_engine.py"
       - ".github/workflows/aimm_engine.yml"
 
@@ -36,6 +40,9 @@ jobs:
 
       - name: Executar motor inicial AIMM
         run: python scripts/testar_aimm_engine.py
+
+      - name: Executar pytest AIMM
+        run: pytest tests/unit/test_aimm_engine.py tests/unit/test_schema_validator.py
 
       - name: Publicar artefatos do motor AIMM
         uses: actions/upload-artifact@v4

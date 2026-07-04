@@ -1,0 +1,4 @@
+cd_municipio;tx_nome_municipio;sg_uf;cnpj;tx_nome_osc;tx_nome_natureza_juridica;situacao_cadastral;tx_email;tx_telefone;endereco;area_atuacao
+1302603;Manaus;AM;12345678000100;Cooperativa Amazônia Viva;Cooperativa;ativa;contato@coop.org;92999999999;Rua Rio Negro 10;bioeconomia amazônia agricultura
+1506807;Santarém;PA;22345678000100;Associação Floresta Forte;Associação;ativa;floresta@assoc.org;;Travessa Verde 5;meio ambiente sustentabilidade
+3550308;São Paulo;SP;32345678000100;OSC Fora do Território;Associação;ativa;fora@osc.org;1133334444;Av Paulista 1000;educação

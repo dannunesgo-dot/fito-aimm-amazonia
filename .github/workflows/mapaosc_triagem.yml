@@ -8,6 +8,10 @@ on:
       - "config/criterios_triagem_mapaosc.yaml"
       - "config/territorios.yaml"
       - "src/fito_aimm/coletor_mapaosc.py"
+      - "src/fito_aimm/mapaosc/**/*.py"
+      - "tests/integration/test_mapaosc_pipeline.py"
+      - "tests/unit/test_mapaosc_classifier.py"
+      - "pytest.ini"
       - "src/fito_aimm/territorios.py"
       - "scripts/testar_mapaosc_triagem.py"
       - "data/reference/mapaosc_query_catalog.csv"
@@ -60,6 +64,9 @@ jobs:
 
       - name: Executar triagem Mapa das OSCs/Ipea
         run: python scripts/testar_mapaosc_triagem.py
+
+      - name: Executar pytest MapaOSC
+        run: pytest tests/unit/test_mapaosc_classifier.py tests/integration/test_mapaosc_pipeline.py
 
       - name: Publicar artefatos da triagem Mapa OSCs
         uses: actions/upload-artifact@v4

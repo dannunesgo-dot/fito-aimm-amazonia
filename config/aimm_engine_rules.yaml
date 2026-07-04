@@ -63,6 +63,13 @@ fontes_estruturais_esperadas:
   - "data/processed/species_priority_ranking.csv"
   - "data/processed/product_pathway_priority_matrix.csv"
 
+criterios_score_final:
+  niveis_confianca_aceitos:
+    - "alto"
+  status_prontidao_aceitos:
+    - "benchmark_utilizavel"
+  monitoring_factor_minimo: 1.0
+
 travas:
   - "O motor inicial calcula score estrutural preliminar, não score AIMM final validado."
   - "Indicador com benchmark bloqueado não alimenta score final."

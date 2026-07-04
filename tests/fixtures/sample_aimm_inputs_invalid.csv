@@ -1,0 +1,3 @@
+id_indicador;dimensao_aimm;score_bruto_preliminar;nivel_confianca;status_prontidao_benchmark;id_benchmark;limitacao
+IND_BAD_001;gap;120;baixo;proxy_baixa_confianca;BMK_001;Score fora da faixa.
+IND_BAD_002;mercado;;alto;benchmark_utilizavel;BMK_002;Score ausente sem bloqueio.

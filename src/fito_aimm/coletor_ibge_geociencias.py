@@ -5,6 +5,7 @@ import json
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,7 @@ from .territorios import (
 
 AREA_XLS_URL = "https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/areas_territoriais/2025/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls"
 AREA_XLS_RAW = Path("data/raw/ibge/geociencias/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls")
+AREA_XLS_CACHE_METADATA = Path("data/raw/ibge/geociencias/AR_BR_RG_UF_RGINT_RGI_MUN_2025.metadata.json")
 SIDRA_BASE_URL = "https://apisidra.ibge.gov.br/values"
 
 MUNICIPIOS_PROJETO = carregar_municipios_projeto()
@@ -103,6 +105,75 @@ def baixar_arquivo(url: str, destino: Path, timeout: int = 120) -> int:
     if destino.stat().st_size < 1024:
         raise ValueError("Arquivo baixado parece pequeno demais para ser a planilha de áreas territoriais.")
     return status
+
+
+def ler_cache_metadata(caminho: Path = AREA_XLS_CACHE_METADATA) -> dict[str, Any]:
+    if not caminho.exists():
+        return {}
+    return json.loads(caminho.read_text(encoding="utf-8"))
+
+
+def salvar_cache_metadata(metadata: dict[str, Any], caminho: Path = AREA_XLS_CACHE_METADATA) -> None:
+    caminho.parent.mkdir(parents=True, exist_ok=True)
+    caminho.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def extrair_data_publicacao(headers: dict[str, Any]) -> str:
+    last_modified = headers.get("Last-Modified") or headers.get("last-modified")
+    if not last_modified:
+        return ""
+    try:
+        return parsedate_to_datetime(str(last_modified)).date().isoformat()
+    except (TypeError, ValueError, IndexError):
+        return str(last_modified)
+
+
+def obter_data_publicacao_remota(url: str, timeout: int = 60) -> tuple[int, str]:
+    resposta = requests.head(
+        url,
+        timeout=timeout,
+        allow_redirects=True,
+        headers={
+            "User-Agent": "fito-aimm-amazonia/0.4 (+github-actions)",
+            "Accept": "application/vnd.ms-excel,application/octet-stream,*/*",
+        },
+    )
+    status = resposta.status_code
+    resposta.raise_for_status()
+    return status, extrair_data_publicacao(resposta.headers)
+
+
+def obter_xls_area_cacheado(
+    url: str = AREA_XLS_URL,
+    destino: Path = AREA_XLS_RAW,
+    metadata_path: Path = AREA_XLS_CACHE_METADATA,
+) -> tuple[int | str, str]:
+    cache_disponivel = destino.exists() and destino.stat().st_size > 1024
+    metadata = ler_cache_metadata(metadata_path)
+
+    try:
+        status_head, data_publicacao_remota = obter_data_publicacao_remota(url)
+    except Exception:
+        status_head, data_publicacao_remota = "head_indisponivel", ""
+
+    if cache_disponivel:
+        data_publicacao_local = str(metadata.get("data_publicacao", "") or "")
+        if data_publicacao_remota and data_publicacao_local == data_publicacao_remota:
+            return "cache_validado", data_publicacao_remota
+        if not data_publicacao_remota:
+            return "cache_local_sem_revalidacao", data_publicacao_local
+
+    status_download = baixar_arquivo(url, destino)
+    metadata_atualizado = {
+        "url": url,
+        "arquivo": str(destino),
+        "data_publicacao": data_publicacao_remota,
+        "status_head": status_head,
+        "status_download": status_download,
+        "baixado_em": agora_utc_iso(),
+    }
+    salvar_cache_metadata(metadata_atualizado, metadata_path)
+    return status_download, data_publicacao_remota
 
 
 def normalizar_codigo(valor: Any) -> str:
@@ -324,7 +395,7 @@ def coletar_area_territorial_geociencias(
 ) -> list[dict[str, str]]:
     id_coleta = f"IBGE_GEOCIENCIAS_AREA_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"
     try:
-        status = baixar_arquivo(AREA_XLS_URL, arquivo_raw)
+        status, data_publicacao = obter_xls_area_cacheado(destino=arquivo_raw)
         linhas = extrair_areas_municipios_de_xls(arquivo_raw)
         salvar_csv(arquivo_saida, linhas)
         registrar_fetch_log(
@@ -333,14 +404,18 @@ def coletar_area_territorial_geociencias(
                 id_coleta=id_coleta,
                 fonte="SRC_IBGE_GEOCIENCIAS_AREAS",
                 endpoint=AREA_XLS_URL,
-                parametros=json.dumps({"ano": "2025", "municipios": CODIGOS_MUNICIPIOS_PROJETO}, ensure_ascii=False),
+                parametros=json.dumps({
+                    "ano": "2025",
+                    "municipios": CODIGOS_MUNICIPIOS_PROJETO,
+                    "data_publicacao_verificada": data_publicacao,
+                }, ensure_ascii=False),
                 indicador_relacionado="GAP_TERR_06; baseline_territorial",
                 territorio=TERRITORIO_PROJETO,
                 status_http=status,
                 status_coleta="sucesso",
                 linhas_extraidas=len(linhas),
                 arquivo_saida=str(arquivo_saida),
-                observacoes="Áreas territoriais municipais coletadas da planilha oficial IBGE/Geociências 2025.",
+                observacoes="Áreas territoriais municipais coletadas da planilha oficial IBGE/Geociências 2025 com cache local e verificação por data de publicação.",
             ),
         )
         return linhas
@@ -427,7 +502,7 @@ def gerar_evidencias_area_densidade(
             "unidade": "km²",
             "periodo_referencia": linha["ano_area_territorial"],
             "territorio": f"{linha['municipio']}/{linha['uf']}",
-            "metodo_extracao": "download XLS IBGE/Geociências + API SIDRA + cálculo automatizado",
+            "metodo_extracao": "cache local do XLS IBGE/Geociências com verificação de data de publicação + API SIDRA + cálculo automatizado",
             "nivel_confianca": "alto",
             "data_coleta": data_coleta,
             "conferido_por": "workflow GitHub Actions",
