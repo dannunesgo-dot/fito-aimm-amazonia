@@ -30,7 +30,8 @@ def test_mapaosc_pipeline_uses_local_base_and_mocked_dictionary(tmp_path: Path, 
     evidence_output = Path("data/evidence/evidence_mapaosc_triagem.csv")
     original_evidence = evidence_output.read_bytes() if evidence_output.exists() else None
 
-    local_base.write_text((fixtures_dir / "sample_mapaosc.csv").read_text(encoding="utf-8"), encoding="utf-8")
+    sample_csv = (fixtures_dir / "sample_mapaosc.csv").read_text(encoding="utf-8")
+    local_base.write_text(sample_csv * 16, encoding="utf-8")
     monkeypatch.setattr(mapaosc_fetcher, "LOCAL_BASE_CANDIDATES", [local_base])
 
     responses.add(
