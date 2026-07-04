@@ -5,6 +5,7 @@ import csv
 import io
 import os
 import re
+import unicodedata
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -83,7 +84,29 @@ DIMENSIONS = [
         "peso": 16,
         "nome": "Financeiro-operacional",
         "descricao": "CAPEX, OPEX, orçamento, custos, receitas, produtividade, cronograma, execução e viabilidade.",
-        "keywords": ["capex", "opex", "custo", "receita", "investimento", "tir", "vpl", "payback", "orçamento", "financeiro", "operacional", "cronograma"],
+        "keywords": [
+            "capex",
+            "opex",
+            "custo",
+            "receita",
+            "investimento",
+            "tir",
+            "vpl",
+            "payback",
+            "orçamento",
+            "financeiro",
+            "operacional",
+            "cronograma",
+            "crédito",
+            "credito",
+            "créditos",
+            "creditos",
+            "financiamento",
+            "linha de crédito",
+            "linha de credito",
+            "microcrédito",
+            "microcredito",
+        ],
     },
     {
         "dimensao": "governanca_execucao",
@@ -216,6 +239,13 @@ def safe_decode(data: bytes) -> str:
     return ""
 
 
+def normalize_for_match(value: str) -> str:
+    text = str(value or "").lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    return text
+
+
 def extract_text(service, item: dict[str, Any]) -> tuple[str, str]:
     file_id = item.get("id", "")
     name = item.get("name", "")
@@ -260,8 +290,8 @@ def extract_text(service, item: dict[str, Any]) -> tuple[str, str]:
 
 def classify(name: str, mime: str, text: str) -> dict[str, Any]:
     suffix = Path(name).suffix.lower()
-    name_l = name.lower()
-    text_l = text.lower()
+    name_l = normalize_for_match(name)
+    text_l = normalize_for_match(text)
 
     if suffix in GIS_EXTENSIONS:
         doc_type = "gis"
@@ -281,7 +311,7 @@ def classify(name: str, mime: str, text: str) -> dict[str, Any]:
     for dim in DIMENSIONS:
         count = 0
         for kw in dim["keywords"]:
-            kw_l = kw.lower()
+            kw_l = normalize_for_match(kw)
             if kw_l in name_l:
                 count += 3
             if kw_l in text_l:
