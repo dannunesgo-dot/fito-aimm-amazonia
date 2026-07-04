@@ -13,6 +13,7 @@ from fito_aimm.aimm_engine import (
     BLOCKED_READINESS_STATUSES,
     BLOCKED_REVIEW_STATUS,
     BLOCKED_USAGE_STATUSES,
+    MIN_READINESS_THRESHOLD,
     MONITORING_ONLY_STATUS,
     calculate_dimension_scores,
     calculate_indicator_scores,
@@ -366,12 +367,22 @@ def test_evaluate_release_gate_blocked_by_human_review():
 # Tests: integration — full engine run with seed data
 # ---------------------------------------------------------------------------
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
-def test_engine_runs_with_seed_data():
+
+@pytest.fixture()
+def repo_cwd(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Change CWD to repo root for the duration of a test, then restore it.
+
+    The engine resolves all data paths relative to the working directory, so
+    integration tests must run from the repo root. Using monkeypatch ensures
+    the directory is restored even if the test fails.
+    """
+    monkeypatch.chdir(REPO_ROOT)
+
+
+def test_engine_runs_with_seed_data(repo_cwd: None):
     """Smoke test: engine must run with real seed CSV files without errors."""
-    import os
-
-    os.chdir(Path(__file__).resolve().parents[1])
     from fito_aimm.aimm_engine import execute_aimm_engine
 
     result = execute_aimm_engine()
@@ -381,11 +392,8 @@ def test_engine_runs_with_seed_data():
     assert float(result["score"]) > 0.0
 
 
-def test_engine_seed_score_not_deflated_by_monitoring():
+def test_engine_seed_score_not_deflated_by_monitoring(repo_cwd: None):
     """After the fix, score must be considerably higher than 3.0 (old deflated value)."""
-    import os
-
-    os.chdir(Path(__file__).resolve().parents[1])
     from fito_aimm.aimm_engine import execute_aimm_engine
 
     result = execute_aimm_engine()
@@ -394,11 +402,8 @@ def test_engine_seed_score_not_deflated_by_monitoring():
     assert float(result["score"]) > 10.0
 
 
-def test_engine_output_files_exist():
+def test_engine_output_files_exist(repo_cwd: None):
     """All declared output files must be created by the engine."""
-    import os
-
-    os.chdir(Path(__file__).resolve().parents[1])
     from fito_aimm.aimm_engine import execute_aimm_engine
 
     result = execute_aimm_engine()
@@ -406,11 +411,8 @@ def test_engine_output_files_exist():
         assert Path(path).exists(), f"Output ausente: {key} -> {path}"
 
 
-def test_engine_gate_blocks_final_score():
+def test_engine_gate_blocks_final_score(repo_cwd: None):
     """Preliminary score must always be blocked from final use (gate config)."""
-    import os
-
-    os.chdir(Path(__file__).resolve().parents[1])
     from fito_aimm.aimm_engine import execute_aimm_engine, read_csv
 
     result = execute_aimm_engine()

@@ -17,6 +17,7 @@ BLOCKED_REVIEW_STATUS = "bloqueado_revisao_humana"
 BLOCKED_USAGE_STATUSES = {"bloqueado_sem_benchmark", BLOCKED_REVIEW_STATUS}
 MONITORING_ONLY_STATUS = "apenas_monitoramento"
 HIGH_CRITICALITY = "alta"
+MIN_READINESS_THRESHOLD = 0.75
 
 OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
 OUT_DIMENSION = Path("data/processed/aimm_dimension_scores.csv")
@@ -216,7 +217,7 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         limitation = " | ".join(p for p in limitation_parts if p)
 
         # apenas_monitoramento indicators are scored but excluded from score aggregation
-        excluido_do_score = bloqueado or readiness_factor < 0.75 or monitoring_only
+        excluido_do_score = bloqueado or readiness_factor < MIN_READINESS_THRESHOLD or monitoring_only
 
         rows.append({
             "id_indicador": row["id_indicador"],
@@ -345,7 +346,7 @@ def evaluate_release_gate(
         if any(r.get("bloqueado_para_score_final") == "sim" for r in indicator_scores):
             reasons.append("indicadores_bloqueados")
     if gate.get("exige_sem_bloqueios_criticos", True):
-        if any((b.get("criticidade") or "").strip().lower() == HIGH_CRITICALITY.lower() for b in blockers):
+        if any((b.get("criticidade") or "").strip().lower() == HIGH_CRITICALITY for b in blockers):
             reasons.append("bloqueios_criticos")
     if gate.get("exige_sem_bloqueio_revisao_humana", True):
         if any((r.get("status_uso") or "").strip() == BLOCKED_REVIEW_STATUS for r in indicator_scores):
