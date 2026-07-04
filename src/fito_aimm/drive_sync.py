@@ -25,9 +25,9 @@ def require_env(name: str) -> str:
 
 def mask_identifier(value: str) -> str:
     text = str(value or "")
-    if len(text) <= 12:
+    if len(text) <= 16:
         return "mascarado"
-    return f"{text[:6]}...{text[-4:]}"
+    return f"{text[:4]}...{text[-2:]}"
 
 
 def load_service_account_info_from_env(name: str = "GDRIVE_SERVICE_ACCOUNT_JSON") -> dict[str, Any]:

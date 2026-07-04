@@ -6,7 +6,14 @@ from pathlib import Path
 import yaml
 
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
+def descobrir_raiz_repositorio() -> Path:
+    for candidato in Path(__file__).resolve().parents:
+        if (candidato / "config/territorios.yaml").exists():
+            return candidato
+    raise FileNotFoundError("Não foi possível localizar config/territorios.yaml a partir do módulo.")
+
+
+REPO_ROOT = descobrir_raiz_repositorio()
 TERRITORIOS_PATH = REPO_ROOT / "config/territorios.yaml"
 
 

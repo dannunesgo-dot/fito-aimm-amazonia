@@ -291,7 +291,10 @@ def coletar_localidades_municipios(
     linhas_por_codigo: dict[str, dict[str, str]] = {}
 
     def coletar_localidade(codigo: str, url: str) -> tuple[str, dict[str, str]]:
-        _, dados_json = requisitar_json(url)
+        try:
+            _, dados_json = requisitar_json(url)
+        except Exception as erro:
+            raise RuntimeError(f"Falha ao consultar município {codigo} em {url}") from erro
         return codigo, transformar_localidade_municipio(dados_json)
 
     try:
