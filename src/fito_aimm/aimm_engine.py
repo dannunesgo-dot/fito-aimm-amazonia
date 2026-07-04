@@ -14,6 +14,7 @@ BLOCKERS = Path("data/reference/aimm_engine_blockers_seed.csv")
 ALIGNMENT = Path("data/reference/aimm_indicator_alignment_seed.csv")
 BLOCKED_READINESS_STATUSES = {"bloqueado", "bloqueado_sem_benchmark"}
 BLOCKED_REVIEW_STATUS = "bloqueado_revisao_humana"
+BLOCKED_USAGE_STATUSES = {"bloqueado_sem_benchmark", BLOCKED_REVIEW_STATUS}
 HIGH_CRITICALITY = "alta"
 
 OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
@@ -74,6 +75,10 @@ def score_band(score: float, rules: dict[str, Any]) -> str:
         if min_val <= score <= max_val:
             return label
     return "sem_faixa"
+
+
+def is_blocked_usage(status: Any) -> bool:
+    return str(status or "").strip() in BLOCKED_USAGE_STATUSES
 
 
 def validate_inputs(
@@ -143,8 +148,8 @@ def validate_inputs(
 
         usage_status = alignment_by_id[iid].get("status_uso", "")
         raw = row.get("score_bruto_preliminar", "")
-        is_blocked_usage = str(usage_status).startswith("bloqueado")
-        if row.get("status_prontidao_benchmark") in BLOCKED_READINESS_STATUSES or is_blocked_usage:
+        blocked_usage_status = is_blocked_usage(usage_status)
+        if row.get("status_prontidao_benchmark") in BLOCKED_READINESS_STATUSES or blocked_usage_status:
             # bloqueado pode ficar vazio
             pass
         else:
@@ -193,7 +198,7 @@ def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, An
         readiness_factor = float(readiness_map[row["status_prontidao_benchmark"]])
         adjusted = raw * confidence_factor * readiness_factor
 
-        blocked_usage = str(row.get("status_uso", "")).startswith("bloqueado")
+        blocked_usage = is_blocked_usage(row.get("status_uso", ""))
         blocked_readiness = row["status_prontidao_benchmark"] in BLOCKED_READINESS_STATUSES
         blocked_confidence = row["nivel_confianca"] == "bloqueado"
         bloqueado = blocked_usage or blocked_readiness or blocked_confidence
@@ -263,14 +268,20 @@ def calculate_overall(
     indicator_scores: list[dict[str, Any]],
     rules: dict[str, Any],
 ) -> dict[str, Any]:
+    canonical_dims = list(rules.get("dimensoes_canonicas", []))
+    project_dim = canonical_dims[0] if len(canonical_dims) > 0 else "project_outcomes"
+    market_dim = canonical_dims[1] if len(canonical_dims) > 1 else "market_outcomes"
+    risk_axis = str(rules.get("eixo_risco", "risk_assessment"))
+    monitoring_axis = str(rules.get("eixo_monitoramento", "monitoring"))
+
     weights = {r["dimensao_aimm"]: float(r["peso"]) for r in dimension_scores}
     dim_score = {r["dimensao_aimm"]: float(r["score_dimensao_preliminar"]) for r in dimension_scores}
-    project_score = dim_score.get("project_outcomes", 0.0)
-    market_score = dim_score.get("market_outcomes", 0.0)
-    score_bruto = (project_score * weights.get("project_outcomes", 0.0)) + (market_score * weights.get("market_outcomes", 0.0))
+    project_score = dim_score.get(project_dim, 0.0)
+    market_score = dim_score.get(market_dim, 0.0)
+    score_bruto = (project_score * weights.get(project_dim, 0.0)) + (market_score * weights.get(market_dim, 0.0))
 
-    risk_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == "risk_assessment"]
-    monitoring_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == "monitoring"]
+    risk_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == risk_axis]
+    monitoring_indicators = [r for r in indicator_scores if r.get("eixo_analitico") == monitoring_axis]
     if risk_indicators:
         risk_penalty = sum(float(r["score_ajustado_preliminar"]) for r in risk_indicators) / len(risk_indicators)
     else:
@@ -322,7 +333,7 @@ def evaluate_release_gate(
         if any(r.get("bloqueado_para_score_final") == "sim" for r in indicator_scores):
             reasons.append("indicadores_bloqueados")
     if gate.get("exige_sem_bloqueios_criticos", True):
-        if any((b.get("criticidade") or "").strip().lower() == HIGH_CRITICALITY for b in blockers):
+        if any((b.get("criticidade") or "").strip().lower() == HIGH_CRITICALITY.lower() for b in blockers):
             reasons.append("bloqueios_criticos")
     if gate.get("exige_sem_bloqueio_revisao_humana", True):
         if any((r.get("status_uso") or "").strip() == BLOCKED_REVIEW_STATUS for r in indicator_scores):
