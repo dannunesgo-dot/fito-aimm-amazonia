@@ -119,6 +119,11 @@ DIMENSIONS = [
 
 
 GIS_EXTENSIONS = [".gpkg", ".shp", ".geojson", ".kml", ".kmz", ".tif", ".tiff"]
+DOC_TYPE_DIMENSION_HINTS = {
+    "gis": "territorial_gis",
+    "planilha": "financeiro_operacional",
+    "google_docs": "desenho_projeto_ifc",
+}
 
 
 def require_env(name: str) -> str:
@@ -319,21 +324,49 @@ def classify(name: str, mime: str, text: str) -> dict[str, Any]:
                 count += 1
         hits[dim["dimensao"]] = count
 
-    best = max(hits, key=hits.get)
+    max_hit = max(hits.values()) if hits else 0
+    top_dimensions = sorted([dim for dim, score in hits.items() if score == max_hit])
+    best = top_dimensions[0] if top_dimensions else "evidencias_benchmarks"
 
     if doc_type == "gis":
         best = "territorial_gis"
         hits[best] = max(hits[best], 5)
+        max_hit = max(hits.values())
+        top_dimensions = [dim for dim, score in hits.items() if score == max_hit]
 
     if hits[best] == 0:
         best = "evidencias_benchmarks"
         hits[best] = 1
+        max_hit = 1
+        top_dimensions = [best]
+
+    empate = len(top_dimensions) > 1
+    if empate:
+        hinted = DOC_TYPE_DIMENSION_HINTS.get(doc_type, "")
+        if hinted and hinted in top_dimensions:
+            best = hinted
+        else:
+            best = sorted(top_dimensions)[0]
+
+    ordered_scores = sorted(hits.values(), reverse=True)
+    second_score = ordered_scores[1] if len(ordered_scores) > 1 else 0
+    margin = max(0, hits[best] - second_score)
+
+    if hits[best] <= 1:
+        confidence = "baixa"
+    elif margin <= 1:
+        confidence = "media"
+    else:
+        confidence = "alta"
 
     return {
         "tipo_documento": doc_type,
         "dimensao_aimm_predominante": best,
         "hits_por_dimensao": " | ".join(f"{k}={v}" for k, v in hits.items()),
         "pontuacao_triagem": hits[best],
+        "classificacao_confianca": confidence,
+        "margem_pontuacao": margin,
+        "empate_topo": "sim" if empate else "nao",
     }
 
 
@@ -474,6 +507,9 @@ def main() -> None:
                 "tipo_documento": triage["tipo_documento"],
                 "dimensao_aimm_predominante": triage["dimensao_aimm_predominante"],
                 "pontuacao_triagem": triage["pontuacao_triagem"],
+                "classificacao_confianca": triage["classificacao_confianca"],
+                "margem_pontuacao": triage["margem_pontuacao"],
+                "empate_topo": triage["empate_topo"],
                 "status_extracao": extraction_status,
                 "texto_amostra": text[:1000].replace("\n", " ").replace(";", ","),
                 "hits_por_dimensao": triage["hits_por_dimensao"],
