@@ -46,7 +46,7 @@ def test_classify_aplica_confianca_media_quando_margem_e_pequena():
 
 def test_classify_aplica_hint_por_tipo_documento():
     modulo = _load_module()
-    triagem = modulo.classify("relatorio_geral.csv", "text/csv", "mercado custo")
+    triagem = modulo.classify("arquivo.csv", "text/csv", "mercado custo")
     assert triagem["tipo_documento"] == "planilha"
     assert triagem["dimensao_aimm_predominante"] == "financeiro_operacional"
 
