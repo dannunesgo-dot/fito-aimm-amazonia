@@ -1,0 +1,7 @@
+﻿checagem;status;valor;mensagem
+erros_validacao;ok;0;Sem erros estruturais.
+indicadores_processados;ok;15;Indicadores processados pelo motor.
+dimensoes_processadas;ok;2;Dimensões AIMM processadas.
+resultado_final_bloqueado;trava;não;Resultado bloqueado por gate configurável.
+gate_liberacao_final;trava;indicadores_bloqueados|bloqueios_criticos|revisao_humana_pendente|gate_desabilitado_por_config;Critérios formais de liberação final avaliados.
+bloqueios_registrados;ok;7;Bloqueios/lacunas ativos registrados.
