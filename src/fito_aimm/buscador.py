@@ -150,13 +150,15 @@ def buscar_por_texto(
         Dicionário ``{tabela: [registros]}`` com resultados por tabela.
     """
     st = storage or get_storage()
-    tabelas_alvo = tabelas or st.listar_tabelas()
+    # Obtém tabelas via listar_tabelas() para garantir que só consultamos tabelas existentes
+    tabelas_existentes = set(st.listar_tabelas())
+    tabelas_alvo = [t for t in (tabelas or list(tabelas_existentes)) if t in tabelas_existentes]
     resultados: dict[str, list[dict[str, Any]]] = {}
 
     for tabela in tabelas_alvo:
-        # Descobre colunas da tabela
+        # Descobre colunas usando PRAGMA parametrizado (tabela já validada contra lista SQLite)
         try:
-            info = st.query(f'PRAGMA table_info("{tabela}")')
+            info = st.query("SELECT name FROM pragma_table_info(?)", [tabela])
         except Exception:
             continue
         colunas = [row["name"] for row in info if row.get("name") not in ("id", "data_hora_utc")]

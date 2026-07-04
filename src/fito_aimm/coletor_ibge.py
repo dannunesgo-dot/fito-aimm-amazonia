@@ -432,6 +432,7 @@ def coletar_localidades_municipios_paralelo(
     arquivo_saida: Path = Path("data/raw/ibge/localidades_municipios.csv"),
     arquivo_log: Path = Path("data/reference/fetch_log.csv"),
     max_workers: int = 4,
+    timeout_por_municipio: int = 60,
 ) -> list[dict[str, str]]:
     """Coleta localidades de todos os municípios do projeto em paralelo.
 
@@ -442,6 +443,7 @@ def coletar_localidades_municipios_paralelo(
         arquivo_saida: Caminho para o CSV de saída.
         arquivo_log: Caminho para o log de coleta.
         max_workers: Número máximo de threads paralelas.
+        timeout_por_municipio: Timeout em segundos por requisição individual.
 
     Returns:
         Lista de dicionários com dados de localidade por município.
@@ -459,10 +461,10 @@ def coletar_localidades_municipios_paralelo(
                 executor.submit(_coletar_localidade_municipio_unico, codigo): codigo
                 for codigo in codigos
             }
-            for futuro in as_completed(futuros):
+            for futuro in as_completed(futuros, timeout=timeout_por_municipio * len(codigos)):
                 codigo = futuros[futuro]
                 try:
-                    url, dados = futuro.result()
+                    url, dados = futuro.result(timeout=timeout_por_municipio)
                     urls.append(url)
                     linhas.append(dados)
                 except Exception as exc:

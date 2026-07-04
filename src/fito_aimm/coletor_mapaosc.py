@@ -487,25 +487,34 @@ def deduplicar_oscs(linhas: list[dict[str, str]]) -> list[dict[str, str]]:
     o mesmo CNPJ em municípios distintos). Para registros sem CNPJ, a deduplicação
     usa a combinação nome + município + UF como chave.
 
+    CNPJs são normalizados (somente dígitos) antes da comparação para garantir
+    que variações de formatação (ex: "00.123.456/0001-00" vs "00123456000100")
+    sejam tratadas como o mesmo registro.
+
     Args:
         linhas: Lista de organizações já padronizadas.
 
     Returns:
         Lista sem duplicatas, com o registro de maior score_triagem por chave.
     """
+    import re as _re
+
     indice: dict[str, dict[str, str]] = {}
 
     for linha in linhas:
-        cnpj = str(linha.get("cnpj_ou_id") or "").strip()
-        if cnpj:
-            chave = cnpj
+        cnpj_raw = str(linha.get("cnpj_ou_id") or "").strip()
+        # Normaliza CNPJ removendo pontuação; mantém somente dígitos
+        cnpj_digits = _re.sub(r"\D", "", cnpj_raw)
+
+        if cnpj_digits:
+            chave = f"cnpj_{cnpj_digits}"
         else:
             nome = str(linha.get("nome_organizacao") or "").strip().lower()
             municipio = str(linha.get("municipio") or "").strip().lower()
             uf = str(linha.get("uf") or "").strip().upper()
             chave = f"__sem_cnpj__{nome}|{municipio}|{uf}"
 
-        if not chave or chave == "__sem_cnpj__||":
+        if not chave or chave in ("__sem_cnpj__||",):
             # Sem chave identificável: mantém sem dedup
             indice[f"__sem_chave__{id(linha)}"] = linha
             continue

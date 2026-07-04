@@ -44,6 +44,13 @@ class Storage:
             self._local.conn = conn
         return self._local.conn
 
+    def fechar(self) -> None:
+        """Fecha a conexão SQLite da thread atual, liberando recursos."""
+        conn = getattr(self._local, "conn", None)
+        if conn is not None:
+            conn.close()
+            self._local.conn = None
+
     @contextmanager
     def _transacao(self) -> Generator[sqlite3.Connection, None, None]:
         con = self._conexao()
@@ -58,12 +65,17 @@ class Storage:
     def _garantir_colunas(self, con: sqlite3.Connection, tabela: str, colunas: list[str]) -> None:
         """Adiciona colunas que ainda não existem na tabela."""
         existentes = {
-            row[1]
-            for row in con.execute(f'PRAGMA table_info("{tabela}")').fetchall()
+            row["name"]
+            for row in con.execute(
+                "SELECT name FROM pragma_table_info(?)", (tabela,)
+            ).fetchall()
         }
         for col in colunas:
             if col not in existentes:
-                con.execute(f'ALTER TABLE "{tabela}" ADD COLUMN "{col}" TEXT')
+                # Usa aspas duplas padrão SQL para identificadores
+                con.execute(
+                    f'ALTER TABLE "{tabela}" ADD COLUMN "{col}" TEXT'
+                )
 
     def _criar_tabela(self, con: sqlite3.Connection, tabela: str, colunas: list[str]) -> None:
         cols_def = ", ".join(f'"{c}" TEXT' for c in colunas)
@@ -93,8 +105,14 @@ class Storage:
         if not registros:
             return 0
 
+        self._validar_identificador(tabela)
+
         # Filtra colunas reservadas antes de qualquer operação
-        colunas = [c for c in registros[0].keys() if c not in self._COLUNAS_RESERVADAS]
+        colunas = [
+            self._validar_identificador(c)
+            for c in registros[0].keys()
+            if c not in self._COLUNAS_RESERVADAS
+        ]
         if not colunas:
             return 0
 
@@ -125,6 +143,7 @@ class Storage:
         Returns:
             Lista de dicionários com os registros encontrados.
         """
+        self._validar_identificador(tabela)
         con = self._conexao()
         if not self._tabela_existe(con, tabela):
             return []
@@ -133,11 +152,14 @@ class Storage:
         params: list[str] = []
 
         if filtros:
+            for k in filtros:
+                self._validar_identificador(k)
             clausulas = [f'"{k}" = ?' for k in filtros]
             sql += " WHERE " + " AND ".join(clausulas)
             params.extend(str(v) for v in filtros.values())
 
         if order_by:
+            self._validar_identificador(order_by)
             direcao = "DESC" if order_desc else "ASC"
             sql += f' ORDER BY "{order_by}" {direcao}'
 
@@ -190,6 +212,7 @@ class Storage:
 
     def contar_registros(self, tabela: str) -> int:
         """Conta registros em uma tabela. Retorna 0 se a tabela não existir."""
+        self._validar_identificador(tabela)
         con = self._conexao()
         if not self._tabela_existe(con, tabela):
             return 0
@@ -199,6 +222,20 @@ class Storage:
     # ------------------------------------------------------------------
     # Helpers internos
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _validar_identificador(nome: str) -> str:
+        """Valida que um identificador SQL não contém aspas duplas (escape de identificadores).
+
+        Identificadores são envolvidos em aspas duplas no SQL gerado; rejeita nomes
+        que contenham aspas duplas para prevenir injeção via interpolação de string.
+        """
+        if '"' in nome:
+            raise ValueError(
+                f"Nome de tabela ou coluna inválido: '{nome}'. "
+                "Identificadores não podem conter aspas duplas."
+            )
+        return nome
 
     @staticmethod
     def _tabela_existe(con: sqlite3.Connection, tabela: str) -> bool:
