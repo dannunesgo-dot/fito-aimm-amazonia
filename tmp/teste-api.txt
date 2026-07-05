@@ -1,0 +1,4 @@
+Teste idempotente via gh CLI
+Data: 2026-07-05T11:34:45
+Repo: dannunesgo-dot/fito-aimm-amazonia
+Branch: chore/teste-gh-idempotente
