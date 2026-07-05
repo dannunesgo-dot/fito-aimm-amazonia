@@ -92,6 +92,14 @@ def _repository_slug_from_git() -> str | None:
 
 
 def interface_url() -> str:
+    """Return the published GitHub Pages URL for the optimized interface.
+
+    Resolution order:
+    1. ``GITHUB_PAGES_URL`` with a trailing slash normalized.
+    2. ``GITHUB_REPOSITORY`` in ``owner/repo`` format.
+    3. The ``remote.origin.url`` git setting parsed into ``owner/repo``.
+    4. The repository's canonical public GitHub Pages URL as a final fallback.
+    """
     explicit_url = os.getenv("GITHUB_PAGES_URL")
     if explicit_url:
         return _normalize_url(explicit_url)

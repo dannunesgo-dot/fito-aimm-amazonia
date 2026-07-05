@@ -6,8 +6,31 @@ import sys
 
 sys.path.insert(0, str(Path("src").resolve()))
 
+import fito_aimm.api.routes as routes
 from fito_aimm.api.routes import PORTAL_JS, PORTAL_JSON, build_portal_payload
 from fito_aimm.projects import ProjectRepository
+
+
+def test_interface_url_prefers_explicit_pages_url(monkeypatch) -> None:
+    monkeypatch.setenv("GITHUB_PAGES_URL", "https://example.com/custom")
+    monkeypatch.setenv("GITHUB_REPOSITORY", "ignored/repo")
+
+    assert routes.interface_url() == "https://example.com/custom/"
+
+
+def test_interface_url_builds_from_repository_env(monkeypatch) -> None:
+    monkeypatch.delenv("GITHUB_PAGES_URL", raising=False)
+    monkeypatch.setenv("GITHUB_REPOSITORY", "octo/demo")
+
+    assert routes.interface_url() == "https://octo.github.io/demo/"
+
+
+def test_interface_url_falls_back_to_git_remote(monkeypatch) -> None:
+    monkeypatch.delenv("GITHUB_PAGES_URL", raising=False)
+    monkeypatch.delenv("GITHUB_REPOSITORY", raising=False)
+    monkeypatch.setattr(routes, "_repository_slug_from_git", lambda: "git-owner/git-repo")
+
+    assert routes.interface_url() == "https://git-owner.github.io/git-repo/"
 
 
 def test_build_portal_payload_generates_full_demo() -> None:
