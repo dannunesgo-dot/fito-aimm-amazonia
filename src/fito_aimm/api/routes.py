@@ -484,7 +484,7 @@ def build_portal_payload(reset_demo: bool = False) -> dict[str, Any]:
                 version.pdf_path = str(pdf_path)
         repository.save_project(project)
 
-    highlighted = repository.list_projects()[0]
+    highlighted = max(repository.list_projects(), key=lambda item: (len(item.versoes), item.atualizado_em))
     latest = highlighted.versoes[-1]
     compare_latest = repository.compare_versions(highlighted.id_projeto, 1, latest.numero_versao) if len(highlighted.versoes) > 1 else {}
 

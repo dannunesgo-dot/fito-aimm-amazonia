@@ -1,0 +1,1467 @@
+{
+  "metadata": {
+    "titulo": "Fito+ Amazônia AIMM",
+    "descricao": "Fluxo único de projeto, análise, comparativos, histórico, aprovação formal e exportação executiva.",
+    "gerado_em": "2026-07-05T00:44:51.319765+00:00"
+  },
+  "formularios": {
+    "territorios": [
+      {
+        "codigo_ibge": "1302603",
+        "municipio": "Manaus",
+        "uf": "AM",
+        "label": "Manaus/AM"
+      },
+      {
+        "codigo_ibge": "1300607",
+        "municipio": "Benjamin Constant",
+        "uf": "AM",
+        "label": "Benjamin Constant/AM"
+      },
+      {
+        "codigo_ibge": "1501402",
+        "municipio": "Belém",
+        "uf": "PA",
+        "label": "Belém/PA"
+      },
+      {
+        "codigo_ibge": "1506807",
+        "municipio": "Santarém",
+        "uf": "PA",
+        "label": "Santarém/PA"
+      }
+    ],
+    "especies_produtos": [
+      "gengibre-amargo / shampoo ginger (Zingiber zerumbet)",
+      "gengibre (Zingiber officinale)",
+      "cúrcuma / açafrão-da-terra (Curcuma longa)",
+      "andiroba (Carapa guianensis)",
+      "copaíba (Copaifera spp.)",
+      "unha-de-gato (Uncaria tomentosa)",
+      "a definir (Espécie amazônica a definir)"
+    ],
+    "fontes": [
+      {
+        "chave": "ibge",
+        "nome": "IBGE/SIDRA",
+        "tipo": "Automática",
+        "campos_expostos": [
+          "Município",
+          "Indicador",
+          "Ano",
+          "Valor"
+        ],
+        "status": "coletado",
+        "progresso_label": "Base pública pronta para uso",
+        "aviso": null
+      },
+      {
+        "chave": "mapa_osc",
+        "nome": "Mapa OSC",
+        "tipo": "Automática",
+        "campos_expostos": [
+          "Razão social",
+          "CNPJ",
+          "Pontuação de risco"
+        ],
+        "status": "parcial",
+        "progresso_label": "Coleta pronta com revisão documental pendente",
+        "aviso": "A diligência manual das organizações permanece obrigatória."
+      },
+      {
+        "chave": "planilha_manual",
+        "nome": "Planilha manual",
+        "tipo": "Upload CSV",
+        "campos_expostos": [
+          "Indicador",
+          "Fonte",
+          "Valor",
+          "Observação"
+        ],
+        "status": "pendente",
+        "progresso_label": "Aguardando envio do usuário",
+        "aviso": null
+      },
+      {
+        "chave": "benchmarks",
+        "nome": "Referências de mercado",
+        "tipo": "Configuração",
+        "campos_expostos": [
+          "Espécie",
+          "Dimensão",
+          "Valor de referência"
+        ],
+        "status": "coletado",
+        "progresso_label": "Referências e estimativas carregadas do repositório",
+        "aviso": null
+      }
+    ],
+    "bloqueadores": [
+      {
+        "id_bloqueio": "BLK_001",
+        "bloqueio": "Pré-diligência manual OSC não executada",
+        "criticidade": "alta",
+        "area": "organizações",
+        "efeito_no_score": "bloqueia aptidão/seleção de executoras"
+      },
+      {
+        "id_bloqueio": "BLK_002",
+        "bloqueio": "Benchmarks IFC/AIMM internos não públicos",
+        "criticidade": "alta",
+        "area": "benchmarks",
+        "efeito_no_score": "bloqueia comparação AIMM/IFC direta"
+      },
+      {
+        "id_bloqueio": "BLK_003",
+        "bloqueio": "Produtos/NCM/mercados reais não definidos",
+        "criticidade": "alta",
+        "area": "mercado",
+        "efeito_no_score": "bloqueia substituição de importações e diversificação real"
+      },
+      {
+        "id_bloqueio": "BLK_004",
+        "bloqueio": "Rotas regulatórias não validadas",
+        "criticidade": "alta",
+        "area": "regulação",
+        "efeito_no_score": "bloqueia aprovação de produto e risco regulatório robusto"
+      },
+      {
+        "id_bloqueio": "BLK_005",
+        "bloqueio": "Orçamento sem pesquisa de preços e memória de cálculo",
+        "criticidade": "alta",
+        "area": "orçamento",
+        "efeito_no_score": "bloqueia custo-efetividade e intensidade robusta"
+      },
+      {
+        "id_bloqueio": "BLK_006",
+        "bloqueio": "Cadastro real de beneficiários ausente",
+        "criticidade": "alta",
+        "area": "beneficiários",
+        "efeito_no_score": "bloqueia cálculo real por beneficiário"
+      },
+      {
+        "id_bloqueio": "BLK_007",
+        "bloqueio": "Área/densidade Rodada 4.3 pendente de confirmação",
+        "criticidade": "média",
+        "area": "território",
+        "efeito_no_score": "bloqueia indicador territorial definitivo"
+      }
+    ],
+    "perfis_peso": [
+      "padrão",
+      "conservador",
+      "agressivo"
+    ]
+  },
+  "projetos": [
+    {
+      "id_projeto": "PRJ_20260705004451_corredor-de-fitoterapico",
+      "nome_projeto": "Corredor de Fitoterápicos Manaus",
+      "territorios": [
+        "Manaus/AM",
+        "Belém/PA"
+      ],
+      "especies_produtos": [
+        "andiroba (Carapa guianensis)",
+        "gengibre (Zingiber officinale)"
+      ],
+      "status_geral": "Aprovado",
+      "ultima_pontuacao": 2.62,
+      "ultima_versao": 2,
+      "ultima_aprovacao": "Aprovado"
+    },
+    {
+      "id_projeto": "PRJ_20260705004451_bioeconomia-andiroba-tap",
+      "nome_projeto": "Bioeconomia Andiroba Tapajós",
+      "territorios": [
+        "Santarém/PA"
+      ],
+      "especies_produtos": [
+        "andiroba (Carapa guianensis)"
+      ],
+      "status_geral": "Em análise",
+      "ultima_pontuacao": 2.3,
+      "ultima_versao": 1,
+      "ultima_aprovacao": "Em análise"
+    }
+  ],
+  "projeto_destaque": {
+    "id_projeto": "PRJ_20260705004451_corredor-de-fitoterapico",
+    "slug": "corredor-de-fitoterapicos-manaus",
+    "nome_projeto": "Corredor de Fitoterápicos Manaus",
+    "descricao": "Projeto demonstrativo para consolidar coleta de dados, pontuação AIMM e aprovação formal.",
+    "territorios": [
+      "Manaus/AM",
+      "Belém/PA"
+    ],
+    "especies_produtos": [
+      "andiroba (Carapa guianensis)",
+      "gengibre (Zingiber officinale)"
+    ],
+    "investimento_previsto_brl": 9500000.0,
+    "faixa_beneficiarios": {
+      "minimo": 120,
+      "maximo": 400
+    },
+    "tecnico_responsavel_nome": "Equipe FITO+",
+    "tecnico_responsavel_email": "analise@fito-amazonia.org",
+    "data_referencia": "2026-07-05",
+    "bioma": "Amazônia",
+    "criado_em": "2026-07-05T00:44:51.240630Z",
+    "atualizado_em": "2026-07-05T00:44:51.313345Z",
+    "status_geral": "Aprovado",
+    "versoes": [
+      {
+        "numero_versao": 1,
+        "criado_em": "2026-07-05T00:44:51.260057Z",
+        "disparado_por_nome": "Equipe FITO+",
+        "disparado_por_email": "analise@fito-amazonia.org",
+        "status": "Em análise",
+        "nota_versao": "Versão inicial com comparação regional e geração do painel executivo.",
+        "pontuacao_geral": 2.47,
+        "rotulo_geral": "Impedimento crítico",
+        "elegivel_analise_formal": false,
+        "dimensoes": [
+          {
+            "chave": "gap",
+            "nome": "Lacuna territorial",
+            "pontuacao": 8.36,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Mostra a distância entre a situação atual e o potencial territorial que o projeto pode alcançar.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_GAP_TERR_001",
+                "dimensao": "gap",
+                "nome_dimensao": "Lacuna territorial",
+                "score_bruto": 45.0,
+                "score_ajustado": 11.59,
+                "fonte": "BMK_001",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Área/densidade ainda depende de confirmação final da Rodada 4.3.",
+                "proxy_utilizada": "proxy_publico"
+              },
+              {
+                "id_indicador": "IND_GAP_ORG_001",
+                "dimensao": "gap",
+                "nome_dimensao": "Lacuna territorial",
+                "score_bruto": 20.0,
+                "score_ajustado": 5.15,
+                "fonte": "BMK_002",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Pré-diligência manual não executada; OSCs não aptas.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              }
+            ]
+          },
+          {
+            "chave": "intensidade",
+            "nome": "Força do investimento",
+            "pontuacao": 7.29,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Indica quanta transformação social e produtiva o investimento consegue viabilizar.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_INT_BEN_001",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 35.0,
+                "score_ajustado": 9.01,
+                "fonte": "BMK_003",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Metas de beneficiários ainda preliminares.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_INT_INV_001",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 50.0,
+                "score_ajustado": 12.88,
+                "fonte": "BMK_004",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Orçamento preliminar sem pesquisa de preços/memória de cálculo.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "AIMM_INTERNAL_PROJECT_OUTCOME",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 0.0,
+                "score_ajustado": 0.0,
+                "fonte": "BMK_012",
+                "nivel_confianca": "bloqueado",
+                "status_benchmark": "bloqueado",
+                "limitacao": "Benchmark IFC/AIMM interno não público bloqueado.",
+                "proxy_utilizada": "benchmark_ifc_nao_publico"
+              }
+            ]
+          },
+          {
+            "chave": "mercado",
+            "nome": "Viabilidade comercial",
+            "pontuacao": 8.16,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Resume a capacidade do projeto de gerar demanda, receita e conexão com compradores reais.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_MKT_IMP_001",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 40.0,
+                "score_ajustado": 10.3,
+                "fonte": "BMK_005",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Produtos/NCM ainda não definidos.",
+                "proxy_utilizada": "proxy_publico"
+              },
+              {
+                "id_indicador": "IND_MKT_DIV_001",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 55.0,
+                "score_ajustado": 14.16,
+                "fonte": "BMK_006",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Mercados/clientes reais ainda não cadastrados.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "AIMM_INTERNAL_MARKET_OUTCOME",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 0.0,
+                "score_ajustado": 0.0,
+                "fonte": "BMK_011",
+                "nivel_confianca": "bloqueado",
+                "status_benchmark": "bloqueado",
+                "limitacao": "Benchmark IFC/AIMM interno não público bloqueado.",
+                "proxy_utilizada": "benchmark_ifc_nao_publico"
+              }
+            ]
+          },
+          {
+            "chave": "risco",
+            "nome": "Fatores de risco",
+            "pontuacao": 24.3,
+            "rotulo_qualitativo": "Baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Reúne os impedimentos operacionais, regulatórios e organizacionais que podem reduzir o resultado.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_RISK_OSC_001",
+                "dimensao": "risco",
+                "nome_dimensao": "Fatores de risco",
+                "score_bruto": 55.0,
+                "score_ajustado": 31.87,
+                "fonte": "BMK_007",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Risco OSC sem validação documental real.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_RISK_REG_001",
+                "dimensao": "risco",
+                "nome_dimensao": "Fatores de risco",
+                "score_bruto": 65.0,
+                "score_ajustado": 16.74,
+                "fonte": "BMK_008",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Rotas regulatórias ainda conceituais.",
+                "proxy_utilizada": "proxy_regulatorio"
+              }
+            ]
+          },
+          {
+            "chave": "monitoramento",
+            "nome": "Capacidade de acompanhamento",
+            "pontuacao": 42.0,
+            "rotulo_qualitativo": "Regular",
+            "status": "preliminar",
+            "tooltip": "Mede se o projeto consegue acompanhar evidências, indicadores e prestação de contas.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_MON_EVD_001",
+                "dimensao": "monitoramento",
+                "nome_dimensao": "Capacidade de acompanhamento",
+                "score_bruto": 70.0,
+                "score_ajustado": 40.56,
+                "fonte": "BMK_009",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Mede completude documental, não validade substantiva.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_MON_LOG_001",
+                "dimensao": "monitoramento",
+                "nome_dimensao": "Capacidade de acompanhamento",
+                "score_bruto": 75.0,
+                "score_ajustado": 43.46,
+                "fonte": "BMK_010",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Depende de disciplina de logs e artefatos.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              }
+            ]
+          }
+        ],
+        "bloqueios": [
+          {
+            "id_bloqueio": "BLK_002",
+            "descricao": "Benchmarks IFC/AIMM internos não públicos",
+            "criticidade": "alta",
+            "area": "benchmarks",
+            "origem_campo": "bloqueadores_ativos",
+            "justificativa": null
+          },
+          {
+            "id_bloqueio": "BLK_004",
+            "descricao": "Rotas regulatórias não validadas",
+            "criticidade": "alta",
+            "area": "regulação",
+            "origem_campo": "bloqueadores_ativos",
+            "justificativa": null
+          }
+        ],
+        "lacunas": [
+          {
+            "id_indicador": "IND_GAP_TERR_001",
+            "dimensao": "Lacuna territorial",
+            "descricao": "Área/densidade ainda depende de confirmação final da Rodada 4.3.",
+            "proxy_utilizada": "proxy_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_GAP_ORG_001",
+            "dimensao": "Lacuna territorial",
+            "descricao": "Pré-diligência manual não executada; OSCs não aptas.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_INT_BEN_001",
+            "dimensao": "Força do investimento",
+            "descricao": "Metas de beneficiários ainda preliminares.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_INT_INV_001",
+            "dimensao": "Força do investimento",
+            "descricao": "Orçamento preliminar sem pesquisa de preços/memória de cálculo.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "AIMM_INTERNAL_PROJECT_OUTCOME",
+            "dimensao": "Força do investimento",
+            "descricao": "Benchmark IFC/AIMM interno não público bloqueado.",
+            "proxy_utilizada": "benchmark_ifc_nao_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MKT_IMP_001",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Produtos/NCM ainda não definidos.",
+            "proxy_utilizada": "proxy_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MKT_DIV_001",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Mercados/clientes reais ainda não cadastrados.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "AIMM_INTERNAL_MARKET_OUTCOME",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Benchmark IFC/AIMM interno não público bloqueado.",
+            "proxy_utilizada": "benchmark_ifc_nao_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_RISK_OSC_001",
+            "dimensao": "Fatores de risco",
+            "descricao": "Risco OSC sem validação documental real.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_RISK_REG_001",
+            "dimensao": "Fatores de risco",
+            "descricao": "Rotas regulatórias ainda conceituais.",
+            "proxy_utilizada": "proxy_regulatorio",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MON_EVD_001",
+            "dimensao": "Capacidade de acompanhamento",
+            "descricao": "Mede completude documental, não validade substantiva.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MON_LOG_001",
+            "dimensao": "Capacidade de acompanhamento",
+            "descricao": "Depende de disciplina de logs e artefatos.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          }
+        ],
+        "evidencias": [
+          {
+            "fonte": "Calculadora AIMM",
+            "titulo": "Resumo estrutural do motor AIMM",
+            "valor": "2.40",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "Resultado consolidado da rodada automática com foco em pontuação estrutural e impedimentos ativos."
+          },
+          {
+            "fonte": "organizações",
+            "titulo": "Pré-diligência manual OSC não executada",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia aptidão/seleção de executoras"
+          },
+          {
+            "fonte": "benchmarks",
+            "titulo": "Benchmarks IFC/AIMM internos não públicos",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia comparação AIMM/IFC direta"
+          },
+          {
+            "fonte": "mercado",
+            "titulo": "Produtos/NCM/mercados reais não definidos",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia substituição de importações e diversificação real"
+          },
+          {
+            "fonte": "regulação",
+            "titulo": "Rotas regulatórias não validadas",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia aprovação de produto e risco regulatório robusto"
+          }
+        ],
+        "comparativos": [
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 8.36,
+            "pontuacao_referencia": 48.0,
+            "delta": -39.64,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar lacuna territorial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 8.36,
+            "pontuacao_referencia": 44.0,
+            "delta": -35.64,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar lacuna territorial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto similar",
+            "pontuacao_projeto": 8.36,
+            "pontuacao_referencia": 46.0,
+            "delta": -37.64,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar lacuna territorial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 7.29,
+            "pontuacao_referencia": 43.67,
+            "delta": -36.38,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar força do investimento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 7.29,
+            "pontuacao_referencia": 39.67,
+            "delta": -32.38,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar força do investimento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto similar",
+            "pontuacao_projeto": 7.29,
+            "pontuacao_referencia": 41.67,
+            "delta": -34.38,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar força do investimento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 8.16,
+            "pontuacao_referencia": 43.67,
+            "delta": -35.51,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar viabilidade comercial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 8.16,
+            "pontuacao_referencia": 39.67,
+            "delta": -31.51,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar viabilidade comercial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto similar",
+            "pontuacao_projeto": 8.16,
+            "pontuacao_referencia": 41.67,
+            "delta": -33.51,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar viabilidade comercial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 24.3,
+            "pontuacao_referencia": 56.5,
+            "delta": -32.2,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar fatores de risco com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 24.3,
+            "pontuacao_referencia": 52.5,
+            "delta": -28.2,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar fatores de risco com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto similar",
+            "pontuacao_projeto": 24.3,
+            "pontuacao_referencia": 54.5,
+            "delta": -30.2,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar fatores de risco com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 42.0,
+            "pontuacao_referencia": 65.0,
+            "delta": -23.0,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar capacidade de acompanhamento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 42.0,
+            "pontuacao_referencia": 61.0,
+            "delta": -19.0,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar capacidade de acompanhamento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto similar",
+            "pontuacao_projeto": 42.0,
+            "pontuacao_referencia": 63.0,
+            "delta": -21.0,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Reforçar capacidade de acompanhamento com dados validados e ações territoriais."
+          }
+        ],
+        "entradas": {
+          "nome_projeto": "Corredor de Fitoterápicos Manaus",
+          "descricao": "Projeto demonstrativo para consolidar coleta de dados, pontuação AIMM e aprovação formal.",
+          "territorios": [
+            "Manaus/AM",
+            "Belém/PA"
+          ],
+          "especies_produtos": [
+            "andiroba (Carapa guianensis)",
+            "gengibre (Zingiber officinale)"
+          ],
+          "investimento_previsto_brl": 9500000.0,
+          "faixa_beneficiarios": {
+            "minimo": 120,
+            "maximo": 400
+          },
+          "tecnico_responsavel_nome": "Equipe FITO+",
+          "tecnico_responsavel_email": "analise@fito-amazonia.org",
+          "data_referencia": "2026-07-05",
+          "perfil_pesos": "padrão",
+          "bloqueadores_ativos": [
+            "BLK_002",
+            "BLK_004"
+          ],
+          "nivel_confianca_minimo": 3,
+          "modo_execucao": "completo",
+          "planilha_manual_nome": null,
+          "nota_execucao": "Versão inicial com comparação regional e geração do painel executivo."
+        },
+        "hash_documento": "38a8c4d46e3533aa491ce06011a6daa5fc2ed3354da31f0647878edfcf2528a6",
+        "pdf_path": "outputs/reports/fito_aimm_corredor-de-fitoterapicos-manaus_2026-07-05_v1.pdf",
+        "approval_path": null,
+        "aprovacao": null
+      },
+      {
+        "numero_versao": 2,
+        "criado_em": "2026-07-05T00:44:51.301291Z",
+        "disparado_por_nome": "Equipe FITO+",
+        "disparado_por_email": "analise@fito-amazonia.org",
+        "status": "Aprovado",
+        "nota_versao": "Versão inicial com comparação regional e geração do painel executivo.",
+        "pontuacao_geral": 2.62,
+        "rotulo_geral": "Impedimento crítico",
+        "elegivel_analise_formal": false,
+        "dimensoes": [
+          {
+            "chave": "gap",
+            "nome": "Lacuna territorial",
+            "pontuacao": 8.85,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Mostra a distância entre a situação atual e o potencial territorial que o projeto pode alcançar.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_GAP_TERR_001",
+                "dimensao": "gap",
+                "nome_dimensao": "Lacuna territorial",
+                "score_bruto": 45.0,
+                "score_ajustado": 12.26,
+                "fonte": "BMK_001",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Área/densidade ainda depende de confirmação final da Rodada 4.3.",
+                "proxy_utilizada": "proxy_publico"
+              },
+              {
+                "id_indicador": "IND_GAP_ORG_001",
+                "dimensao": "gap",
+                "nome_dimensao": "Lacuna territorial",
+                "score_bruto": 20.0,
+                "score_ajustado": 5.45,
+                "fonte": "BMK_002",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Pré-diligência manual não executada; OSCs não aptas.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              }
+            ]
+          },
+          {
+            "chave": "intensidade",
+            "nome": "Força do investimento",
+            "pontuacao": 7.72,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Indica quanta transformação social e produtiva o investimento consegue viabilizar.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_INT_BEN_001",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 35.0,
+                "score_ajustado": 9.54,
+                "fonte": "BMK_003",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Metas de beneficiários ainda preliminares.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_INT_INV_001",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 50.0,
+                "score_ajustado": 13.63,
+                "fonte": "BMK_004",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Orçamento preliminar sem pesquisa de preços/memória de cálculo.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "AIMM_INTERNAL_PROJECT_OUTCOME",
+                "dimensao": "intensidade",
+                "nome_dimensao": "Força do investimento",
+                "score_bruto": 0.0,
+                "score_ajustado": 0.0,
+                "fonte": "BMK_012",
+                "nivel_confianca": "bloqueado",
+                "status_benchmark": "bloqueado",
+                "limitacao": "Benchmark IFC/AIMM interno não público bloqueado.",
+                "proxy_utilizada": "benchmark_ifc_nao_publico"
+              }
+            ]
+          },
+          {
+            "chave": "mercado",
+            "nome": "Viabilidade comercial",
+            "pontuacao": 8.63,
+            "rotulo_qualitativo": "Muito baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Resume a capacidade do projeto de gerar demanda, receita e conexão com compradores reais.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_MKT_IMP_001",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 40.0,
+                "score_ajustado": 10.9,
+                "fonte": "BMK_005",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Produtos/NCM ainda não definidos.",
+                "proxy_utilizada": "proxy_publico"
+              },
+              {
+                "id_indicador": "IND_MKT_DIV_001",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 55.0,
+                "score_ajustado": 14.99,
+                "fonte": "BMK_006",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Mercados/clientes reais ainda não cadastrados.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "AIMM_INTERNAL_MARKET_OUTCOME",
+                "dimensao": "mercado",
+                "nome_dimensao": "Viabilidade comercial",
+                "score_bruto": 0.0,
+                "score_ajustado": 0.0,
+                "fonte": "BMK_011",
+                "nivel_confianca": "bloqueado",
+                "status_benchmark": "bloqueado",
+                "limitacao": "Benchmark IFC/AIMM interno não público bloqueado.",
+                "proxy_utilizada": "benchmark_ifc_nao_publico"
+              }
+            ]
+          },
+          {
+            "chave": "risco",
+            "nome": "Fatores de risco",
+            "pontuacao": 25.71,
+            "rotulo_qualitativo": "Baixo",
+            "status": "preliminar_com_bloqueios",
+            "tooltip": "Reúne os impedimentos operacionais, regulatórios e organizacionais que podem reduzir o resultado.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_RISK_OSC_001",
+                "dimensao": "risco",
+                "nome_dimensao": "Fatores de risco",
+                "score_bruto": 55.0,
+                "score_ajustado": 33.72,
+                "fonte": "BMK_007",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Risco OSC sem validação documental real.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_RISK_REG_001",
+                "dimensao": "risco",
+                "nome_dimensao": "Fatores de risco",
+                "score_bruto": 65.0,
+                "score_ajustado": 17.71,
+                "fonte": "BMK_008",
+                "nivel_confianca": "baixo",
+                "status_benchmark": "proxy_baixa_confianca",
+                "limitacao": "Rotas regulatórias ainda conceituais.",
+                "proxy_utilizada": "proxy_regulatorio"
+              }
+            ]
+          },
+          {
+            "chave": "monitoramento",
+            "nome": "Capacidade de acompanhamento",
+            "pontuacao": 44.45,
+            "rotulo_qualitativo": "Regular",
+            "status": "preliminar",
+            "tooltip": "Mede se o projeto consegue acompanhar evidências, indicadores e prestação de contas.",
+            "indicadores": [
+              {
+                "id_indicador": "IND_MON_EVD_001",
+                "dimensao": "monitoramento",
+                "nome_dimensao": "Capacidade de acompanhamento",
+                "score_bruto": 70.0,
+                "score_ajustado": 42.92,
+                "fonte": "BMK_009",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Mede completude documental, não validade substantiva.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              },
+              {
+                "id_indicador": "IND_MON_LOG_001",
+                "dimensao": "monitoramento",
+                "nome_dimensao": "Capacidade de acompanhamento",
+                "score_bruto": 75.0,
+                "score_ajustado": 45.99,
+                "fonte": "BMK_010",
+                "nivel_confianca": "medio",
+                "status_benchmark": "proxy_utilizavel_com_validacao",
+                "limitacao": "Depende de disciplina de logs e artefatos.",
+                "proxy_utilizada": "proxy_interno_projeto"
+              }
+            ]
+          }
+        ],
+        "bloqueios": [
+          {
+            "id_bloqueio": "BLK_002",
+            "descricao": "Benchmarks IFC/AIMM internos não públicos",
+            "criticidade": "alta",
+            "area": "benchmarks",
+            "origem_campo": "bloqueadores_ativos",
+            "justificativa": null
+          }
+        ],
+        "lacunas": [
+          {
+            "id_indicador": "IND_GAP_TERR_001",
+            "dimensao": "Lacuna territorial",
+            "descricao": "Área/densidade ainda depende de confirmação final da Rodada 4.3.",
+            "proxy_utilizada": "proxy_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_GAP_ORG_001",
+            "dimensao": "Lacuna territorial",
+            "descricao": "Pré-diligência manual não executada; OSCs não aptas.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_INT_BEN_001",
+            "dimensao": "Força do investimento",
+            "descricao": "Metas de beneficiários ainda preliminares.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_INT_INV_001",
+            "dimensao": "Força do investimento",
+            "descricao": "Orçamento preliminar sem pesquisa de preços/memória de cálculo.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "AIMM_INTERNAL_PROJECT_OUTCOME",
+            "dimensao": "Força do investimento",
+            "descricao": "Benchmark IFC/AIMM interno não público bloqueado.",
+            "proxy_utilizada": "benchmark_ifc_nao_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MKT_IMP_001",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Produtos/NCM ainda não definidos.",
+            "proxy_utilizada": "proxy_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MKT_DIV_001",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Mercados/clientes reais ainda não cadastrados.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "AIMM_INTERNAL_MARKET_OUTCOME",
+            "dimensao": "Viabilidade comercial",
+            "descricao": "Benchmark IFC/AIMM interno não público bloqueado.",
+            "proxy_utilizada": "benchmark_ifc_nao_publico",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_RISK_OSC_001",
+            "dimensao": "Fatores de risco",
+            "descricao": "Risco OSC sem validação documental real.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_RISK_REG_001",
+            "dimensao": "Fatores de risco",
+            "descricao": "Rotas regulatórias ainda conceituais.",
+            "proxy_utilizada": "proxy_regulatorio",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MON_EVD_001",
+            "dimensao": "Capacidade de acompanhamento",
+            "descricao": "Mede completude documental, não validade substantiva.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          },
+          {
+            "id_indicador": "IND_MON_LOG_001",
+            "dimensao": "Capacidade de acompanhamento",
+            "descricao": "Depende de disciplina de logs e artefatos.",
+            "proxy_utilizada": "proxy_interno_projeto",
+            "sugestao_fonte": "Validar benchmark público, evidência documental e atualização territorial."
+          }
+        ],
+        "evidencias": [
+          {
+            "fonte": "Calculadora AIMM",
+            "titulo": "Resumo estrutural do motor AIMM",
+            "valor": "2.40",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "Resultado consolidado da rodada automática com foco em pontuação estrutural e impedimentos ativos."
+          },
+          {
+            "fonte": "organizações",
+            "titulo": "Pré-diligência manual OSC não executada",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia aptidão/seleção de executoras"
+          },
+          {
+            "fonte": "benchmarks",
+            "titulo": "Benchmarks IFC/AIMM internos não públicos",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia comparação AIMM/IFC direta"
+          },
+          {
+            "fonte": "mercado",
+            "titulo": "Produtos/NCM/mercados reais não definidos",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia substituição de importações e diversificação real"
+          },
+          {
+            "fonte": "regulação",
+            "titulo": "Rotas regulatórias não validadas",
+            "valor": "alta",
+            "data_referencia": "2026-07-05",
+            "nivel_confianca": "médio",
+            "resumo": "bloqueia aprovação de produto e risco regulatório robusto"
+          }
+        ],
+        "comparativos": [
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 8.85,
+            "pontuacao_referencia": 48.0,
+            "delta": -39.15,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar lacuna territorial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 8.85,
+            "pontuacao_referencia": 7.8,
+            "delta": 1.05,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de lacuna territorial e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Lacuna territorial",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto usado como referência de mercado e histórico.",
+            "pontuacao_projeto": 8.85,
+            "pontuacao_referencia": 7.8,
+            "delta": 1.05,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de lacuna territorial e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 7.72,
+            "pontuacao_referencia": 43.67,
+            "delta": -35.95,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar força do investimento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 7.72,
+            "pontuacao_referencia": 6.8,
+            "delta": 0.92,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de força do investimento e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Força do investimento",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto usado como referência de mercado e histórico.",
+            "pontuacao_projeto": 7.72,
+            "pontuacao_referencia": 6.8,
+            "delta": 0.92,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de força do investimento e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 8.63,
+            "pontuacao_referencia": 43.67,
+            "delta": -35.04,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar viabilidade comercial com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 8.63,
+            "pontuacao_referencia": 7.6,
+            "delta": 1.03,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de viabilidade comercial e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Viabilidade comercial",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto usado como referência de mercado e histórico.",
+            "pontuacao_projeto": 8.63,
+            "pontuacao_referencia": 7.6,
+            "delta": 1.03,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de viabilidade comercial e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 25.71,
+            "pontuacao_referencia": 56.5,
+            "delta": -30.79,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar fatores de risco com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 25.71,
+            "pontuacao_referencia": 22.65,
+            "delta": 3.06,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de fatores de risco e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Fatores de risco",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto usado como referência de mercado e histórico.",
+            "pontuacao_projeto": 25.71,
+            "pontuacao_referencia": 22.65,
+            "delta": 3.06,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de fatores de risco e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "benchmark_setorial",
+            "referencia_nome": "Benchmark setorial",
+            "pontuacao_projeto": 44.45,
+            "pontuacao_referencia": 65.0,
+            "delta": -20.55,
+            "direcao": "abaixo",
+            "status": "Abaixo da referência",
+            "estimativa_aproximada": true,
+            "sugestao_melhoria": "Reforçar capacidade de acompanhamento com dados validados e ações territoriais."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "media_regional",
+            "referencia_nome": "Média regional",
+            "pontuacao_projeto": 44.45,
+            "pontuacao_referencia": 39.15,
+            "delta": 5.3,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de capacidade de acompanhamento e registrar evidências comparáveis."
+          },
+          {
+            "dimensao": "Capacidade de acompanhamento",
+            "referencia_tipo": "projeto_similar",
+            "referencia_nome": "Projeto usado como referência de mercado e histórico.",
+            "pontuacao_projeto": 44.45,
+            "pontuacao_referencia": 39.15,
+            "delta": 5.3,
+            "direcao": "acima",
+            "status": "Acima da referência",
+            "estimativa_aproximada": false,
+            "sugestao_melhoria": "Manter a consistência de capacidade de acompanhamento e registrar evidências comparáveis."
+          }
+        ],
+        "entradas": {
+          "nome_projeto": "Corredor de Fitoterápicos Manaus",
+          "descricao": "Projeto demonstrativo para consolidar coleta de dados, pontuação AIMM e aprovação formal.",
+          "territorios": [
+            "Manaus/AM",
+            "Belém/PA"
+          ],
+          "especies_produtos": [
+            "andiroba (Carapa guianensis)",
+            "gengibre (Zingiber officinale)"
+          ],
+          "investimento_previsto_brl": 9500000.0,
+          "faixa_beneficiarios": {
+            "minimo": 120,
+            "maximo": 400
+          },
+          "tecnico_responsavel_nome": "Equipe FITO+",
+          "tecnico_responsavel_email": "analise@fito-amazonia.org",
+          "data_referencia": "2026-07-05",
+          "perfil_pesos": "agressivo",
+          "bloqueadores_ativos": [
+            "BLK_002"
+          ],
+          "nivel_confianca_minimo": 4,
+          "modo_execucao": "completo",
+          "planilha_manual_nome": null,
+          "nota_execucao": "Versão inicial com comparação regional e geração do painel executivo."
+        },
+        "hash_documento": "481887b69c07347a2172b78745bfe95d503c81605a53fd905a5d062b27eb3982",
+        "pdf_path": "outputs/reports/fito_aimm_corredor-de-fitoterapicos-manaus_2026-07-05_v2.pdf",
+        "approval_path": "outputs/app/approvals/PRJ_20260705004451_corredor-de-fitoterapico_v2.json",
+        "aprovacao": {
+          "revisor_nome": "Coordenação Técnica",
+          "revisor_email": "coordenacao@fito-amazonia.org",
+          "papel_revisor": "Coordenador",
+          "parecer": "A análise apresenta coerência metodológica, registra os impedimentos remanescentes e oferece base suficiente para uso executivo interno nesta etapa.",
+          "decisao": "Aprovado",
+          "ressalvas": null,
+          "confirmou_identidade": true,
+          "assinado_em": "2026-07-05T00:44:51.302939Z",
+          "hash_documento": "481887b69c07347a2172b78745bfe95d503c81605a53fd905a5d062b27eb3982"
+        }
+      }
+    ],
+    "auditoria": [
+      {
+        "evento": "criacao",
+        "usuario_nome": "Equipe FITO+",
+        "usuario_email": "analise@fito-amazonia.org",
+        "ocorrido_em": "2026-07-05T00:44:51.240630Z",
+        "ip_mascarado": "0.xxx.xxx.0",
+        "hash_estado": "bc7a7486d8fd4b240c231fcf0c193160f0ff58ab46f9dae5eefad43999d56537",
+        "nota": "Projeto criado na tela única de projeto."
+      },
+      {
+        "evento": "analise_inicial",
+        "usuario_nome": "Equipe FITO+",
+        "usuario_email": "analise@fito-amazonia.org",
+        "ocorrido_em": "2026-07-05T00:44:51.260057Z",
+        "ip_mascarado": "0.xxx.xxx.0",
+        "hash_estado": "38a8c4d46e3533aa491ce06011a6daa5fc2ed3354da31f0647878edfcf2528a6",
+        "nota": "Versão inicial com comparação regional e geração do painel executivo."
+      },
+      {
+        "evento": "reanalise",
+        "usuario_nome": "Equipe FITO+",
+        "usuario_email": "analise@fito-amazonia.org",
+        "ocorrido_em": "2026-07-05T00:44:51.301291Z",
+        "ip_mascarado": "0.xxx.xxx.0",
+        "hash_estado": "74ff52eda7cd6de20147053015b7bee52a31426df59a550a6a79134a063492c8",
+        "nota": "Versão inicial com comparação regional e geração do painel executivo."
+      },
+      {
+        "evento": "aprovacao",
+        "usuario_nome": "Coordenação Técnica",
+        "usuario_email": "coordenacao@fito-amazonia.org",
+        "ocorrido_em": "2026-07-05T00:44:51.302939Z",
+        "ip_mascarado": "189.xxx.xxx.12",
+        "hash_estado": "481887b69c07347a2172b78745bfe95d503c81605a53fd905a5d062b27eb3982",
+        "nota": "Aprovado"
+      }
+    ]
+  },
+  "comparacao_destaque": {
+    "score_geral": {
+      "antes": 2.47,
+      "depois": 2.62,
+      "delta": 0.15
+    },
+    "dimensoes": [
+      {
+        "dimensao": "Lacuna territorial",
+        "antes": 8.36,
+        "depois": 8.85,
+        "delta": 0.49,
+        "direcao": "melhora"
+      },
+      {
+        "dimensao": "Força do investimento",
+        "antes": 7.29,
+        "depois": 7.72,
+        "delta": 0.43,
+        "direcao": "melhora"
+      },
+      {
+        "dimensao": "Viabilidade comercial",
+        "antes": 8.16,
+        "depois": 8.63,
+        "delta": 0.47,
+        "direcao": "melhora"
+      },
+      {
+        "dimensao": "Fatores de risco",
+        "antes": 24.3,
+        "depois": 25.71,
+        "delta": 1.41,
+        "direcao": "melhora"
+      },
+      {
+        "dimensao": "Capacidade de acompanhamento",
+        "antes": 42.0,
+        "depois": 44.45,
+        "delta": 2.45,
+        "direcao": "melhora"
+      }
+    ],
+    "bloqueios_adicionados": [],
+    "bloqueios_resolvidos": [
+      "BLK_004"
+    ],
+    "lacunas_adicionadas": [],
+    "lacunas_preenchidas": [],
+    "campos_alterados": [
+      {
+        "campo": "perfil_pesos",
+        "antes": "padrão",
+        "depois": "agressivo"
+      },
+      {
+        "campo": "bloqueadores_ativos",
+        "antes": [
+          "BLK_002",
+          "BLK_004"
+        ],
+        "depois": [
+          "BLK_002"
+        ]
+      },
+      {
+        "campo": "nivel_confianca_minimo",
+        "antes": 3,
+        "depois": 4
+      }
+    ]
+  },
+  "links": {
+    "pdf_versao_atual": "outputs/reports/fito_aimm_corredor-de-fitoterapicos-manaus_2026-07-05_v2.pdf",
+    "json_payload": "outputs/app/portal_payload.json"
+  }
+}

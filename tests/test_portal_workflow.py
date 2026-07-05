@@ -28,7 +28,7 @@ def test_build_portal_payload_generates_full_demo() -> None:
 def test_project_history_and_pdf_are_available() -> None:
     build_portal_payload(reset_demo=True)
     repository = ProjectRepository()
-    project = repository.list_projects()[0]
+    project = max(repository.list_projects(), key=lambda item: len(item.versoes))
 
     assert len(project.versoes) >= 2
     latest = project.versoes[-1]
