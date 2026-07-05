@@ -3,151 +3,804 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AIMM — Interface operacional Fito+ Amazônia</title>
+  <title>Fito+ Amazônia AIMM — Fluxo único de projeto</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #111827; }
-    header { background: #0f172a; color: #fff; padding: 26px; }
-    main { max-width: 1120px; margin: 24px auto; padding: 0 18px; }
-    section { background: #fff; border: 1px solid #d8dee9; border-radius: 12px; padding: 18px; margin-bottom: 18px; }
-    h1, h2, h3 { margin-top: 0; }
-    label { display: block; margin-top: 12px; font-weight: bold; }
-    input, textarea, select { width: 100%; box-sizing: border-box; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; }
-    button, a.button { display: inline-block; margin-top: 14px; padding: 11px 16px; border: 0; border-radius: 8px; background: #0f172a; color: white; text-decoration: none; cursor: pointer; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-    .card { border: 1px solid #d8dee9; border-radius: 10px; padding: 14px; background: #fbfdff; }
-    .ok { color: #166534; font-weight: bold; }
-    .warn { color: #92400e; font-weight: bold; }
-    .block { border-left: 5px solid #1d4ed8; background: #eff6ff; padding: 12px; }
-    code { background: #e5e7eb; padding: 2px 5px; border-radius: 5px; }
-    pre { white-space: pre-wrap; background: #f3f4f6; padding: 12px; border-radius: 8px; overflow:auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #d8dee9; padding: 8px; text-align: left; vertical-align: top; }
-    th { background: #f1f5f9; }
+    :root {
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --ink: #102038;
+      --muted: #4a5970;
+      --line: #d4deea;
+      --brand: #0b4a6f;
+      --brand-2: #0f766e;
+      --ok: #166534;
+      --warn: #9a6700;
+      --danger: #b42318;
+      --chip: #eff6ff;
+      --focus: #1d4ed8;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.45; }
+    a { color: var(--brand); }
+    button, input, select, textarea { font: inherit; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+    header { background: linear-gradient(120deg, #0f172a, #0b4a6f); color: #fff; padding: 24px 20px; }
+    header p { max-width: 820px; margin: 8px 0 0; }
+    .app { max-width: 1280px; margin: 0 auto; padding: 20px; }
+    .topbar, .grid, .cards, .timeline, .actions, .toolbar, .checklist { display: grid; gap: 16px; }
+    .topbar { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .grid { grid-template-columns: 1.1fr 1fr; align-items: start; }
+    .cards { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .timeline { grid-template-columns: 1fr; }
+    .card, .panel, .timeline-item, .comparison-card, .table-wrap, form, nav.tabs { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+    .card, .panel, .timeline-item, .comparison-card, .table-wrap, form { padding: 18px; }
+    .status-card strong { display: block; font-size: 1.8rem; margin-top: 6px; }
+    .badge, .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: .92rem; font-weight: 700; }
+    .badge.ok { background: #ecfdf3; color: var(--ok); }
+    .badge.warn { background: #fff7e6; color: var(--warn); }
+    .badge.danger { background: #fff1f3; color: var(--danger); }
+    .pill { background: var(--chip); color: var(--brand); font-weight: 600; }
+    nav.tabs { display: flex; flex-wrap: wrap; padding: 8px; margin: 18px 0; gap: 8px; }
+    nav.tabs button { border: 0; background: transparent; padding: 12px 14px; border-radius: 10px; color: var(--ink); cursor: pointer; min-height: 44px; }
+    nav.tabs button[aria-selected="true"] { background: var(--brand); color: #fff; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .wizard { display: grid; gap: 18px; }
+    .wizard-steps { display: flex; flex-wrap: wrap; gap: 10px; }
+    .wizard-steps .step { padding: 10px 12px; border-radius: 999px; background: #eaf2ff; color: var(--brand); font-weight: 700; }
+    .wizard-steps .step.current { background: var(--brand); color: #fff; }
+    .fieldset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    label { display: block; margin-bottom: 6px; font-weight: 700; }
+    input, select, textarea { width: 100%; border: 1px solid #adc4db; border-radius: 10px; padding: 11px 12px; min-height: 44px; background: #fff; }
+    textarea { min-height: 110px; resize: vertical; }
+    .help, .error, .muted { font-size: .95rem; }
+    .help, .muted { color: var(--muted); }
+    .error { color: var(--danger); font-weight: 700; }
+    .checklist { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .checklist label { font-weight: 600; display: flex; align-items: flex-start; gap: 10px; }
+    .checklist input { width: 20px; min-height: auto; margin-top: 2px; }
+    .actions { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+    .actions a, .actions button, .toolbar button, .toolbar a {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 46px; padding: 12px 14px; border-radius: 10px; border: 0; text-decoration: none; cursor: pointer;
+      background: var(--brand); color: #fff; font-weight: 700;
+    }
+    .actions .secondary, .toolbar .secondary { background: #e5eef8; color: var(--brand); }
+    .toolbar { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 16px 0; }
+    details { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: #fbfdff; }
+    details + details { margin-top: 12px; }
+    summary { cursor: pointer; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; min-width: 640px; }
+    caption { text-align: left; font-weight: 700; margin-bottom: 10px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef4fb; }
+    .table-wrap { overflow: auto; }
+    .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+    .delta.up { color: var(--ok); font-weight: 700; }
+    .delta.down { color: var(--danger); font-weight: 700; }
+    .delta.flat { color: var(--muted); font-weight: 700; }
+    .timeline-item { position: relative; padding-left: 22px; }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 24px;
+      bottom: -20px;
+      width: 2px;
+      background: #c6d4e4;
+    }
+    .timeline-item:last-child::before { display: none; }
+    .timeline-item h3 { margin: 0 0 6px; }
+    .metric-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+    .metric-list div { background: #f6fafc; border-radius: 10px; padding: 12px; }
+    .radar-table-toggle { margin-top: 12px; }
+    .skip-link {
+      position: absolute; left: 12px; top: -52px; background: #fff; color: #000; padding: 10px 14px; z-index: 100;
+    }
+    .skip-link:focus { top: 12px; }
+    @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) {
+      .app { padding: 14px; }
+      nav.tabs { padding: 6px; }
+      .cards, .actions, .toolbar { grid-template-columns: 1fr; }
+      header { padding: 20px 16px; }
+      table { min-width: 540px; }
+    }
+    @media print {
+      body { background: #fff; }
+      nav.tabs, .toolbar, .wizard-steps, .actions, .radar-table-toggle { display: none !important; }
+      .tab-panel { display: block !important; }
+      .card, .panel, .timeline-item, .comparison-card, .table-wrap, form { border-color: #999; box-shadow: none; }
+    }
   </style>
 </head>
 <body>
-<header>
-  <h1>AIMM — Interface operacional Fito+ Amazônia</h1>
-  <p>Ferramenta de apoio à elaboração e avaliação de projetos com análise AIMM, evidências documentais, GIS e relatórios técnicos.</p>
-</header>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
+  <header>
+    <h1>Fito+ Amazônia AIMM</h1>
+    <p>Fluxo único para novo projeto, coleta de dados, disparo de análise, comparação com referências, histórico de versões, aprovação formal e exportação executiva em PDF.</p>
+  </header>
 
-<main>
-  <section>
-    <h2>1. Estado da ferramenta</h2>
-    <div class="grid">
-      <div class="card"><h3>Entrada pela interface</h3><p class="ok">Campos operacionais preparados</p></div>
-      <div class="card"><h3>Documentos</h3><p class="ok">Leitura via pasta do Google Drive</p></div>
-      <div class="card"><h3>GIS</h3><p class="warn">Manaus validado; novos municípios exigem validação GIS</p></div>
-      <div class="card"><h3>Relatórios</h3><p class="ok">Executivo IFC e técnico AIMM</p></div>
-    </div>
-  </section>
+  <main id="conteudo" class="app">
+    <section class="topbar" aria-label="Resumo geral do sistema">
+      <article class="card status-card">
+        <span class="pill">Fluxo único</span>
+        <strong id="metaProjetos">0</strong>
+        <div class="muted">Projetos disponíveis para consulta</div>
+      </article>
+      <article class="card status-card">
+        <span class="pill">Pontuação atual</span>
+        <strong id="metaScore">0</strong>
+        <div class="muted">Resultado inicial do projeto selecionado</div>
+      </article>
+      <article class="card status-card">
+        <span class="pill">Versões</span>
+        <strong id="metaVersoes">0</strong>
+        <div class="muted">Histórico disponível com auditoria</div>
+      </article>
+      <article class="card status-card">
+        <span class="pill">Última geração</span>
+        <strong id="metaData">—</strong>
+        <div class="muted">Momento da atualização do pacote</div>
+      </article>
+    </section>
 
-  <section>
-    <h2>2. Como os usuários devem trabalhar</h2>
-    <ol>
-      <li>Reunir artigos, notas técnicas, planilhas, PDFs, DOCX e arquivos GIS na pasta de entrada do Google Drive.</li>
-      <li>Copiar o link ou ID da pasta de entrada.</li>
-      <li>Preencher os campos abaixo para preparar a execução.</li>
-      <li>Enviar os dados ao operador responsável.</li>
-      <li>O operador executa a automação pelo GitHub Actions.</li>
-      <li>O sistema gera relatório técnico, relatório executivo, matrizes e evidências no Drive.</li>
-    </ol>
-    <div class="block">
-      Esta interface não guarda dados e não recebe upload direto. Ela prepara a execução sem expor credenciais. O processamento real ocorre no workflow protegido do GitHub Actions.
-    </div>
-  </section>
+    <nav class="tabs" aria-label="Navegação principal por áreas">
+      <button type="button" role="tab" aria-selected="true" aria-controls="tab-criacao" id="botao-criacao">Novo projeto</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-resultado" id="botao-resultado">Resultado AIMM</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-comparativos" id="botao-comparativos">Comparativos</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-historico" id="botao-historico">Histórico</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="tab-aprovacao" id="botao-aprovacao">Aprovação</button>
+    </nav>
 
-  <section>
-    <h2>3. Formulário operacional</h2>
+    <section id="tab-criacao" class="tab-panel active" role="tabpanel" aria-labelledby="botao-criacao">
+      <form id="formProjeto" novalidate>
+        <div class="wizard">
+          <div class="wizard-steps" aria-label="Progresso do fluxo">
+            <span class="step current">1. Identificação</span>
+            <span class="step">2. Coleta de dados</span>
+            <span class="step">3. Disparo da análise</span>
+          </div>
 
-    <label>ID do caso</label>
-    <input id="case_id" value="IFC_MANAUS_001">
+          <div class="grid">
+            <section class="panel" aria-labelledby="titulo-identificacao">
+              <h2 id="titulo-identificacao">Etapa 1 — Identificação do projeto</h2>
+              <div class="fieldset-grid">
+                <div>
+                  <label for="nomeProjeto">Nome do projeto</label>
+                  <input id="nomeProjeto" name="nomeProjeto" maxlength="120" aria-describedby="erroNome ajudaNome">
+                  <div id="ajudaNome" class="help">Use um nome claro para facilitar o histórico e a auditoria.</div>
+                  <div id="erroNome" class="error" aria-live="polite"></div>
+                </div>
+                <div>
+                  <label for="investimento">Investimento previsto (R$)</label>
+                  <input id="investimento" name="investimento" type="number" min="1" step="0.01" aria-describedby="erroInvestimento">
+                  <div id="erroInvestimento" class="error" aria-live="polite"></div>
+                </div>
+                <div>
+                  <label for="beneficiariosMin">Beneficiários mínimos</label>
+                  <input id="beneficiariosMin" name="beneficiariosMin" type="number" min="1" aria-describedby="erroBeneficiarios">
+                </div>
+                <div>
+                  <label for="beneficiariosMax">Beneficiários máximos</label>
+                  <input id="beneficiariosMax" name="beneficiariosMax" type="number" min="1" aria-describedby="erroBeneficiarios">
+                  <div id="erroBeneficiarios" class="error" aria-live="polite"></div>
+                </div>
+                <div>
+                  <label for="responsavelNome">Responsável técnico</label>
+                  <input id="responsavelNome" name="responsavelNome" aria-describedby="erroResponsavelNome">
+                  <div id="erroResponsavelNome" class="error" aria-live="polite"></div>
+                </div>
+                <div>
+                  <label for="responsavelEmail">E-mail do responsável</label>
+                  <input id="responsavelEmail" name="responsavelEmail" type="email" aria-describedby="erroResponsavelEmail ajudaResponsavelEmail">
+                  <div id="ajudaResponsavelEmail" class="help">Este campo é necessário para registrar a trilha de auditoria.</div>
+                  <div id="erroResponsavelEmail" class="error" aria-live="polite"></div>
+                </div>
+                <div>
+                  <label for="dataReferencia">Data de referência</label>
+                  <input id="dataReferencia" name="dataReferencia" type="date" aria-describedby="erroDataReferencia">
+                  <div id="erroDataReferencia" class="error" aria-live="polite"></div>
+                </div>
+              </div>
+              <div style="margin-top:16px">
+                <label for="descricaoProjeto">Descrição do projeto</label>
+                <textarea id="descricaoProjeto" name="descricaoProjeto" maxlength="500" aria-describedby="erroDescricao ajudaDescricao"></textarea>
+                <div id="ajudaDescricao" class="help">Explique o benefício social e territorial esperado.</div>
+                <div id="erroDescricao" class="error" aria-live="polite"></div>
+              </div>
+              <div style="margin-top:16px">
+                <strong>Territórios prioritários</strong>
+                <div id="territoriosLista" class="checklist" aria-describedby="erroTerritorios"></div>
+                <div id="erroTerritorios" class="error" aria-live="polite"></div>
+              </div>
+              <div style="margin-top:16px">
+                <strong>Espécies e produtos prioritários</strong>
+                <div id="especiesLista" class="checklist" aria-describedby="erroEspecies"></div>
+                <div id="erroEspecies" class="error" aria-live="polite"></div>
+              </div>
+            </section>
 
-    <label>Código IBGE</label>
-    <input id="codigo_ibge" value="1302603">
+            <section class="panel" aria-labelledby="titulo-coleta">
+              <h2 id="titulo-coleta">Etapa 2 — Coleta de dados</h2>
+              <div id="fontesColeta" class="cards"></div>
+              <div style="margin-top:16px">
+                <label for="planilhaManual">Nome da planilha manual</label>
+                <input id="planilhaManual" name="planilhaManual" placeholder="ex.: base-beneficiarios-julho.csv" aria-describedby="ajudaPlanilha">
+                <div id="ajudaPlanilha" class="help">Use este campo quando houver dados locais para complementar a análise.</div>
+              </div>
+              <div style="margin-top:16px">
+                <label for="perfilPesos">Perfil de pesos AIMM</label>
+                <select id="perfilPesos" name="perfilPesos">
+                  <option value="padrão">Padrão</option>
+                  <option value="conservador">Conservador</option>
+                  <option value="agressivo">Agressivo</option>
+                </select>
+              </div>
+              <div style="margin-top:16px">
+                <label for="modoExecucao">Modo de execução</label>
+                <select id="modoExecucao" name="modoExecucao">
+                  <option value="rápido">Rápido — usa dados já coletados</option>
+                  <option value="completo">Completo — inclui todas as verificações</option>
+                </select>
+              </div>
+              <div style="margin-top:16px">
+                <label for="confiancaMinima">Nível mínimo de confiança (1 a 5)</label>
+                <input id="confiancaMinima" name="confiancaMinima" type="range" min="1" max="5" value="3" aria-describedby="valorConfianca">
+                <div id="valorConfianca" class="help">Valor atual: <span id="valorConfiancaAtual">3</span></div>
+              </div>
+            </section>
+          </div>
 
-    <label>Município</label>
-    <input id="municipio" value="Manaus">
+          <section class="panel" aria-labelledby="titulo-disparo">
+            <h2 id="titulo-disparo">Etapa 3 — Disparo da análise</h2>
+            <p class="muted">Selecione os impedimentos que ainda exigem justificativa formal. Eles continuam visíveis no painel de resultado até a aprovação.</p>
+            <div id="bloqueadoresLista" class="checklist"></div>
+            <div style="margin-top:16px">
+              <label for="notaExecucao">Nota desta execução</label>
+              <textarea id="notaExecucao" name="notaExecucao" maxlength="200" aria-describedby="ajudaNotaExecucao"></textarea>
+              <div id="ajudaNotaExecucao" class="help">Ajuda a explicar o que mudou entre as versões do projeto.</div>
+            </div>
+            <div class="actions" style="margin-top:18px">
+              <button type="submit">Criar projeto, registrar coleta e disparar análise</button>
+              <button type="button" class="secondary" id="usarExemplo">Carregar exemplo do portal</button>
+            </div>
+            <div id="mensagemCriacao" class="badge warn" style="margin-top:14px;">Aguardando preenchimento do formulário.</div>
+          </section>
+        </div>
+      </form>
+    </section>
 
-    <label>UF</label>
-    <input id="uf" value="AM">
+    <section id="tab-resultado" class="tab-panel" role="tabpanel" aria-labelledby="botao-resultado">
+      <div class="toolbar">
+        <button type="button" id="exportarPdf">Exportar PDF executivo</button>
+        <button type="button" class="secondary" data-go="comparativos">Ver comparativos</button>
+        <button type="button" class="secondary" data-go="aprovacao">Abrir aprovação</button>
+      </div>
+      <div class="grid">
+        <article class="panel">
+          <h2 id="tituloProjetoResultado">Projeto selecionado</h2>
+          <p id="cabecalhoProjeto"></p>
+          <div class="cards">
+            <article class="card">
+              <span class="muted">Pontuação geral</span>
+              <strong id="pontuacaoGeral">0</strong>
+              <div id="badgePontuacao" class="badge warn">Resultado inicial</div>
+            </article>
+            <article class="card">
+              <span class="muted">Status da versão</span>
+              <strong id="statusVersao">—</strong>
+              <div class="muted">Controle formal de versão e auditoria</div>
+            </article>
+            <article class="card">
+              <span class="muted">Responsável</span>
+              <strong id="responsavelProjeto">—</strong>
+              <div class="muted">Responsável técnico pela execução</div>
+            </article>
+          </div>
+          <div class="radar-table-toggle">
+            <button type="button" class="secondary" id="mostrarTabelaDimensoes">Ver dados em tabela</button>
+          </div>
+          <div class="table-wrap" id="tabelaDimensoesWrap" hidden>
+            <table>
+              <caption>Pontuação por dimensão AIMM</caption>
+              <thead>
+                <tr><th scope="col">Dimensão</th><th scope="col">Pontuação</th><th scope="col">Leitura</th><th scope="col">Explicação</th></tr>
+              </thead>
+              <tbody id="tabelaDimensoes"></tbody>
+            </table>
+          </div>
+        </article>
 
-    <label>Área km²</label>
-    <input id="area_km2" value="11401.092">
+        <article class="panel">
+          <h2>Dimensões AIMM</h2>
+          <div id="cardsDimensao" class="cards"></div>
+        </article>
+      </div>
 
-    <label>Link ou ID da pasta Drive com documentos</label>
-    <input id="drive_input_folder" placeholder="Cole aqui o link ou ID da pasta de entrada">
+      <div class="grid" style="margin-top:16px">
+        <article class="panel">
+          <h2>Impedimentos ativos</h2>
+          <div id="listaBloqueios"></div>
+        </article>
+        <article class="panel">
+          <h2>Dados ausentes e estimativas</h2>
+          <div id="listaLacunas"></div>
+        </article>
+      </div>
 
-    <label>Objetivo do projeto</label>
-    <textarea id="objetivo">Avaliar potencial, riscos, evidências e maturidade de projeto para apoio à elaboração e avaliação IFC, usando abordagem AIMM.</textarea>
+      <section class="panel" style="margin-top:16px">
+        <h2>Evidências usadas</h2>
+        <div id="evidenciasLista"></div>
+      </section>
+    </section>
 
-    <label>Tipo de projeto</label>
-    <select id="tipo_projeto">
-      <option value="ifc_project">Projeto IFC / AIMM</option>
-      <option value="cadeia_valor">Cadeia de valor</option>
-      <option value="farmacia_viva">Farmácia Viva / SUS</option>
-      <option value="bioeconomia">Bioeconomia / biodiversidade</option>
-      <option value="outro">Outro</option>
-    </select>
+    <section id="tab-comparativos" class="tab-panel" role="tabpanel" aria-labelledby="botao-comparativos">
+      <div class="comparison-grid" id="resumoComparativos"></div>
+      <div class="table-wrap" style="margin-top:16px">
+        <table>
+          <caption>Comparativo por dimensão</caption>
+          <thead>
+            <tr>
+              <th scope="col">Dimensão</th>
+              <th scope="col">Referência</th>
+              <th scope="col">Projeto</th>
+              <th scope="col">Referência</th>
+              <th scope="col">Diferença</th>
+              <th scope="col">Leitura</th>
+            </tr>
+          </thead>
+          <tbody id="tabelaComparativos"></tbody>
+        </table>
+      </div>
+    </section>
 
-    <label>Nível de relatório</label>
-    <select id="nivel_relatorio">
-      <option value="tecnico_profissional">Técnico profissional</option>
-      <option value="executivo">Executivo</option>
-      <option value="completo">Completo</option>
-    </select>
+    <section id="tab-historico" class="tab-panel" role="tabpanel" aria-labelledby="botao-historico">
+      <div class="timeline" id="historicoVersoes"></div>
+      <section class="panel" style="margin-top:16px">
+        <h2>Diferença entre a primeira e a última versão</h2>
+        <div class="metric-list" id="diffResumo"></div>
+        <div class="table-wrap" style="margin-top:16px">
+          <table>
+            <caption>Evolução da pontuação por dimensão</caption>
+            <thead>
+              <tr><th scope="col">Dimensão</th><th scope="col">Antes</th><th scope="col">Depois</th><th scope="col">Diferença</th></tr>
+            </thead>
+            <tbody id="tabelaHistorico"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
 
-    <label>Observações para análise</label>
-    <textarea id="observacao">Considerar dimensões AIMM, evidências documentais, maturidade do projeto, riscos, lacunas, viabilidade operacional, territorialidade e uso de GIS quando aplicável.</textarea>
+    <section id="tab-aprovacao" class="tab-panel" role="tabpanel" aria-labelledby="botao-aprovacao">
+      <div class="grid">
+        <section class="panel">
+          <h2>Aprovação formal</h2>
+          <p id="situacaoAprovacao" class="badge warn">Versão ainda sem validação formal.</p>
+          <div class="metric-list">
+            <div><strong>Hash do documento</strong><br><span id="hashDocumento">—</span></div>
+            <div><strong>Revisor</strong><br><span id="revisorDocumento">—</span></div>
+            <div><strong>Data da assinatura</strong><br><span id="dataAssinatura">—</span></div>
+          </div>
+        </section>
+        <section class="panel">
+          <h2>Trilha de auditoria</h2>
+          <div class="table-wrap">
+            <table>
+              <caption>Eventos do projeto selecionado</caption>
+              <thead>
+                <tr><th scope="col">Evento</th><th scope="col">Usuário</th><th scope="col">Quando</th><th scope="col">Hash</th><th scope="col">Nota</th></tr>
+              </thead>
+              <tbody id="tabelaAuditoria"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
 
-    <button onclick="gerarInstrucao()">Gerar instrução para execução</button>
-    <a class="button" href="https://github.com/dannunesgo-dot/fito-aimm-amazonia/actions/workflows/rodada_4_37_operational_interface_inputs.yml" target="_blank">Abrir workflow 4.37</a>
+  <script src="portal_payload.js"></script>
+  <script>
+    const DATA = window.FITO_PORTAL_DATA || {
+      metadata: { titulo: "Fito+ Amazônia AIMM", gerado_em: new Date().toISOString() },
+      formularios: { territorios: [], especies_produtos: [], fontes: [], bloqueadores: [] },
+      projetos: [],
+      projeto_destaque: { versoes: [], auditoria: [] },
+      comparacao_destaque: { score_geral: {}, dimensoes: [] },
+      links: {}
+    };
 
-    <h3>Instrução gerada</h3>
-    <pre id="saida">Preencha o formulário e clique em gerar.</pre>
-  </section>
+    const state = {
+      project: JSON.parse(JSON.stringify(DATA.projeto_destaque)),
+      projectList: JSON.parse(JSON.stringify(DATA.projetos || [])),
+      diff: JSON.parse(JSON.stringify(DATA.comparacao_destaque || {})),
+      selectedVersion: null
+    };
 
-  <section>
-    <h2>4. Dimensões AIMM consideradas</h2>
-    <table>
-      <tr><th>Dimensão</th><th>Função no relatório</th></tr>
-      <tr><td>Territorial/GIS</td><td>Município, UF, área, arquivos espaciais, coerência territorial e lacunas GIS.</td></tr>
-      <tr><td>Desenho do projeto</td><td>Objetivo, lógica de intervenção, aderência IFC, entregáveis e maturidade.</td></tr>
-      <tr><td>Mercado e cadeia de valor</td><td>Compradores, fornecedores, agregação de valor, escalabilidade e gargalos.</td></tr>
-      <tr><td>Evidências e benchmarks</td><td>Artigos, relatórios, bases, normalização e qualidade das fontes.</td></tr>
-      <tr><td>Risco socioambiental</td><td>Riscos, salvaguardas, dependência territorial, água, solo, biodiversidade e governança.</td></tr>
-      <tr><td>Financeiro-operacional</td><td>CAPEX/OPEX, custos, receitas, produtividade, viabilidade e lacunas de dados.</td></tr>
-      <tr><td>Governança e execução</td><td>Instituições, responsáveis, cronograma, auditoria, travas e revisão humana.</td></tr>
-    </table>
-  </section>
-</main>
+    function fmt(value) {
+      if (value === null || value === undefined || value === "") return "—";
+      if (typeof value === "number") return value.toFixed(2);
+      return value;
+    }
 
-<script>
-function v(id) { return document.getElementById(id).value.trim(); }
-function gerarInstrucao() {
-  const texto = `
-RODADA 4.37 — DADOS PARA EXECUÇÃO
+    function badgeClass(text) {
+      if (!text) return "warn";
+      const normalized = text.toLowerCase();
+      if (normalized.includes("aprovado") || normalized.includes("elegível")) return "ok";
+      if (normalized.includes("impedimento") || normalized.includes("revisão")) return "danger";
+      return "warn";
+    }
 
-case_id: ${v('case_id')}
-codigo_ibge: ${v('codigo_ibge')}
-municipio: ${v('municipio')}
-uf: ${v('uf')}
-area_km2: ${v('area_km2')}
-drive_input_folder: ${v('drive_input_folder')}
-objetivo_projeto: ${v('objetivo')}
-tipo_projeto: ${v('tipo_projeto')}
-nivel_relatorio: ${v('nivel_relatorio')}
-usar_gis: sim
-extrair_documentos: sim
-observacao: ${v('observacao')}
+    function setTab(targetId) {
+      document.querySelectorAll(".tab-panel").forEach((panel) => panel.classList.toggle("active", panel.id === targetId));
+      document.querySelectorAll("nav.tabs button").forEach((button) => button.setAttribute("aria-selected", String(button.getAttribute("aria-controls") === targetId)));
+    }
 
-Abra o workflow:
-https://github.com/dannunesgo-dot/fito-aimm-amazonia/actions/workflows/rodada_4_37_operational_interface_inputs.yml
+    function fillChecklist(containerId, items, name, itemLabel) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      items.forEach((item, index) => {
+        const value = typeof item === "string" ? item : item.label || item.nome_popular || item.nome || item.municipio;
+        const key = typeof item === "string" ? item : item.id_bloqueio || item.codigo_ibge || item.label || value;
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="${name}" value="${key}"><span>${itemLabel(item, value, index)}</span>`;
+        container.appendChild(label);
+      });
+    }
 
-Copie cada valor para o campo correspondente e execute Run workflow.
-`;
-  document.getElementById('saida').textContent = texto;
-}
-</script>
+    function populateFormOptions() {
+      fillChecklist("territoriosLista", DATA.formularios.territorios || [], "territorios", (item) => `${item.label} — território prioritário`);
+      fillChecklist("especiesLista", DATA.formularios.especies_produtos || [], "especies", (_, value) => value);
+      fillChecklist("bloqueadoresLista", DATA.formularios.bloqueadores || [], "bloqueadores", (item) => `${item.bloqueio} (${item.criticidade})`);
+
+      const fontesColeta = document.getElementById("fontesColeta");
+      fontesColeta.innerHTML = "";
+      (DATA.formularios.fontes || []).forEach((fonte) => {
+        const card = document.createElement("article");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="badge ${badgeClass(fonte.status === "coletado" ? "aprovado" : fonte.status === "falha" ? "impedimento" : "regular")}">${fonte.nome}</div>
+          <p><strong>${fonte.tipo}</strong></p>
+          <p class="muted">${fonte.progresso_label}</p>
+          <p>${fonte.campos_expostos.join(" · ")}</p>
+          ${fonte.aviso ? `<p class="error">${fonte.aviso}</p>` : ""}
+        `;
+        fontesColeta.appendChild(card);
+      });
+    }
+
+    function renderOverview() {
+      document.getElementById("metaProjetos").textContent = state.projectList.length;
+      const latest = (state.project.versoes || [])[state.project.versoes.length - 1] || {};
+      document.getElementById("metaScore").textContent = fmt(latest.pontuacao_geral || 0);
+      document.getElementById("metaVersoes").textContent = state.project.versoes ? state.project.versoes.length : 0;
+      document.getElementById("metaData").textContent = new Date(DATA.metadata.gerado_em).toLocaleDateString("pt-BR");
+    }
+
+    function renderResults() {
+      const version = (state.project.versoes || [])[state.project.versoes.length - 1];
+      if (!version) return;
+      state.selectedVersion = version;
+
+      document.getElementById("tituloProjetoResultado").textContent = state.project.nome_projeto;
+      document.getElementById("cabecalhoProjeto").textContent = `${state.project.territorios.join(", ")} · referência ${state.project.data_referencia} · versão ${version.numero_versao}`;
+      document.getElementById("pontuacaoGeral").textContent = fmt(version.pontuacao_geral);
+      document.getElementById("statusVersao").textContent = version.status;
+      document.getElementById("responsavelProjeto").textContent = state.project.tecnico_responsavel_nome;
+
+      const badge = document.getElementById("badgePontuacao");
+      badge.className = `badge ${badgeClass(version.rotulo_geral)}`;
+      badge.textContent = version.rotulo_geral;
+
+      const cards = document.getElementById("cardsDimensao");
+      cards.innerHTML = "";
+      const table = document.getElementById("tabelaDimensoes");
+      table.innerHTML = "";
+      version.dimensoes.forEach((dimensao) => {
+        const card = document.createElement("details");
+        card.innerHTML = `
+          <summary>${dimensao.nome} — ${fmt(dimensao.pontuacao)} (${dimensao.rotulo_qualitativo})</summary>
+          <p>${dimensao.tooltip}</p>
+          <ul>${dimensao.indicadores.map((item) => `<li><strong>${item.id_indicador}</strong>: ${fmt(item.score_ajustado)} · ${item.nivel_confianca} · ${item.fonte}</li>`).join("")}</ul>
+        `;
+        cards.appendChild(card);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${dimensao.nome}</td><td>${fmt(dimensao.pontuacao)}</td><td>${dimensao.rotulo_qualitativo}</td><td>${dimensao.tooltip}</td>`;
+        table.appendChild(tr);
+      });
+
+      const bloqueios = document.getElementById("listaBloqueios");
+      bloqueios.innerHTML = version.bloqueios.length
+        ? version.bloqueios.map((item) => `<div class="card"><div class="badge danger">🔴 ${item.criticidade}</div><p><strong>${item.descricao}</strong></p><p class="muted">Origem: ${item.origem_campo || item.area}</p></div>`).join("")
+        : `<div class="badge ok">Sem impedimentos ativos</div>`;
+
+      const lacunas = document.getElementById("listaLacunas");
+      lacunas.innerHTML = version.lacunas.length
+        ? version.lacunas.map((item) => `<div class="card"><div class="badge warn">🟡 Estimativa</div><p><strong>${item.dimensao}</strong></p><p>${item.descricao}</p><p class="muted">Estimativa usada: ${item.proxy_utilizada}. Próxima ação: ${item.sugestao_fonte}</p></div>`).join("")
+        : `<div class="badge ok">Sem dados ausentes críticos</div>`;
+
+      const evidencias = document.getElementById("evidenciasLista");
+      evidencias.innerHTML = version.evidencias.map((item) => `
+        <details>
+          <summary>${item.titulo}</summary>
+          <p><strong>Fonte:</strong> ${item.fonte}</p>
+          <p><strong>Valor:</strong> ${item.valor}</p>
+          <p><strong>Confiança:</strong> ${item.nivel_confianca}</p>
+          <p>${item.resumo}</p>
+        </details>
+      `).join("");
+    }
+
+    function renderComparisons() {
+      const version = state.selectedVersion || (state.project.versoes || []).slice(-1)[0];
+      const rows = version ? version.comparativos : [];
+      const resumo = document.getElementById("resumoComparativos");
+      const table = document.getElementById("tabelaComparativos");
+      resumo.innerHTML = "";
+      table.innerHTML = "";
+
+      ["benchmark_setorial", "media_regional", "projeto_similar"].forEach((tipo) => {
+        const subset = rows.filter((row) => row.referencia_tipo === tipo);
+        if (!subset.length) return;
+        const averageDelta = subset.reduce((total, row) => total + row.delta, 0) / subset.length;
+        const card = document.createElement("article");
+        card.className = "comparison-card";
+        card.innerHTML = `
+          <h2>${subset[0].referencia_nome}</h2>
+          <p class="muted">${tipo === "benchmark_setorial" ? "Referência de mercado" : tipo === "media_regional" ? "Média de projetos aprovados na região" : "Projeto mais próximo em espécie, território ou faixa de investimento"}</p>
+          <p class="delta ${averageDelta > 0 ? "up" : averageDelta < 0 ? "down" : "flat"}">${averageDelta > 0 ? "▲" : averageDelta < 0 ? "▼" : "•"} diferença média ${fmt(averageDelta)}</p>
+        `;
+        resumo.appendChild(card);
+      });
+
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.dimensao}</td>
+          <td>${row.referencia_nome}${row.estimativa_aproximada ? ' <span class="pill">⚠️ Estimativa</span>' : ''}</td>
+          <td>${fmt(row.pontuacao_projeto)}</td>
+          <td>${fmt(row.pontuacao_referencia)}</td>
+          <td class="delta ${row.delta > 0 ? "up" : row.delta < 0 ? "down" : "flat"}">${row.delta > 0 ? "▲" : row.delta < 0 ? "▼" : "•"} ${fmt(row.delta)}</td>
+          <td>${row.sugestao_melhoria}</td>
+        `;
+        table.appendChild(tr);
+      });
+    }
+
+    function renderHistory() {
+      const history = document.getElementById("historicoVersoes");
+      history.innerHTML = "";
+      (state.project.versoes || []).slice().reverse().forEach((versao) => {
+        const article = document.createElement("article");
+        article.className = "timeline-item";
+        article.innerHTML = `
+          <h3>Versão ${versao.numero_versao} <span class="badge ${badgeClass(versao.status)}">${versao.status}</span></h3>
+          <p><strong>Pontuação geral:</strong> ${fmt(versao.pontuacao_geral)} · <strong>Registrada em:</strong> ${new Date(versao.criado_em).toLocaleString("pt-BR")}</p>
+          <p>${versao.nota_versao || "Sem nota adicional."}</p>
+          <p><a href="${versao.pdf_path || '#'}">Baixar PDF desta versão</a></p>
+        `;
+        history.appendChild(article);
+      });
+
+      const diff = state.diff || {};
+      const resumo = document.getElementById("diffResumo");
+      resumo.innerHTML = `
+        <div><strong>Pontuação antes</strong><br>${fmt(diff.score_geral?.antes)}</div>
+        <div><strong>Pontuação depois</strong><br>${fmt(diff.score_geral?.depois)}</div>
+        <div><strong>Diferença</strong><br>${fmt(diff.score_geral?.delta)}</div>
+        <div><strong>Impedimentos resolvidos</strong><br>${(diff.bloqueios_resolvidos || []).join(", ") || "Nenhum"}</div>
+      `;
+
+      const table = document.getElementById("tabelaHistorico");
+      table.innerHTML = "";
+      (diff.dimensoes || []).forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${item.dimensao}</td><td>${fmt(item.antes)}</td><td>${fmt(item.depois)}</td><td class="delta ${item.delta > 0 ? "up" : item.delta < 0 ? "down" : "flat"}">${fmt(item.delta)}</td>`;
+        table.appendChild(tr);
+      });
+    }
+
+    function renderApproval() {
+      const version = state.selectedVersion || (state.project.versoes || []).slice(-1)[0];
+      const approval = version && version.aprovacao;
+      const situation = document.getElementById("situacaoAprovacao");
+      situation.className = `badge ${badgeClass(approval ? approval.decisao : "resultado inicial")}`;
+      situation.textContent = approval ? `${approval.decisao} — ${approval.papel_revisor}` : "Versão ainda sem validação formal.";
+
+      document.getElementById("hashDocumento").textContent = version?.hash_documento || "—";
+      document.getElementById("revisorDocumento").textContent = approval ? `${approval.revisor_nome} (${approval.revisor_email})` : "—";
+      document.getElementById("dataAssinatura").textContent = approval ? new Date(approval.assinado_em).toLocaleString("pt-BR") : "—";
+
+      const table = document.getElementById("tabelaAuditoria");
+      table.innerHTML = "";
+      (state.project.auditoria || []).forEach((item) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.evento}</td>
+          <td>${item.usuario_nome}<br><span class="muted">${item.usuario_email}</span></td>
+          <td>${new Date(item.ocorrido_em).toLocaleString("pt-BR")}</td>
+          <td>${item.hash_estado.slice(0, 14)}…</td>
+          <td>${item.nota || "—"}</td>
+        `;
+        table.appendChild(tr);
+      });
+    }
+
+    function validateForm(data) {
+      const errors = {};
+      if (!data.nomeProjeto.trim()) errors.nome = "Informe o nome do projeto para organizar o histórico.";
+      if (data.nomeProjeto.length > 120) errors.nome = "Use até 120 caracteres.";
+      if (!data.descricaoProjeto.trim()) errors.descricao = "Explique o benefício social e territorial para orientar a análise.";
+      if (!data.investimento || Number(data.investimento) <= 0) errors.investimento = "Informe um investimento maior que zero para calcular a viabilidade.";
+      if (!data.responsavelNome.trim()) errors.responsavelNome = "Informe quem responde tecnicamente pela proposta.";
+      if (!data.responsavelEmail.includes("@")) errors.responsavelEmail = "Informe um e-mail válido para a trilha de auditoria.";
+      if (!data.dataReferencia) errors.dataReferencia = "Escolha a data de referência usada para consolidar as evidências.";
+      if (!data.territorios.length) errors.territorios = "Selecione ao menos um território para medir o benefício territorial.";
+      if (!data.especies.length) errors.especies = "Selecione ao menos uma espécie ou produto prioritário.";
+      const min = Number(data.beneficiariosMin || 0);
+      const max = Number(data.beneficiariosMax || 0);
+      if (min < 1 || max < 1 || max < min) errors.beneficiarios = "A faixa de beneficiários deve começar em 1 e ter máximo maior ou igual ao mínimo.";
+      return errors;
+    }
+
+    function showErrors(errors) {
+      document.getElementById("erroNome").textContent = errors.nome || "";
+      document.getElementById("erroDescricao").textContent = errors.descricao || "";
+      document.getElementById("erroInvestimento").textContent = errors.investimento || "";
+      document.getElementById("erroResponsavelNome").textContent = errors.responsavelNome || "";
+      document.getElementById("erroResponsavelEmail").textContent = errors.responsavelEmail || "";
+      document.getElementById("erroDataReferencia").textContent = errors.dataReferencia || "";
+      document.getElementById("erroTerritorios").textContent = errors.territorios || "";
+      document.getElementById("erroEspecies").textContent = errors.especies || "";
+      document.getElementById("erroBeneficiarios").textContent = errors.beneficiarios || "";
+    }
+
+    function cloneLatestVersion() {
+      return JSON.parse(JSON.stringify((state.project.versoes || []).slice(-1)[0] || {}));
+    }
+
+    function handleCreateProject(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const data = {
+        nomeProjeto: formData.get("nomeProjeto") || "",
+        descricaoProjeto: formData.get("descricaoProjeto") || "",
+        investimento: formData.get("investimento") || "",
+        beneficiariosMin: formData.get("beneficiariosMin") || "",
+        beneficiariosMax: formData.get("beneficiariosMax") || "",
+        responsavelNome: formData.get("responsavelNome") || "",
+        responsavelEmail: formData.get("responsavelEmail") || "",
+        dataReferencia: formData.get("dataReferencia") || "",
+        perfilPesos: formData.get("perfilPesos") || "padrão",
+        modoExecucao: formData.get("modoExecucao") || "rápido",
+        confiancaMinima: formData.get("confiancaMinima") || "3",
+        planilhaManual: formData.get("planilhaManual") || "",
+        notaExecucao: formData.get("notaExecucao") || "",
+        territorios: formData.getAll("territorios"),
+        especies: formData.getAll("especies"),
+        bloqueadores: formData.getAll("bloqueadores")
+      };
+
+      const errors = validateForm(data);
+      showErrors(errors);
+      if (Object.keys(errors).length) {
+        document.getElementById("mensagemCriacao").className = "badge danger";
+        document.getElementById("mensagemCriacao").textContent = "Revise os campos destacados antes de disparar a análise.";
+        return;
+      }
+
+      const latest = cloneLatestVersion();
+      latest.numero_versao = 1;
+      latest.status = "Em análise";
+      latest.aprovacao = null;
+      latest.nota_versao = data.notaExecucao || `Análise ${data.modoExecucao} criada na interface única.`;
+      latest.criado_em = new Date().toISOString();
+      latest.disparado_por_nome = data.responsavelNome;
+      latest.disparado_por_email = data.responsavelEmail;
+      latest.bloqueios = (DATA.formularios.bloqueadores || [])
+        .filter((item) => data.bloqueadores.includes(item.id_bloqueio))
+        .map((item) => ({
+          id_bloqueio: item.id_bloqueio,
+          descricao: item.bloqueio,
+          criticidade: item.criticidade,
+          area: item.area,
+          origem_campo: "bloqueadores_ativos"
+        }));
+      latest.rotulo_geral = latest.bloqueios.some((item) => item.criticidade === "alta")
+        ? "Impedimento crítico"
+        : latest.pontuacao_geral >= 70 ? "Elegível para análise formal" : "Potencial moderado";
+
+      state.project = {
+        ...state.project,
+        id_projeto: `portal-${Date.now()}`,
+        nome_projeto: data.nomeProjeto,
+        descricao: data.descricaoProjeto,
+        territorios: data.territorios,
+        especies_produtos: data.especies,
+        tecnico_responsavel_nome: data.responsavelNome,
+        tecnico_responsavel_email: data.responsavelEmail,
+        data_referencia: data.dataReferencia,
+        auditoria: [{
+          evento: "criacao",
+          usuario_nome: data.responsavelNome,
+          usuario_email: data.responsavelEmail,
+          ocorrido_em: latest.criado_em,
+          hash_estado: String(Date.now()),
+          nota: "Projeto criado na tela única",
+        }, {
+          evento: "analise_inicial",
+          usuario_nome: data.responsavelNome,
+          usuario_email: data.responsavelEmail,
+          ocorrido_em: latest.criado_em,
+          hash_estado: String(Date.now() + 1),
+          nota: latest.nota_versao,
+        }],
+        versoes: [latest]
+      };
+      state.projectList.unshift({
+        id_projeto: state.project.id_projeto,
+        nome_projeto: state.project.nome_projeto,
+        territorios: state.project.territorios,
+        especies_produtos: state.project.especies_produtos,
+        status_geral: latest.status,
+        ultima_pontuacao: latest.pontuacao_geral,
+        ultima_versao: latest.numero_versao,
+        ultima_aprovacao: latest.status
+      });
+
+      renderOverview();
+      renderResults();
+      renderComparisons();
+      renderHistory();
+      renderApproval();
+      document.getElementById("mensagemCriacao").className = "badge ok";
+      document.getElementById("mensagemCriacao").textContent = "Projeto criado, coleta registrada e análise disparada. O resultado já está disponível no painel.";
+      setTab("tab-resultado");
+    }
+
+    document.querySelectorAll("nav.tabs button").forEach((button) => {
+      button.addEventListener("click", () => setTab(button.getAttribute("aria-controls")));
+    });
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => setTab(`tab-${button.dataset.go}`));
+    });
+    document.getElementById("formProjeto").addEventListener("submit", handleCreateProject);
+    document.getElementById("usarExemplo").addEventListener("click", () => {
+      document.getElementById("nomeProjeto").value = state.project.nome_projeto || "";
+      document.getElementById("descricaoProjeto").value = state.project.descricao || "";
+      document.getElementById("investimento").value = state.project.investimento_previsto_brl || "";
+      document.getElementById("beneficiariosMin").value = state.project.faixa_beneficiarios?.minimo || "";
+      document.getElementById("beneficiariosMax").value = state.project.faixa_beneficiarios?.maximo || "";
+      document.getElementById("responsavelNome").value = state.project.tecnico_responsavel_nome || "";
+      document.getElementById("responsavelEmail").value = state.project.tecnico_responsavel_email || "";
+      document.getElementById("dataReferencia").value = state.project.data_referencia || "";
+      document.getElementById("notaExecucao").value = "Exemplo carregado do portal.";
+    });
+    document.getElementById("mostrarTabelaDimensoes").addEventListener("click", () => {
+      const wrap = document.getElementById("tabelaDimensoesWrap");
+      wrap.hidden = !wrap.hidden;
+      document.getElementById("mostrarTabelaDimensoes").textContent = wrap.hidden ? "Ver dados em tabela" : "Ocultar tabela";
+    });
+    document.getElementById("confiancaMinima").addEventListener("input", (event) => {
+      document.getElementById("valorConfiancaAtual").textContent = event.target.value;
+    });
+    document.getElementById("exportarPdf").addEventListener("click", () => {
+      const latest = (state.project.versoes || []).slice(-1)[0];
+      if (latest?.pdf_path) {
+        window.open(`../${latest.pdf_path}`, "_blank");
+      }
+    });
+
+    populateFormOptions();
+    renderOverview();
+    renderResults();
+    renderComparisons();
+    renderHistory();
+    renderApproval();
+  </script>
 </body>
 </html>
