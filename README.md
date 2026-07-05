@@ -2,6 +2,10 @@
 
 Este repositório é uma estrutura inicial para a Calculadora AIMM Adaptada aplicada a cadeias de valor de plantas medicinais, fitoterápicos e produtos herbais em saúde.
 
+## Acesso direto à interface otimizada
+
+- GitHub Pages: https://dannunesgo-dot.github.io/fito-aimm-amazonia/
+
 ## Estrutura mínima
 
 - `data/reference/source_registry.csv`: cadastro das fontes que podem alimentar indicadores.

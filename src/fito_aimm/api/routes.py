@@ -2,6 +2,9 @@ from __future__ import annotations
 
 import csv
 import json
+import os
+import re
+import subprocess
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -66,6 +69,39 @@ def ensure_prerequisites() -> None:
     execute_benchmark_proxy()
     execute_aimm_engine()
     execute_aimm_dashboard()
+
+
+def _normalize_url(value: str) -> str:
+    return value.rstrip("/") + "/"
+
+
+def _repository_slug_from_git() -> str | None:
+    try:
+        remote = subprocess.run(
+            ["git", "config", "--get", "remote.origin.url"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    match = re.search(r"[:/]([^/]+)/([^/]+?)(?:\.git)?$", remote)
+    if not match:
+        return None
+    return f"{match.group(1)}/{match.group(2)}"
+
+
+def interface_url() -> str:
+    explicit_url = os.getenv("GITHUB_PAGES_URL")
+    if explicit_url:
+        return _normalize_url(explicit_url)
+
+    repository = os.getenv("GITHUB_REPOSITORY") or _repository_slug_from_git()
+    if repository and "/" in repository:
+        owner, repo = repository.split("/", 1)
+        return f"https://{owner}.github.io/{repo}/"
+
+    return "https://dannunesgo-dot.github.io/fito-aimm-amazonia/"
 
 
 def territory_options() -> list[dict[str, str]]:
@@ -505,6 +541,7 @@ def build_portal_payload(reset_demo: bool = False) -> dict[str, Any]:
         "projeto_destaque": highlighted.model_dump(mode="json"),
         "comparacao_destaque": compare_latest,
         "links": {
+            "interface_otimizada": interface_url(),
             "pdf_versao_atual": latest.pdf_path,
             "json_payload": str(PORTAL_JSON),
         },

@@ -17,12 +17,16 @@ def test_build_portal_payload_generates_full_demo() -> None:
     assert len(payload["projetos"]) >= 2
     assert payload["projeto_destaque"]["versoes"]
     assert payload["comparacao_destaque"]["dimensoes"]
+    assert payload["links"]["interface_otimizada"].startswith("https://")
+    assert payload["links"]["interface_otimizada"].endswith("/fito-aimm-amazonia/")
 
     json_payload = json.loads(PORTAL_JSON.read_text(encoding="utf-8"))
     assert json_payload["metadata"]["titulo"] == payload["metadata"]["titulo"]
+    assert json_payload["links"]["interface_otimizada"] == payload["links"]["interface_otimizada"]
 
     js_payload = PORTAL_JS.read_text(encoding="utf-8")
     assert js_payload.startswith("window.FITO_PORTAL_DATA = ")
+    assert '"interface_otimizada"' in js_payload
 
 
 def test_project_history_and_pdf_are_available() -> None:
