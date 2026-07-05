@@ -791,7 +791,7 @@
     document.getElementById("exportarPdf").addEventListener("click", () => {
       const latest = (state.project.versoes || []).slice(-1)[0];
       if (latest?.pdf_path) {
-        window.open(`../${latest.pdf_path}`, "_blank");
+        window.open(`../${latest.pdf_path}`, "_blank", "noopener,noreferrer");
       }
     });
 

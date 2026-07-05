@@ -93,7 +93,6 @@ class ApprovalWorkflow:
                 nota=decision,
             )
         )
-        self.repository.save_project(project)
         approval_path = Path(version.approval_path)
         approval_path.parent.mkdir(parents=True, exist_ok=True)
         approval_path.write_text(approval.model_dump_json(indent=2), encoding="utf-8")
