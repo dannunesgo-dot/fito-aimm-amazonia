@@ -3,6 +3,9 @@ name: Validate Drive Access
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   validate-drive-access:
     runs-on: ubuntu-latest
