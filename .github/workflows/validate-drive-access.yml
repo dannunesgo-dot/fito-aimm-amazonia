@@ -3,6 +3,9 @@ name: Validate Drive Access
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   validate-drive-access:
     runs-on: ubuntu-latest
@@ -17,27 +20,8 @@ jobs:
           GOOGLE_DRIVE_TEST_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_TEST_FOLDER_ID }}
         run: |
           set -euo pipefail
-
-          check_non_empty () {
-            local name="$1"
-            local value="${2:-}"
-            if [ -z "$value" ]; then
-              echo "❌ $name: missing"
-              exit 1
-            else
-              echo "✅ $name: secret exists"
-            fi
-          }
-
-          mask_id () {
-            local v="$1"
-            local n=${#v}
-            if [ "$n" -le 8 ]; then
-              echo "****"
-            else
-              echo "${v:0:4}...${v: -4}"
-            fi
-          }
+          check_non_empty () { local name="$1"; local value="${2:-}"; if [ -z "$value" ]; then echo "❌ $name: missing"; exit 1; else echo "✅ $name: secret exists"; fi; }
+          mask_id () { local v="$1"; local n=${#v}; if [ "$n" -le 8 ]; then echo "****"; else echo "${v:0:4}...${v: -4}"; fi; }
 
           check_non_empty "GOOGLE_OAUTH_CLIENT_ID" "${GOOGLE_OAUTH_CLIENT_ID:-}"
           check_non_empty "GOOGLE_OAUTH_CLIENT_SECRET" "${GOOGLE_OAUTH_CLIENT_SECRET:-}"
@@ -62,39 +46,21 @@ jobs:
           echo "✅ OAuth token obtained"
 
           check_folder () {
-            local label="$1"
-            local folder_id="$2"
-            local masked
-            masked="$(mask_id "$folder_id")"
-
-            HTTP_CODE="$(curl -sS -o /tmp/folder.json -w "%{http_code}" \
-              -H "Authorization: Bearer ${ACCESS_TOKEN}" \
-              "https://www.googleapis.com/drive/v3/files/${folder_id}?fields=id,name,mimeType,trashed")"
-
+            local label="$1"; local folder_id="$2"; local masked; masked="$(mask_id "$folder_id")"
+            HTTP_CODE="$(curl -sS -o /tmp/folder.json -w "%{http_code}" -H "Authorization: Bearer ${ACCESS_TOKEN}" "https://www.googleapis.com/drive/v3/files/${folder_id}?fields=id,name,mimeType,trashed")"
             if [ "$HTTP_CODE" != "200" ]; then
               echo "❌ ${label}: no access (${masked}) HTTP ${HTTP_CODE}"
               cat /tmp/folder.json | jq '{error}'
               exit 1
             fi
-
             MIME="$(jq -r '.mimeType // empty' /tmp/folder.json)"
             TRASHED="$(jq -r '.trashed // false' /tmp/folder.json)"
-
-            if [ "$MIME" != "application/vnd.google-apps.folder" ]; then
-              echo "❌ ${label}: id is not a folder (${masked})"
-              exit 1
-            fi
-
-            if [ "$TRASHED" = "true" ]; then
-              echo "❌ ${label}: folder is in trash (${masked})"
-              exit 1
-            fi
-
+            if [ "$MIME" != "application/vnd.google-apps.folder" ]; then echo "❌ ${label}: id is not a folder (${masked})"; exit 1; fi
+            if [ "$TRASHED" = "true" ]; then echo "❌ ${label}: folder is in trash (${masked})"; exit 1; fi
             NAME="$(jq -r '.name // "unknown"' /tmp/folder.json)"
             echo "✅ ${label}: accessible (${masked}) name='${NAME}'"
           }
 
           check_folder "ROOT folder" "${GOOGLE_DRIVE_ROOT_FOLDER_ID}"
           check_folder "TEST folder" "${GOOGLE_DRIVE_TEST_FOLDER_ID}"
-
           echo "🎉 Drive access validation passed"

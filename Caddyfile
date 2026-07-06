@@ -1,0 +1,25 @@
+{
+	admin 127.0.0.1:2020
+}
+
+:8080 {
+	route {
+		handle /health {
+			respond "OK" 200
+		}
+
+		handle /api/* {
+			@missing_auth not header Authorization *
+			respond @missing_auth "Unauthorized" 401
+
+			@bad_scheme not header_regexp bearer Authorization ^Bearer\s+.+$
+			respond @bad_scheme "Unauthorized" 401
+
+			reverse_proxy 127.0.0.1:8000
+		}
+
+		handle {
+			respond "Not Found" 404
+		}
+	}
+}
