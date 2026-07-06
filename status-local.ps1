@@ -68,17 +68,13 @@ function Get-ProcDetails([string]$Name, [string]$Root, [bool]$OnlyFromProject) {
 }
 
 function Get-ListeningPidByPort([int]$Port) {
-  # Usa netstat para compatibilidade ampla no Windows PowerShell
-  $matches = netstat -ano | Select-String ":(?:$Port)\s+.*LISTENING\s+(\d+)$"
-  if (-not $matches) { return @() }
-
-  $pids = @()
-  foreach ($m in $matches) {
-    if ($m.Line -match "LISTENING\s+(\d+)$") {
-      $pids += [int]$Matches[1]
-    }
+  try {
+    $rows = Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction Stop
+    if (-not $rows) { return @() }
+    return ($rows | Select-Object -ExpandProperty OwningProcess -Unique)
+  } catch {
+    return @()
   }
-  return ($pids | Select-Object -Unique)
 }
 
 function Get-ProcessByPid([int]$Pid) {
