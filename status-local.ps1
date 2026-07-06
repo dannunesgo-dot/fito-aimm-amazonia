@@ -1,5 +1,6 @@
 param(
-  [string]$ProjectRoot = "C:\Users\danie\work\github\fito-aimm-amazonia"
+  [string]$ProjectRoot = "C:\Users\danie\work\github\fito-aimm-amazonia",
+  [switch]$OnlyProject = $true
 )
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -32,18 +33,27 @@ function HttpCode([string]$url, [hashtable]$headers = $null) {
   }
 }
 
-function Get-ProcDetails([string]$Name) {
-  # Win32_Process traz ExecutablePath e CommandLine
-  Get-CimInstance Win32_Process -Filter "Name='$Name'" |
+function Get-ProcDetails([string]$Name, [string]$Root, [bool]$OnlyFromProject) {
+  $all = Get-CimInstance Win32_Process -Filter "Name='$Name'" |
     Select-Object ProcessId, Name, ExecutablePath, CommandLine
+
+  if (-not $OnlyFromProject) { return $all }
+
+  $rootNorm = $Root.ToLowerInvariant()
+  return $all | Where-Object {
+    $cmd = ($_.CommandLine   | Out-String).Trim().ToLowerInvariant()
+    $exe = ($_.ExecutablePath | Out-String).Trim().ToLowerInvariant()
+    ($cmd -like "*$rootNorm*") -or ($exe -like "*$rootNorm*")
+  }
 }
 
 Load-DotEnv
 
 Write-Host "==> [status] Processos (com executável)" -ForegroundColor Cyan
+Write-Host ("Filtro projeto atual: {0}" -f ($(if ($OnlyProject) { "ATIVO" } else { "DESATIVADO" })))
 
-$caddy = Get-ProcDetails -Name "caddy.exe"
-$python = Get-ProcDetails -Name "python.exe"
+$caddy  = Get-ProcDetails -Name "caddy.exe"  -Root $ProjectRoot -OnlyFromProject $OnlyProject
+$python = Get-ProcDetails -Name "python.exe" -Root $ProjectRoot -OnlyFromProject $OnlyProject
 
 if ($caddy) {
   Write-Host "`n[CADDY]" -ForegroundColor Green
@@ -52,7 +62,7 @@ if ($caddy) {
     @{Label="Exe";Expression={$_.ExecutablePath}}, `
     @{Label="CommandLine";Expression={$_.CommandLine}}
 } else {
-  Write-Warning "Caddy não está rodando."
+  Write-Warning "Caddy não encontrado com o filtro atual."
 }
 
 if ($python) {
@@ -62,7 +72,7 @@ if ($python) {
     @{Label="Exe";Expression={$_.ExecutablePath}}, `
     @{Label="CommandLine";Expression={$_.CommandLine}}
 } else {
-  Write-Warning "Python não está rodando."
+  Write-Warning "Python não encontrado com o filtro atual."
 }
 
 Write-Host "`n==> [status] Portas (8000/8080)" -ForegroundColor Cyan
