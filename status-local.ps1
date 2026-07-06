@@ -1,30 +1,99 @@
+param(
+  [string]$ProjectRoot = "C:\Users\danie\work\github\fito-aimm-amazonia"
+)
+
+$ErrorActionPreference = "SilentlyContinue"
+Set-Location $ProjectRoot
+
 function Mask-AuthHeader([string]$line) {
   if ([string]::IsNullOrWhiteSpace($line)) { return $line }
-  # mascara qualquer "Authorization: Bearer <token>"
   return ($line -replace '(?i)(Authorization:\s*Bearer\s+)[^\s"]+', '$1***REDACTED***')
 }
 
-Write-Host "==> [status] Processos" -ForegroundColor Cyan
-$caddy = Get-Process caddy -ErrorAction SilentlyContinue
-$python = Get-Process python -ErrorAction SilentlyContinue
+function Load-DotEnv {
+  param([string]$Path = ".\.env")
+  if (-not (Test-Path $Path)) { return }
+  Get-Content $Path | ForEach-Object {
+    $line = $_.Trim()
+    if (-not $line -or $line.StartsWith("#")) { return }
+    $parts = $line.Split("=", 2)
+    if ($parts.Length -eq 2) {
+      Set-Item -Path "Env:$($parts[0].Trim())" -Value $parts[1].Trim().Trim('"').Trim("'")
+    }
+  }
+}
 
-if ($caddy) { $caddy | ForEach-Object { Write-Host ("Caddy  PID=" + $_.Id) -ForegroundColor Green } }
-else { Write-Warning "Caddy não está rodando." }
+function HttpCode([string]$url, [hashtable]$headers = $null) {
+  try {
+    $r = Invoke-WebRequest -Uri $url -Headers $headers -SkipHttpErrorCheck -TimeoutSec 8
+    return [int]$r.StatusCode
+  } catch {
+    return -1
+  }
+}
 
-if ($python) { $python | ForEach-Object { Write-Host ("Python PID=" + $_.Id) -ForegroundColor Green } }
-else { Write-Warning "Python não está rodando." }
+function Get-ProcDetails([string]$Name) {
+  # Win32_Process traz ExecutablePath e CommandLine
+  Get-CimInstance Win32_Process -Filter "Name='$Name'" |
+    Select-Object ProcessId, Name, ExecutablePath, CommandLine
+}
 
-Write-Host "`n==> [status] Portas" -ForegroundColor Cyan
+Load-DotEnv
+
+Write-Host "==> [status] Processos (com executável)" -ForegroundColor Cyan
+
+$caddy = Get-ProcDetails -Name "caddy.exe"
+$python = Get-ProcDetails -Name "python.exe"
+
+if ($caddy) {
+  Write-Host "`n[CADDY]" -ForegroundColor Green
+  $caddy | Sort-Object ProcessId | Format-Table -AutoSize `
+    @{Label="PID";Expression={$_.ProcessId}}, `
+    @{Label="Exe";Expression={$_.ExecutablePath}}, `
+    @{Label="CommandLine";Expression={$_.CommandLine}}
+} else {
+  Write-Warning "Caddy não está rodando."
+}
+
+if ($python) {
+  Write-Host "`n[PYTHON]" -ForegroundColor Green
+  $python | Sort-Object ProcessId | Format-Table -AutoSize `
+    @{Label="PID";Expression={$_.ProcessId}}, `
+    @{Label="Exe";Expression={$_.ExecutablePath}}, `
+    @{Label="CommandLine";Expression={$_.CommandLine}}
+} else {
+  Write-Warning "Python não está rodando."
+}
+
+Write-Host "`n==> [status] Portas (8000/8080)" -ForegroundColor Cyan
 $ports = netstat -ano | Select-String ":(8000|8080)\s+.*LISTENING"
 if ($ports) { $ports | ForEach-Object { Write-Host $_.Line } }
 else { Write-Warning "Nenhuma porta 8000/8080 em LISTENING." }
 
-Write-Host "`n==> [status] HTTP checks (sem token real)" -ForegroundColor Cyan
-$h = curl.exe -s -o NUL -w "%{http_code}" "http://127.0.0.1:8080/health"
-$u = curl.exe -s -o NUL -w "%{http_code}" "http://127.0.0.1:8080/api/worldbank/countries"
-$b = curl.exe -s -o NUL -w "%{http_code}" "http://127.0.0.1:8080/api/worldbank/countries" -H "Authorization: Bearer local-dev-token"
+Write-Host "`n==> [status] HTTP checks" -ForegroundColor Cyan
+$h = HttpCode "http://127.0.0.1:8080/health"
+$u = HttpCode "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1"
 
-Write-Host (Mask-AuthHeader "Authorization: Bearer local-dev-token")
+if ([string]::IsNullOrWhiteSpace($env:AUTH_TOKEN)) {
+  $tokenLine = "Authorization: Bearer (AUTH_TOKEN ausente)"
+  $b = -1
+} else {
+  $tokenLine = "Authorization: Bearer $($env:AUTH_TOKEN)"
+  $headers = @{ Authorization = "Bearer $env:AUTH_TOKEN" }
+  $b = HttpCode "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1" $headers
+}
+
+Write-Host (Mask-AuthHeader $tokenLine)
 Write-Host "/health                         => $h"
 Write-Host "/api/worldbank/countries        => $u (esperado 401)"
-Write-Host "/api/... com Bearer dummy       => $b (esperado 200 ou 502)"
+Write-Host "/api/... com Bearer token       => $b (esperado 200 ou 502)"
+
+Write-Host "`n==> [status] Logs (tail 10)" -ForegroundColor Cyan
+if (Test-Path ".\logs\backend.log") {
+  Write-Host "--- backend.log ---"
+  Get-Content ".\logs\backend.log" -Tail 10
+}
+if (Test-Path ".\logs\caddy.log") {
+  Write-Host "--- caddy.log ---"
+  Get-Content ".\logs\caddy.log" -Tail 10
+}
