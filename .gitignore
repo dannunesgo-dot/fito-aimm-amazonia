@@ -3,3 +3,6 @@ secrets/
 __pycache__/
 out/
 *.log
+# World Bank downloads
+*.zip
+outputs/*.zip
