@@ -37,14 +37,54 @@ function Get-ProcDetails([string]$Name, [string]$Root, [bool]$OnlyFromProject) {
   $all = Get-CimInstance Win32_Process -Filter "Name='$Name'" |
     Select-Object ProcessId, Name, ExecutablePath, CommandLine
 
-  if (-not $OnlyFromProject) { return $all }
+  if (-not $OnlyFromProject) {
+    return $all | ForEach-Object {
+      [PSCustomObject]@{
+        ProcessId      = $_.ProcessId
+        Name           = $_.Name
+        ExecutablePath = $_.ExecutablePath
+        CommandLine    = $_.CommandLine
+        Source         = "all-processes"
+      }
+    }
+  }
 
   $rootNorm = $Root.ToLowerInvariant()
-  return $all | Where-Object {
-    $cmd = ($_.CommandLine   | Out-String).Trim().ToLowerInvariant()
+  $filtered = $all | Where-Object {
+    $cmd = ($_.CommandLine | Out-String).Trim().ToLowerInvariant()
     $exe = ($_.ExecutablePath | Out-String).Trim().ToLowerInvariant()
     ($cmd -like "*$rootNorm*") -or ($exe -like "*$rootNorm*")
   }
+
+  return $filtered | ForEach-Object {
+    [PSCustomObject]@{
+      ProcessId      = $_.ProcessId
+      Name           = $_.Name
+      ExecutablePath = $_.ExecutablePath
+      CommandLine    = $_.CommandLine
+      Source         = "project-filter"
+    }
+  }
+}
+
+function Get-ListeningPidByPort([int]$Port) {
+  # Usa netstat para compatibilidade ampla no Windows PowerShell
+  $matches = netstat -ano | Select-String ":(?:$Port)\s+.*LISTENING\s+(\d+)$"
+  if (-not $matches) { return @() }
+
+  $pids = @()
+  foreach ($m in $matches) {
+    if ($m.Line -match "LISTENING\s+(\d+)$") {
+      $pids += [int]$Matches[1]
+    }
+  }
+  return ($pids | Select-Object -Unique)
+}
+
+function Get-ProcessByPid([int]$Pid) {
+  $p = Get-CimInstance Win32_Process -Filter "ProcessId=$Pid" |
+    Select-Object ProcessId, Name, ExecutablePath, CommandLine
+  return $p
 }
 
 Load-DotEnv
@@ -52,13 +92,39 @@ Load-DotEnv
 Write-Host "==> [status] Processos (com executável)" -ForegroundColor Cyan
 Write-Host ("Filtro projeto atual: {0}" -f ($(if ($OnlyProject) { "ATIVO" } else { "DESATIVADO" })))
 
+# Base (filtro normal)
 $caddy  = Get-ProcDetails -Name "caddy.exe"  -Root $ProjectRoot -OnlyFromProject $OnlyProject
 $python = Get-ProcDetails -Name "python.exe" -Root $ProjectRoot -OnlyFromProject $OnlyProject
+
+# Fallback Caddy por porta 8080 (quando filtro por projeto não achar)
+if (($OnlyProject) -and (-not $caddy -or $caddy.Count -eq 0)) {
+  $pids8080 = Get-ListeningPidByPort -Port 8080
+  foreach ($pid in $pids8080) {
+    $proc = Get-ProcessByPid -Pid $pid
+    if ($proc -and $proc.Name -ieq "caddy.exe") {
+      $already = $false
+      if ($caddy) {
+        $already = ($caddy.ProcessId -contains $proc.ProcessId)
+      }
+      if (-not $already) {
+        $fallbackObj = [PSCustomObject]@{
+          ProcessId      = $proc.ProcessId
+          Name           = $proc.Name
+          ExecutablePath = $proc.ExecutablePath
+          CommandLine    = $proc.CommandLine
+          Source         = "port-8080-fallback"
+        }
+        if ($caddy) { $caddy += $fallbackObj } else { $caddy = @($fallbackObj) }
+      }
+    }
+  }
+}
 
 if ($caddy) {
   Write-Host "`n[CADDY]" -ForegroundColor Green
   $caddy | Sort-Object ProcessId | Format-Table -AutoSize `
     @{Label="PID";Expression={$_.ProcessId}}, `
+    @{Label="Source";Expression={$_.Source}}, `
     @{Label="Exe";Expression={$_.ExecutablePath}}, `
     @{Label="CommandLine";Expression={$_.CommandLine}}
 } else {
@@ -69,6 +135,7 @@ if ($python) {
   Write-Host "`n[PYTHON]" -ForegroundColor Green
   $python | Sort-Object ProcessId | Format-Table -AutoSize `
     @{Label="PID";Expression={$_.ProcessId}}, `
+    @{Label="Source";Expression={$_.Source}}, `
     @{Label="Exe";Expression={$_.ExecutablePath}}, `
     @{Label="CommandLine";Expression={$_.CommandLine}}
 } else {
