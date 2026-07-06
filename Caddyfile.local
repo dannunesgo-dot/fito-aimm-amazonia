@@ -1,0 +1,23 @@
+{
+	admin off
+}
+
+:8080 {
+	handle /health {
+		respond "OK" 200
+	}
+
+	handle_path /api/* {
+		@missingAuth not header Authorization *
+		respond @missingAuth "Unauthorized" 401
+
+		@notBearer not header Authorization "Bearer *"
+		respond @notBearer "Unauthorized" 401
+
+		reverse_proxy 127.0.0.1:8000
+	}
+
+	handle {
+		respond "Not Found" 404
+	}
+}
