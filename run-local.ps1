@@ -7,20 +7,20 @@ $ErrorActionPreference = "Stop"
 [Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
 $OutputEncoding = [System.Text.UTF8Encoding]::new()
 
-if (-not (Test-Path $ProjectRoot)) {
+if (-not (Test-Path -LiteralPath $ProjectRoot)) {
   throw "ProjectRoot não encontrado: $ProjectRoot"
 }
-Set-Location $ProjectRoot
+Set-Location -LiteralPath $ProjectRoot
 
-function Write-Step($msg) { Write-Host "==> [run] $msg" -ForegroundColor Cyan }
-function Write-Ok($msg)   { Write-Host "✅ $msg" -ForegroundColor Green }
-function Write-Warn($msg) { Write-Host "⚠️ $msg" -ForegroundColor Yellow }
+function Write-Step([string]$msg) { Write-Host "==> [run] $msg" -ForegroundColor Cyan }
+function Write-Ok([string]$msg)   { Write-Host "✅ $msg" -ForegroundColor Green }
+function Write-Warn([string]$msg) { Write-Host "⚠️ $msg" -ForegroundColor Yellow }
 
 function Load-DotEnv {
   param([string]$Path = ".\.env")
-  if (-not (Test-Path $Path)) { return }
+  if (-not (Test-Path -LiteralPath $Path)) { return }
 
-  Get-Content $Path | ForEach-Object {
+  Get-Content -LiteralPath $Path | ForEach-Object {
     $line = $_.Trim()
     if (-not $line -or $line.StartsWith("#")) { return }
 
@@ -36,9 +36,9 @@ function Load-DotEnv {
 function Get-PidsListeningOnPort {
   param([int]$Port)
   try {
-    $rows = Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction Stop
-    if (-not $rows) { return @() }
-    return ($rows | Select-Object -ExpandProperty OwningProcess -Unique)
+    $rows = @(Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction Stop)
+    if ($rows.Count -eq 0) { return @() }
+    return @($rows | Select-Object -ExpandProperty OwningProcess -Unique)
   } catch {
     return @()
   }
@@ -48,10 +48,12 @@ function Stop-PidsOnPorts {
   param([int[]]$Ports = @(8000,8080))
 
   $all = @()
-  foreach ($p in $Ports) { $all += Get-PidsListeningOnPort -Port $p }
-  $all = $all | Select-Object -Unique
+  foreach ($p in $Ports) {
+    $all += @(Get-PidsListeningOnPort -Port $p)
+  }
+  $all = @($all | Select-Object -Unique)
 
-  if (-not $all -or $all.Count -eq 0) {
+  if (@($all).Count -eq 0) {
     Write-Step "Nenhum processo ocupando portas $($Ports -join ', ')."
     return
   }
@@ -73,20 +75,21 @@ function Wait-PortListening {
 
   $deadline = (Get-Date).AddSeconds($TimeoutSec)
   while ((Get-Date) -lt $deadline) {
-    if ((Get-PidsListeningOnPort -Port $Port).Count -gt 0) { return $true }
+    if (@(Get-PidsListeningOnPort -Port $Port).Count -gt 0) { return $true }
     Start-Sleep -Milliseconds 400
   }
   return $false
 }
 
-function HttpCode([string]$Url, [hashtable]$Headers = $null) {
+function HttpCode {
+  param(
+    [string]$Url,
+    [hashtable]$Headers = $null
+  )
   try {
-    $r = Invoke-WebRequest -Uri $Url -Headers $Headers -TimeoutSec 10
+    $r = Invoke-WebRequest -Uri $Url -Headers $Headers -SkipHttpErrorCheck -TimeoutSec 10
     return [int]$r.StatusCode
   } catch {
-    if ($_.Exception.Response -and $_.Exception.Response.StatusCode) {
-      return [int]$_.Exception.Response.StatusCode.value__
-    }
     return -1
   }
 }
@@ -117,10 +120,10 @@ Stop-PidsOnPorts -Ports @(8000,8080)
 		respond "Not Found" 404
 	}
 }
-'@ | Set-Content .\Caddyfile.local -Encoding utf8
+'@ | Set-Content -LiteralPath .\Caddyfile.local -Encoding utf8
 
-if (-not (Test-Path ".\.venv\Scripts\python.exe")) { throw "Falta .\.venv\Scripts\python.exe" }
-if (-not (Test-Path ".\app.py")) { throw "Falta .\app.py" }
+if (-not (Test-Path -LiteralPath ".\.venv\Scripts\python.exe")) { throw "Falta .\.venv\Scripts\python.exe" }
+if (-not (Test-Path -LiteralPath ".\app.py")) { throw "Falta .\app.py" }
 
 New-Item -ItemType Directory -Path .\logs -Force | Out-Null
 
@@ -132,7 +135,7 @@ $logFiles = @(
   ".\logs\caddy.err.log"
 )
 foreach ($lf in $logFiles) {
-  if (Test-Path $lf) { Remove-Item $lf -Force -ErrorAction SilentlyContinue }
+  if (Test-Path -LiteralPath $lf) { Remove-Item -LiteralPath $lf -Force -ErrorAction SilentlyContinue }
 }
 
 Write-Step "Subindo Flask (venv python)"
@@ -162,10 +165,10 @@ if (-not (Wait-PortListening -Port 8080 -TimeoutSec 20)) {
 $healthUrl = "http://127.0.0.1:8080/health"
 $apiUrl    = "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1"
 
-$h = HttpCode $healthUrl
-$u = HttpCode $apiUrl
+$h = HttpCode -Url $healthUrl
+$u = HttpCode -Url $apiUrl
 $b = if ($env:AUTH_TOKEN) {
-  HttpCode $apiUrl @{ Authorization = "Bearer $env:AUTH_TOKEN" }
+  HttpCode -Url $apiUrl -Headers @{ Authorization = "Bearer $env:AUTH_TOKEN" }
 } else { -1 }
 
 Write-Host ""
