@@ -2,7 +2,6 @@
   [string]$ProjectRoot = "C:\Users\danie\work\github\fito-aimm-amazonia"
 )
 
-$ErrorActionPreference = "Stop"
 Set-Location $ProjectRoot
 
 function Write-Step($msg) { Write-Host "==> [run] $msg" -ForegroundColor Cyan }
