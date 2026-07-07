@@ -194,11 +194,20 @@ Write-Host "/api/worldbank/countries        => $u (esperado 401)"
 Write-Host "/api/... com Bearer token       => $b (esperado 200 ou 502)"
 
 Write-Host "`n==> [status] Logs (tail 10)" -ForegroundColor Cyan
-if (Test-Path ".\logs\backend.log") {
-  Write-Host "--- backend.log ---"
-  Get-Content ".\logs\backend.log" -Tail 10
+
+if (Test-Path ".\logs\backend.out.log") {
+  Write-Host "--- backend.out.log ---"
+  Get-Content ".\logs\backend.out.log" -Tail 10
 }
-if (Test-Path ".\logs\caddy.log") {
-  Write-Host "--- caddy.log ---"
-  Get-Content ".\logs\caddy.log" -Tail 10
+if (Test-Path ".\logs\backend.err.log") {
+  Write-Host "--- backend.err.log ---"
+  Get-Content ".\logs\backend.err.log" -Tail 10
+}
+if (Test-Path ".\logs\caddy.out.log") {
+  Write-Host "--- caddy.out.log ---"
+  Get-Content ".\logs\caddy.out.log" -Tail 10
+}
+if (Test-Path ".\logs\caddy.err.log") {
+  Write-Host "--- caddy.err.log ---"
+  Get-Content ".\logs\caddy.err.log" -Tail 10
 }
