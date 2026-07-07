@@ -17,13 +17,19 @@ cd /d "%PROJECT_ROOT%"
 
 if not exist ".\deactivate-api.ps1" (
   echo [ERRO] Arquivo .\deactivate-api.ps1 nao encontrado.
-  echo Crie o deactivate-api.ps1 antes de usar este launcher.
   pause
   exit /b 1
 )
 
-echo [Parar-API] Executando deactivate-api.ps1...
-powershell -NoProfile -ExecutionPolicy Bypass -File ".\deactivate-api.ps1"
+where pwsh >nul 2>nul
+if %ERRORLEVEL%==0 (
+  set "PS_EXE=pwsh"
+) else (
+  set "PS_EXE=powershell"
+)
+
+echo [Parar-API] Executando com %PS_EXE%...
+%PS_EXE% -NoProfile -ExecutionPolicy Bypass -File ".\deactivate-api.ps1"
 set "ERR=%ERRORLEVEL%"
 
 if not "%ERR%"=="0" (
