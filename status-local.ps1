@@ -3,6 +3,9 @@ param(
   [switch]$OnlyProject = $true
 )
 
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new()
+$OutputEncoding = [System.Text.UTF8Encoding]::new()
+
 $ErrorActionPreference = "SilentlyContinue"
 Set-Location $ProjectRoot
 
@@ -14,12 +17,16 @@ function Mask-AuthHeader([string]$line) {
 function Load-DotEnv {
   param([string]$Path = ".\.env")
   if (-not (Test-Path $Path)) { return }
+
   Get-Content $Path | ForEach-Object {
     $line = $_.Trim()
     if (-not $line -or $line.StartsWith("#")) { return }
+
     $parts = $line.Split("=", 2)
     if ($parts.Length -eq 2) {
-      Set-Item -Path "Env:$($parts[0].Trim())" -Value $parts[1].Trim().Trim('"').Trim("'")
+      $key = $parts[0].Trim()
+      $val = $parts[1].Trim().Trim('"').Trim("'")
+      Set-Item -Path "Env:$key" -Value $val
     }
   }
 }
@@ -31,6 +38,11 @@ function HttpCode([string]$url, [hashtable]$headers = $null) {
   } catch {
     return -1
   }
+}
+
+function Normalize-String([string]$s) {
+  if ([string]::IsNullOrWhiteSpace($s)) { return "" }
+  return $s.Trim().ToLowerInvariant()
 }
 
 function Get-ProcDetails([string]$Name, [string]$Root, [bool]$OnlyFromProject) {
@@ -49,10 +61,10 @@ function Get-ProcDetails([string]$Name, [string]$Root, [bool]$OnlyFromProject) {
     }
   }
 
-  $rootNorm = $Root.ToLowerInvariant()
+  $rootNorm = Normalize-String $Root
   $filtered = $all | Where-Object {
-    $cmd = ($_.CommandLine | Out-String).Trim().ToLowerInvariant()
-    $exe = ($_.ExecutablePath | Out-String).Trim().ToLowerInvariant()
+    $cmd = Normalize-String $_.CommandLine
+    $exe = Normalize-String $_.ExecutablePath
     ($cmd -like "*$rootNorm*") -or ($exe -like "*$rootNorm*")
   }
 
@@ -78,9 +90,32 @@ function Get-ListeningPidByPort([int]$Port) {
 }
 
 function Get-ProcessByPid([int]$Pid) {
-  $p = Get-CimInstance Win32_Process -Filter "ProcessId=$Pid" |
-    Select-Object ProcessId, Name, ExecutablePath, CommandLine
-  return $p
+  return (Get-CimInstance Win32_Process -Filter "ProcessId=$Pid" |
+    Select-Object ProcessId, Name, ExecutablePath, CommandLine)
+}
+
+function Get-ProcessNameByPid([int]$Pid) {
+  try {
+    return (Get-Process -Id $Pid -ErrorAction Stop).ProcessName
+  } catch {
+    return $null
+  }
+}
+
+function Is-CaddyProcessName([string]$processName) {
+  $n = Normalize-String $processName
+  return ($n -eq "caddy" -or $n -eq "caddy.exe")
+}
+
+function Get-CaddyPidOn8080 {
+  $pids = Get-ListeningPidByPort -Port 8080
+  foreach ($procId in $pids) {
+    $pname = Get-ProcessNameByPid -Pid $procId
+    if (Is-CaddyProcessName $pname) {
+      return $procId
+    }
+  }
+  return $null
 }
 
 Load-DotEnv
@@ -92,26 +127,20 @@ Write-Host ("Filtro projeto atual: {0}" -f ($(if ($OnlyProject) { "ATIVO" } else
 $caddy  = Get-ProcDetails -Name "caddy.exe"  -Root $ProjectRoot -OnlyFromProject $OnlyProject
 $python = Get-ProcDetails -Name "python.exe" -Root $ProjectRoot -OnlyFromProject $OnlyProject
 
-# Fallback Caddy por porta 8080 (quando filtro por projeto não achar)
+# Fallback Caddy por porta 8080 + validação de nome do processo
 if (($OnlyProject) -and (-not $caddy -or $caddy.Count -eq 0)) {
-  $pids8080 = Get-ListeningPidByPort -Port 8080
-  foreach ($pid in $pids8080) {
-    $proc = Get-ProcessByPid -Pid $pid
-    if ($proc -and $proc.Name -ieq "caddy.exe") {
-      $already = $false
-      if ($caddy) {
-        $already = ($caddy.ProcessId -contains $proc.ProcessId)
+  $caddyPid = Get-CaddyPidOn8080
+  if ($caddyPid) {
+    $proc = Get-ProcessByPid -Pid $caddyPid
+    if ($proc) {
+      $fallbackObj = [PSCustomObject]@{
+        ProcessId      = $proc.ProcessId
+        Name           = $proc.Name
+        ExecutablePath = $proc.ExecutablePath
+        CommandLine    = $proc.CommandLine
+        Source         = "port-8080-fallback(caddy-validated)"
       }
-      if (-not $already) {
-        $fallbackObj = [PSCustomObject]@{
-          ProcessId      = $proc.ProcessId
-          Name           = $proc.Name
-          ExecutablePath = $proc.ExecutablePath
-          CommandLine    = $proc.CommandLine
-          Source         = "port-8080-fallback"
-        }
-        if ($caddy) { $caddy += $fallbackObj } else { $caddy = @($fallbackObj) }
-      }
+      $caddy = @($fallbackObj)
     }
   }
 }
@@ -140,8 +169,11 @@ if ($python) {
 
 Write-Host "`n==> [status] Portas (8000/8080)" -ForegroundColor Cyan
 $ports = netstat -ano | Select-String ":(8000|8080)\s+.*LISTENING"
-if ($ports) { $ports | ForEach-Object { Write-Host $_.Line } }
-else { Write-Warning "Nenhuma porta 8000/8080 em LISTENING." }
+if ($ports) {
+  $ports | ForEach-Object { Write-Host $_.Line }
+} else {
+  Write-Warning "Nenhuma porta 8000/8080 em LISTENING."
+}
 
 Write-Host "`n==> [status] HTTP checks" -ForegroundColor Cyan
 $h = HttpCode "http://127.0.0.1:8080/health"
