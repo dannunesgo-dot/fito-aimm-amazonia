@@ -40,8 +40,12 @@ ENVIRONMENT=development
 
 ## Uso (fluxo padrão)
 
+> **`.\run-local.ps1` é o comando oficial de execução local.** Ele sobe Flask + Caddy, aguarda as portas ficarem ativas e executa smoke tests automáticos.
+>
+> Alternativas (`python app.py`, `Iniciar-API.cmd`) são **fallback** — não garantem o gateway Caddy na porta 8080.
+
 ```powershell
-cd C:\Users\danie\work\github\fito-aimm-amazonia
+cd <raiz-do-projeto>
 .\run-local.ps1
 .\status-local.ps1
 .\run-tests-local.ps1
@@ -52,6 +56,13 @@ Para parar:
 ```powershell
 .\stop-local.ps1
 ```
+
+### Fallbacks (somente quando `run-local.ps1` não estiver disponível)
+
+| Método | Comando | Limitação |
+|--------|---------|-----------|
+| Flask direto | `.\.venv\Scripts\python.exe .\app.py` | Não sobe Caddy/gateway (porta 8080 indisponível) |
+| CMD atalho | `Iniciar-API.cmd` | Depende de `activate-api.ps1`; não garante gateway |
 
 ## Resultado esperado
 

@@ -42,13 +42,72 @@ Arquitetura
 │ World Bank API              │
 │ https://api.worldbank.org   │
 └─────────────────────────────┘
-Setup rápido
+## Checklist de pré-execução
+
+Antes de iniciar o ambiente local, verifique cada item:
+
+- [ ] **Ambiente virtual criado e ativado**
+  ```powershell
+  python -m venv .venv
+  .\.venv\Scripts\Activate.ps1
+  pip install -r requirements.txt
+  ```
+
+- [ ] **Arquivo `.env` criado a partir do `.env.example`**
+  ```powershell
+  copy .env.example .env
+  # Edite .env com seus valores (AUTH_TOKEN, etc.)
+  ```
+
+- [ ] **Portas necessárias livres**
+  | Porta | Serviço |
+  |-------|---------|
+  | 8000  | Backend Flask |
+  | 8080  | Gateway Caddy |
+
+  Para verificar/liberar:
+  ```powershell
+  .\stop-local.ps1
+  ```
+
+- [ ] **Caddy disponível no PATH**
+  ```powershell
+  caddy version
+  ```
+
+- [ ] **Validação pós-subida (health endpoint)**
+  ```powershell
+  # Após .\run-local.ps1, verificar:
+  Invoke-WebRequest http://127.0.0.1:8080/health
+  # Esperado: HTTP 200 OK
+  ```
+
+## Setup rápido
+
+> **Comando oficial de execução local: `.\run-local.ps1`**
+> Os demais métodos (`python app.py`, `Iniciar-API.cmd`) são fallback e podem não iniciar todos os serviços.
+
 Configure o ambiente local conforme o guia em README-local.md.
 Suba os serviços:
+```powershell
 .\run-local.ps1
+```
 Verifique status:
+```powershell
 .\status-local.ps1
+```
 Execute testes de integração:
+```powershell
 .\run-tests-local.ps1
+```
 Para parar:
+```powershell
 .\stop-local.ps1
+```
+
+### Fallbacks (somente se `run-local.ps1` não estiver disponível)
+
+| Método | Comando | Limitação |
+|--------|---------|-----------|
+| Flask direto | `python app.py` | Não sobe Caddy/gateway |
+| CMD atalho | `Iniciar-API.cmd` | Depende de `activate-api.ps1`; não garante gateway |
