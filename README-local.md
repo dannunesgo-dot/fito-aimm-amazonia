@@ -1,98 +1,128 @@
-# Ambiente local (Flask + Caddy)
+# README Local — Operação do ambiente (factual)
 
-Subida rápida da API local com proxy/autorização para integração com World Bank API.
+Este guia descreve a execução local com base nos arquivos confirmados no repositório.
 
-## Pré-requisitos
+## 1) Arquivos de operação local confirmados
 
-- Windows + PowerShell
-- Python com `.venv` no projeto
-- Dependências instaladas
-- Caddy instalado e disponível no PATH
+- `run-local.ps1`
+- `status-local.ps1`
+- `stop-local.ps1`
+- `run-tests-local.ps1`
+- `Iniciar-API.cmd`
+- `Parar-API.cmd`
+- `activate-api.ps1`
+- `deactivate-api.ps1`
+- `app.py`
+- `Caddyfile`
+- `Caddyfile.local`
+- `.env.example`
+- `requirements.txt`
 
-## Arquivos e scripts locais
+## 2) Pré-requisitos locais
 
-- `.\run-local.ps1` → sobe Flask + Caddy e faz smoke tests
-- `.\status-local.ps1` → mostra processos, portas e checks HTTP (token mascarado)
-- `.\stop-local.ps1` → para somente processos vinculados às portas 8000/8080
-- `.\run-tests-local.ps1` → carrega `.env` e executa testes
-- `.\scripts\test_api_integration.ps1` → testes HTTP de integração Gateway/Backend
+- Python instalado (o repositório usa `requirements.txt`)
+- PowerShell para scripts `.ps1`
+- Caddy disponível no sistema para uso com `Caddyfile`
+- Variáveis de ambiente configuradas em `.env` (a partir de `.env.example`)
 
-## Configuração do `.env` (raiz do projeto)
+## 3) Preparação do ambiente
 
-Crie/edite `.env`:
-
-```dotenv
-WORLDBANK_API_URL=https://api.worldbank.org/v2
-GATEWAY_URL=http://127.0.0.1:8080
-BACKEND_URL=http://127.0.0.1:8000
-AUTH_TOKEN=local-dev-token
-ENVIRONMENT=development
+### 3.1 Criar e ativar ambiente virtual
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
 ```
 
-> Nunca commitar `.env` com token real.
-
-## Instalação rápida de dependências
-
+### 3.2 Criar `.env` com base no exemplo
 ```powershell
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install flask requests python-dotenv
+copy .env.example .env
 ```
 
-## Uso (fluxo padrão)
+## 4) Execução local (fluxo oficial)
 
-> **`.\run-local.ps1` é o comando oficial de execução local.** Ele sobe Flask + Caddy, aguarda as portas ficarem ativas e executa smoke tests automáticos.
->
-> Alternativas (`python app.py`, `Iniciar-API.cmd`) são **fallback** — não garantem o gateway Caddy na porta 8080.
+> Comando oficial: `.\run-local.ps1`
 
 ```powershell
-cd <raiz-do-projeto>
 .\run-local.ps1
+```
+
+Verificar estado:
+```powershell
 .\status-local.ps1
+```
+
+Rodar testes locais:
+```powershell
 .\run-tests-local.ps1
 ```
 
-Para parar:
-
+Parar serviços:
 ```powershell
 .\stop-local.ps1
 ```
 
-### Fallbacks (somente quando `run-local.ps1` não estiver disponível)
+## 5) Comandos alternativos disponíveis no repositório
 
-| Método | Comando | Limitação |
-|--------|---------|-----------|
-| Flask direto | `.\.venv\Scripts\python.exe .\app.py` | Não sobe Caddy/gateway (porta 8080 indisponível) |
-| CMD atalho | `Iniciar-API.cmd` | Depende de `activate-api.ps1`; não garante gateway |
+- `Iniciar-API.cmd`
+- `Parar-API.cmd`
+- `python app.py`
 
-## Resultado esperado
+> Use alternativas apenas quando necessário para diagnóstico/contingência.
 
-- `GET /health` → `200`
-- `GET /api/worldbank/countries` sem Authorization → `401`
-- `GET /api/worldbank/countries` com Bearer token válido local → `200`  
-  (`502` indica backend fora do ar)
+## 6) Verificações operacionais rápidas
 
-## Troubleshooting
-
-### 1) `502` com token
-Backend não subiu ou caiu.
+### 6.1 Dependências e runtime
 ```powershell
-.\status-local.ps1
-Get-Content .\logs\backend.log -Tail 50
+python --version
+pip --version
 ```
 
-### 2) `ModuleNotFoundError: flask`
-Use Python da venv:
+### 6.2 Caddy disponível
 ```powershell
-.\.venv\Scripts\python.exe .\app.py
+caddy version
 ```
 
-### 3) Porta ocupada
+### 6.3 Portas de runtime (checagem local)
 ```powershell
-.\stop-local.ps1 -ShowOnly
+netstat -ano | findstr ":8000"
+netstat -ano | findstr ":8080"
+```
+
+## 7) Estruturas relevantes para operação
+
+- Logs locais observados no inventário local:
+  - `logs/backend.log`, `logs/backend.err.log`, `logs/backend.out.log`
+  - `logs/caddy.log`, `logs/caddy.err.log`, `logs/caddy.out.log`
+- Diretório temporário:
+  - `tmp/teste-api.txt`
+
+## 8) Troubleshooting básico (factual)
+
+### 8.1 Porta ocupada
+```powershell
 .\stop-local.ps1
 ```
+Depois, reexecute `.\run-local.ps1`.
 
-### 4) Script bloqueado pelo PowerShell
+### 8.2 Ambiente virtual não ativado
 ```powershell
-Set-ExecutionPolicy -Scope Process Bypass
+.\.venv\Scripts\Activate.ps1
 ```
+
+### 8.3 Dependências ausentes
+```powershell
+pip install -r requirements.txt
+```
+
+### 8.4 Erro de configuração local
+- Verifique presença e conteúdo de `.env` (base `.env.example`)
+- Verifique disponibilidade do Caddy (`caddy version`)
+- Revise logs em `logs/` para backend e gateway
+
+## 9) Referências internas
+
+- `README.md` (mapa geral)
+- `README_operacional.md` (documentação operacional adicional)
+- `scripts/test_api_integration.ps1`
+- `scripts/worldbank_examples.ps1`
