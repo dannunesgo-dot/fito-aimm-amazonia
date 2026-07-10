@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dannunesgo-dot/fito-aimm-amazonia/docs/contracts/indicator_canonical.schema.json",
+  "title": "AIMM Canonical Indicator Payload",
+  "description": "Contrato canônico para indicadores AIMM (UI/API).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "nome",
+    "dimensao",
+    "componente",
+    "papel",
+    "valor",
+    "unidade",
+    "periodo",
+    "territorio",
+    "territorio_tipo",
+    "territorio_codigo",
+    "fonte",
+    "fonte_url",
+    "confiabilidade",
+    "metodologia_ref",
+    "origem_api",
+    "status_dado",
+    "versao_metodologia",
+    "ultima_atualizacao"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identificador canônico do indicador no sistema AIMM."
+    },
+    "nome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dimensao": {
+      "type": "string",
+      "minLength": 1
+    },
+    "componente": {
+      "type": "string",
+      "minLength": 1
+    },
+    "papel": {
+      "type": "string",
+      "minLength": 1
+    },
+    "valor": {
+      "type": ["number", "null"],
+      "description": "Valor atual do indicador. null permitido quando indisponível."
+    },
+    "unidade": {
+      "type": "string",
+      "minLength": 1
+    },
+    "periodo": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Ano/período de referência (ex.: 2024, 2010:2024, 2024-Q1)."
+    },
+    "territorio": {
+      "type": "string",
+      "minLength": 1
+    },
+    "territorio_tipo": {
+      "type": "string",
+      "enum": ["municipio", "estado", "pais", "regiao", "global"]
+    },
+    "territorio_codigo": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Código oficial do território (IBGE, ISO etc.)."
+    },
+    "fonte": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fonte_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "confiabilidade": {
+      "type": "string",
+      "enum": ["alta", "media", "baixa", "em_validacao"]
+    },
+    "metodologia_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Referência documental/metodológica (arquivo, seção, versão)."
+    },
+    "origem_api": {
+      "type": "string",
+      "enum": ["worldbank", "ibge", "aimm_local", "manual", "outra"]
+    },
+    "status_dado": {
+      "type": "string",
+      "enum": ["observado", "estimado", "proxy", "indisponivel"]
+    },
+    "versao_metodologia": {
+      "type": "string",
+      "pattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Versão semântica da regra de cálculo."
+    },
+    "ultima_atualizacao": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "serie": {
+      "type": "array",
+      "description": "Série histórica opcional para visualizações.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["periodo", "valor", "fonte", "status_dado"],
+        "properties": {
+          "periodo": { "type": "string", "minLength": 1 },
+          "valor": { "type": ["number", "null"] },
+          "fonte": { "type": "string", "minLength": 1 },
+          "status_dado": {
+            "type": "string",
+            "enum": ["observado", "estimado", "proxy", "indisponivel"]
+          },
+          "nota": { "type": "string" }
+        }
+      }
+    },
+    "notas_limitacao": {
+      "type": "string",
+      "description": "Limitações conhecidas do dado."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Campo opcional para extensões futuras sem quebrar contrato.",
+      "additionalProperties": true
+    }
+  }
+}
