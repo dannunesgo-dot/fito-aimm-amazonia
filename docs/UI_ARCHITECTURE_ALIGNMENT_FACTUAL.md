@@ -10,7 +10,7 @@
 
 | Bloco UI | Endpoint / Mecanismo | Status | Arquivo | Linhas | Observação |
 |---|---|---|---|---|---|
-| **Busca/Filtros — países** | `GET /worldbank/countries` | IMPLEMENTADO | `app.py` | 158–190 | Paginação; ****** obrigatório |
+| **Busca/Filtros — países** | `GET /worldbank/countries` | IMPLEMENTADO | `app.py` | 158–190 | Paginação; [AUTH_TOKEN] obrigatório |
 | **Busca/Filtros — indicadores WB** | `GET /worldbank/indicators?search=` | IMPLEMENTADO | `app.py` | 191–227 | Filtro por nome; retorna top-10 |
 | **Série temporal** | `GET /worldbank/data/{country}/{indicator}` | IMPLEMENTADO | `app.py` | 230–320 | Série temporal com filtro de data |
 | **Tabela de indicadores AIMM** | Arquivo `data/processed/aimm_indicator_scores.csv` | PARCIAL | `aimm_engine.py` | 1–200 | Gerado por pipeline; não exposto via endpoint HTTP |
@@ -23,7 +23,7 @@
 | **Visualização: export** | SVG, Mermaid, JSON, Markdown | PARCIAL | `aimm_communication.py` | 235–320 | Exportação por pipeline; sem botão de export na UI web |
 | **Upload de arquivo** | Nenhum endpoint `POST /api/upload` | AUSENTE | `docs/FEATURE_STATUS_BY_BRANCH.md` | — | Experimental em `origin/copilot/research-data-ingestion-analysis` |
 | **Health check** | `GET /health` | IMPLEMENTADO | `app.py` | 147–156 | Sem autenticação |
-| **Autenticação** | ****** via Caddy gateway | IMPLEMENTADO | `app.py` + `Caddyfile` | `app.py:80–107`, `Caddyfile:10` | Token validado em formato; não em valor |
+| **Autenticação** | [AUTH_TOKEN] via Caddy gateway | IMPLEMENTADO | `app.py` + `Caddyfile` | `app.py:80–107`, `Caddyfile:10` | Token validado em formato; não em valor |
 | **Resumo executivo** | `outputs/reports/aimm_executive_summary.md` + JSON | IMPLEMENTADO | `aimm_dashboard.py` | 145–175 | Gerado por pipeline |
 
 ---
@@ -61,7 +61,7 @@ Os seguintes componentes funcionam no estado atual de `main`, a partir dos seeds
 | Sem painel web interativo (Plotly, Dash, etc.) | Média | AUSENTE — referenciado em `docs/FEATURE_STATUS_BY_BRANCH.md` como futuro refactor/phase3 |
 | GIS apenas para Manaus; Benjamin Constant, Belém, Santarém sem GeoPackage processado | Alta | `data/reference/gis_baseline_control_seed.csv` — status `pendente_gis` para MUN_002–004 |
 | Normalização automática WB ↔ AIMM | Média | EXPERIMENTAL em `origin/copilot/research-aimm-calculator-analysis` |
-| Validação de token ****** valor (apenas formato validado hoje) | Média | `app.py:80–107` |
+| Validação de token [AUTH_TOKEN] valor (apenas formato validado hoje) | Média | `app.py:80–107` |
 | Score final AIMM bloqueado (apenas score estrutural preliminar) | Alta | `aimm_engine.py` — `pode_ser_usado_como_score_final: "não"` |
 
 ---
