@@ -1,0 +1,95 @@
+name: agent-audit-completion-gate-v2
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+      - "docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+      - "docs/UI_VISUAL_EVIDENCE_TABLE.csv"
+      - "docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+      - "docs/agents/**"
+      - ".github/workflows/agent_audit_completion_gate.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-agent-audit-output:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure required files exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            "docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+            "docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+            "docs/UI_VISUAL_EVIDENCE_TABLE.csv"
+            "docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+          )
+          missing=0
+          for f in "${required[@]}"; do
+            if [[ ! -f "$f" ]]; then
+              echo "❌ Missing required file: $f"
+              missing=1
+            fi
+          done
+          if [[ $missing -ne 0 ]]; then
+            exit 1
+          fi
+
+      - name: Validate minimum structure tokens
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "Paleta oficial" docs/UI_VISUAL_GUIDELINES_FACTUAL.md
+          grep -q "Legendas oficiais" docs/UI_VISUAL_GUIDELINES_FACTUAL.md
+          grep -q "Bloco UI" docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md
+          grep -q "Endpoint" docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md
+          grep -q "Status" docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md
+          head -n 1 docs/UI_VISUAL_EVIDENCE_TABLE.csv | grep -q "tema,status,branch,arquivo,linhas,evidencia,impacto_ui,acao_recomendada"
+          grep -q "Manaus" docs/UI_MUNICIPAL_COVERAGE_GAPS.md
+          grep -q "Benjamin Constant" docs/UI_MUNICIPAL_COVERAGE_GAPS.md
+          grep -q "Belém" docs/UI_MUNICIPAL_COVERAGE_GAPS.md
+          grep -q "Santarém" docs/UI_MUNICIPAL_COVERAGE_GAPS.md
+
+      - name: Enforce explicit non-inference phrase in critical sections
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          phrase="NÃO COMPROVADO NO REPOSITÓRIO ANALISADO"
+
+          # Critical docs that must contain explicit non-inference handling
+          critical_docs=(
+            "docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+            "docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+            "docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+          )
+
+          for doc in "${critical_docs[@]}"; do
+            if ! grep -q "$phrase" "$doc"; then
+              echo "❌ Required phrase missing in critical file: $doc"
+              echo "Expected phrase: $phrase"
+              exit 1
+            fi
+          done
+
+          # CSV must support NAO_COMPROVADO status in at least one row OR header policy mention in docs
+          if ! grep -q "NAO_COMPROVADO\|NÃO COMPROVADO" docs/UI_VISUAL_EVIDENCE_TABLE.csv; then
+            echo "❌ docs/UI_VISUAL_EVIDENCE_TABLE.csv must include at least one NAO_COMPROVADO/NÃO COMPROVADO status row."
+            exit 1
+          fi
+
+      - name: Upload validation snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-audit-validation-snapshot-v2
+          path: |
+            docs/UI_VISUAL_GUIDELINES_FACTUAL.md
+            docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md
+            docs/UI_VISUAL_EVIDENCE_TABLE.csv
+            docs/UI_MUNICIPAL_COVERAGE_GAPS.md
