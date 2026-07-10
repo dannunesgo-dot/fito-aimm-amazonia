@@ -1,0 +1,125 @@
+name: agent-audit-completion-gate-v2.1
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+      - "docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+      - "docs/UI_VISUAL_EVIDENCE_TABLE.csv"
+      - "docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+      - "docs/agents/**"
+      - "scripts/check_agent_audit_completion.ps1"
+      - ".github/workflows/agent_audit_completion_gate.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-agent-audit-output:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure required files exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            "docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+            "docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+            "docs/UI_VISUAL_EVIDENCE_TABLE.csv"
+            "docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+            "docs/agents/BRIEF_UI_FACTUAL_AUDIT.md"
+            "docs/agents/AGENT_RUNBOOK_UI_FACTUAL_AUDIT.md"
+            "docs/agents/AGENT_OUTPUT_CONTRACT_UI_FACTUAL_AUDIT.md"
+          )
+          for f in "${required[@]}"; do
+            [[ -f "$f" ]] || { echo "❌ Missing: $f"; exit 1; }
+          done
+
+      - name: Validate UI_VISUAL_GUIDELINES_FACTUAL blocks (strict regex)
+        shell: bash
+        run: |
+          set -euo pipefail
+          f="docs/UI_VISUAL_GUIDELINES_FACTUAL.md"
+
+          # Blocos obrigatórios (aceita #, ##, ###)
+          grep -Eq '^(#+)[[:space:]]+Resumo executivo factual' "$f"
+          grep -Eq '^(#+)[[:space:]]+Paleta oficial' "$f"
+          grep -Eq '^(#+)[[:space:]]+Legendas oficiais' "$f"
+          grep -Eq '^(#+)[[:space:]]+Regras visuais por estado' "$f"
+          grep -Eq '^(#+)[[:space:]]+Conflitos por branch' "$f"
+          grep -Eq '^(#+)[[:space:]]+Riscos e pendências' "$f"
+
+          # Frase explícita de não inferência obrigatória
+          grep -q 'NÃO COMPROVADO NO REPOSITÓRIO ANALISADO' "$f"
+
+      - name: Validate UI_ARCHITECTURE_ALIGNMENT_FACTUAL blocks (strict regex)
+        shell: bash
+        run: |
+          set -euo pipefail
+          f="docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md"
+
+          grep -Eq '^(#+)[[:space:]]+Tabela.*Bloco UI.*Endpoint.*Status.*Evidência' "$f"
+          grep -Eq '^(#+)[[:space:]]+Componentes já operacionais' "$f"
+          grep -Eq '^(#+)[[:space:]]+Lacunas para MVP' "$f"
+          grep -Eq '^(#+)[[:space:]]+Sequência de implementação' "$f"
+          grep -Eq '^(#+)[[:space:]]+Gates de release' "$f"
+
+          grep -q 'NÃO COMPROVADO NO REPOSITÓRIO ANALISADO' "$f"
+
+      - name: Validate municipal gaps file blocks and required municipalities
+        shell: bash
+        run: |
+          set -euo pipefail
+          f="docs/UI_MUNICIPAL_COVERAGE_GAPS.md"
+
+          grep -Eq '^(#+)[[:space:]]+Situação por município' "$f"
+          grep -Eq '^(#+)[[:space:]]+Campos presentes' "$f"
+          grep -Eq '^(#+)[[:space:]]+Campos ausentes' "$f"
+          grep -Eq '^(#+)[[:space:]]+Impacto na interface' "$f"
+          grep -Eq '^(#+)[[:space:]]+Ações para fechar lacunas' "$f"
+
+          grep -Eq 'Manaus' "$f"
+          grep -Eq 'Benjamin Constant' "$f"
+          grep -Eq 'Belém' "$f"
+          grep -Eq 'Santarém' "$f"
+
+          grep -q 'NÃO COMPROVADO NO REPOSITÓRIO ANALISADO' "$f"
+
+      - name: Validate CSV header + allowed status values
+        shell: bash
+        run: |
+          set -euo pipefail
+          f="docs/UI_VISUAL_EVIDENCE_TABLE.csv"
+          header="$(head -n 1 "$f" | tr -d '\r')"
+
+          [[ "$header" == "tema,status,branch,arquivo,linhas,evidencia,impacto_ui,acao_recomendada" ]] \
+            || { echo "❌ Invalid CSV header: $header"; exit 1; }
+
+          # Deve conter pelo menos 1 linha de NAO_COMPROVADO/NÃO COMPROVADO
+          grep -Eq 'NAO_COMPROVADO|NÃO COMPROVADO' "$f" \
+            || { echo "❌ CSV must contain at least one NAO_COMPROVADO/NÃO COMPROVADO row"; exit 1; }
+
+          # Status permitidos (valida coluna status em linhas 2+)
+          awk -F',' 'NR>1 {print $2}' "$f" | tr -d '\r' | while read -r s; do
+            case "$s" in
+              IMPLEMENTADO|PARCIAL|AUSENTE|EXPERIMENTAL|CONFLITANTE|NAO_COMPROVADO|"NÃO COMPROVADO")
+                ;;
+              *)
+                echo "❌ Invalid status value in CSV: $s"
+                exit 1
+                ;;
+            esac
+          done
+
+      - name: Upload validation snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-audit-validation-snapshot-v2_1
+          path: |
+            docs/UI_VISUAL_GUIDELINES_FACTUAL.md
+            docs/UI_ARCHITECTURE_ALIGNMENT_FACTUAL.md
+            docs/UI_VISUAL_EVIDENCE_TABLE.csv
+            docs/UI_MUNICIPAL_COVERAGE_GAPS.md
