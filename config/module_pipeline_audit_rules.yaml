@@ -32,6 +32,8 @@ mapeamento_workflow_por_modulo:
   coletor_ibge_geociencias: "area_densidade_ibge_geociencias"
   coletor_mapaosc: "mapaosc_triagem"
   risk_osc: "risk_osc_screening"
+  pre_diligencia_manual_validator: "pre_diligencia_manual_validation"
+  pre_diligencia_manual_validator: "pre_diligencia_manual_validation"
 
 # Mapeamento explícito quando o nome do teste diverge do padrão
 # scripts/testar_<modulo>.py. Formato: nome_modulo: nome_arquivo_teste (sem .py)
