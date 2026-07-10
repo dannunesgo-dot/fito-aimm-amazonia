@@ -1,0 +1,153 @@
+{
+  "version": "v1.0.0",
+  "examples": [
+    {
+      "case": "wb_country_indicator_br",
+      "payload": {
+        "id": "WB_SP.POP.TOTL_BR",
+        "nome": "Population, total",
+        "dimensao": "contexto_territorial",
+        "componente": "demografia",
+        "papel": "benchmark_externo",
+        "valor": 203062512,
+        "unidade": "pessoas",
+        "periodo": "2024",
+        "territorio": "Brasil",
+        "territorio_tipo": "pais",
+        "territorio_codigo": "BR",
+        "fonte": "World Bank",
+        "fonte_url": "https://api.worldbank.org/v2/country/BR/indicator/SP.POP.TOTL?format=json",
+        "confiabilidade": "alta",
+        "metodologia_ref": "docs/WB_INTEGRATION_FACTS.md#api-world-bank-ativa",
+        "origem_api": "worldbank",
+        "status_dado": "observado",
+        "versao_metodologia": "v1.0.0",
+        "ultima_atualizacao": "2026-07-10T20:00:00Z",
+        "serie": [
+          { "periodo": "2022", "valor": 201062789, "fonte": "World Bank", "status_dado": "observado" },
+          { "periodo": "2023", "valor": 202124123, "fonte": "World Bank", "status_dado": "observado" },
+          { "periodo": "2024", "valor": 203062512, "fonte": "World Bank", "status_dado": "observado" }
+        ],
+        "notas_limitacao": "Cobertura em nível de país; não substitui recorte municipal."
+      }
+    },
+    {
+      "case": "ibge_municipio_manaus",
+      "payload": {
+        "id": "IBGE_POP_1302603",
+        "nome": "População residente estimada",
+        "dimensao": "contexto_territorial",
+        "componente": "demografia_local",
+        "papel": "linha_de_base_local",
+        "valor": 2255903,
+        "unidade": "pessoas",
+        "periodo": "2024",
+        "territorio": "Manaus",
+        "territorio_tipo": "municipio",
+        "territorio_codigo": "1302603",
+        "fonte": "IBGE",
+        "fonte_url": "https://servicodados.ibge.gov.br/api/docs/agregados?versao=3",
+        "confiabilidade": "alta",
+        "metodologia_ref": "data/reference/source_registry.csv:SRC_IBGE_API",
+        "origem_api": "ibge",
+        "status_dado": "observado",
+        "versao_metodologia": "v1.0.0",
+        "ultima_atualizacao": "2026-07-10T20:00:00Z",
+        "serie": [
+          { "periodo": "2022", "valor": 2239386, "fonte": "IBGE", "status_dado": "observado" },
+          { "periodo": "2023", "valor": 2249882, "fonte": "IBGE", "status_dado": "observado" },
+          { "periodo": "2024", "valor": 2255903, "fonte": "IBGE", "status_dado": "observado" }
+        ]
+      }
+    },
+    {
+      "case": "municipios_prioritarios_exemplo",
+      "payloads": [
+        {
+          "id": "IBGE_MUN_1302603",
+          "nome": "Município de Manaus",
+          "dimensao": "territorio",
+          "componente": "cadastro_municipal",
+          "papel": "referencia_operacional",
+          "valor": null,
+          "unidade": "n/a",
+          "periodo": "2026",
+          "territorio": "Manaus",
+          "territorio_tipo": "municipio",
+          "territorio_codigo": "1302603",
+          "fonte": "IBGE",
+          "fonte_url": "https://www.ibge.gov.br/",
+          "confiabilidade": "alta",
+          "metodologia_ref": "seed_municipios_prioritarios",
+          "origem_api": "ibge",
+          "status_dado": "observado",
+          "versao_metodologia": "v1.0.0",
+          "ultima_atualizacao": "2026-07-10T20:00:00Z"
+        },
+        {
+          "id": "IBGE_MUN_1300607",
+          "nome": "Município de Benjamin Constant",
+          "dimensao": "territorio",
+          "componente": "cadastro_municipal",
+          "papel": "referencia_operacional",
+          "valor": null,
+          "unidade": "n/a",
+          "periodo": "2026",
+          "territorio": "Benjamin Constant",
+          "territorio_tipo": "municipio",
+          "territorio_codigo": "1300607",
+          "fonte": "IBGE",
+          "fonte_url": "https://www.ibge.gov.br/",
+          "confiabilidade": "alta",
+          "metodologia_ref": "seed_municipios_prioritarios",
+          "origem_api": "ibge",
+          "status_dado": "observado",
+          "versao_metodologia": "v1.0.0",
+          "ultima_atualizacao": "2026-07-10T20:00:00Z"
+        },
+        {
+          "id": "IBGE_MUN_1501402",
+          "nome": "Município de Belém",
+          "dimensao": "territorio",
+          "componente": "cadastro_municipal",
+          "papel": "referencia_operacional",
+          "valor": null,
+          "unidade": "n/a",
+          "periodo": "2026",
+          "territorio": "Belém",
+          "territorio_tipo": "municipio",
+          "territorio_codigo": "1501402",
+          "fonte": "IBGE",
+          "fonte_url": "https://www.ibge.gov.br/",
+          "confiabilidade": "alta",
+          "metodologia_ref": "seed_municipios_prioritarios",
+          "origem_api": "ibge",
+          "status_dado": "observado",
+          "versao_metodologia": "v1.0.0",
+          "ultima_atualizacao": "2026-07-10T20:00:00Z"
+        },
+        {
+          "id": "IBGE_MUN_1506807",
+          "nome": "Município de Santarém",
+          "dimensao": "territorio",
+          "componente": "cadastro_municipal",
+          "papel": "referencia_operacional",
+          "valor": null,
+          "unidade": "n/a",
+          "periodo": "2026",
+          "territorio": "Santarém",
+          "territorio_tipo": "municipio",
+          "territorio_codigo": "1506807",
+          "fonte": "IBGE",
+          "fonte_url": "https://www.ibge.gov.br/",
+          "confiabilidade": "alta",
+          "metodologia_ref": "seed_municipios_prioritarios",
+          "origem_api": "ibge",
+          "status_dado": "observado",
+          "versao_metodologia": "v1.0.0",
+          "ultima_atualizacao": "2026-07-10T20:00:00Z"
+        }
+      ]
+    }
+  ]
+}
