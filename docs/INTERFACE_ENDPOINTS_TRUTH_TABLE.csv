@@ -1,0 +1,8 @@
+"endpoint_path","http_method","handler_module","status_main","status_branch","branch_name","evidencia_arquivo","evidencia_linha","output_type","autenticacao_requerida","teste_status"
+"/worldbank/countries","GET","app.py","IMPLEMENTADO","IMPLEMENTADO","origin/main","app.py","158-190","JSON","Bearer token","GET /worldbank/countries?per_page=50&page=1 => 200 com Bearer; 401 sem token"
+"/worldbank/indicators","GET","app.py","IMPLEMENTADO","IMPLEMENTADO","origin/main","app.py","191-227","JSON","Bearer token","GET /worldbank/indicators?search=gdp&per_page=50 => lista indicadores"
+"/worldbank/data/{country}/{indicator}","GET","app.py","IMPLEMENTADO","IMPLEMENTADO","origin/main","app.py","230-320","JSON","Bearer token","GET /worldbank/data/BR/SP.POP.TOTL?date=2010:2024 => série temporal"
+"/api/health","GET","Caddy gateway","IMPLEMENTADO","IMPLEMENTADO","origin/main","Caddyfile","10","status","não","health check Gateway"
+"/api/*","*","Caddy gateway","IMPLEMENTADO","IMPLEMENTADO","origin/main","Caddyfile","10","proxy","context dependent","rota proxy para backend"
+"nenhum endpoint POST /api/upload","POST","app.py","NÃO_IMPLEMENTADO","EXPERIMENTAL","origin/copilot/research-data-ingestion-analysis","rodada_4_28_file_ingestion_validator.py","1-500","Controle_manifesto_CSV","não","ingestão controlada por manifesto, não upload direto"
+"nenhum endpoint GET /api/indicators","GET","app.py","NÃO_IMPLEMENTADO","EXPERIMENTAL","origin/copilot/research-interface-calculadora-aimm-fito","rodada_4_28_file_ingestion_validator.py","","JSON_indicadores_filtro","não","pesquisa de indicadores não exposta em rota"
