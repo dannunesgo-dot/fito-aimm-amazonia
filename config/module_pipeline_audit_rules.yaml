@@ -1,0 +1,76 @@
+# Agente — Auditoria factual de módulo/pipeline (AIMM)
+# Objetivo: verificar, sem inferência, a completude e a consistência de cada
+# módulo de negócio em src/fito_aimm/ (código + regras + workflow + teste +
+# saídas declaradas/publicadas + seeds resolvidos).
+
+projeto:
+  nome: "Fito+ Amazônia"
+  agente: "module_pipeline_audit"
+  objetivo: "Auditar completude e consistência técnica dos módulos AIMM."
+
+# Módulos-base utilitários de superfície mínima: registrados como
+# 'utilitario_base', não exigem tríade completa.
+modulos_base_utilitarios:
+  - "__init__.py"
+  - "buscador.py"
+  - "extrator.py"
+  - "normalizador.py"
+  - "conferidor.py"
+  - "sincroniza_drive.py"
+
+# Diretórios canônicos do repositório.
+diretorios:
+  modulos: "src/fito_aimm"
+  regras: "config"
+  workflows: ".github/workflows"
+  testes: "scripts"
+
+# Mapeamento explícito quando o nome do workflow diverge do nome do módulo.
+# Formato: nome_modulo (sem .py): nome_arquivo_workflow (sem .yml)
+mapeamento_workflow_por_modulo:
+  coletor_ibge: "baseline_ibge_sidra"
+  coletor_ibge_geociencias: "area_densidade_ibge_geociencias"
+  coletor_mapaosc: "mapaosc_triagem"
+  risk_osc: "risk_osc_screening"
+
+# Mapeamento explícito quando o nome do teste diverge do padrão
+# scripts/testar_<modulo>.py. Formato: nome_modulo: nome_arquivo_teste (sem .py)
+mapeamento_teste_por_modulo:
+  coletor_ibge: "testar_coleta_ibge"
+  coletor_ibge_geociencias: "testar_area_densidade_ibge"
+  coletor_mapaosc: "testar_mapaosc_triagem"
+  risk_osc: "testar_risk_osc_screening"
+  pre_diligencia_manual_validator: "testar_pre_diligencia_manual_validation"
+
+# Prefixos de caminho que, quando ausentes, representam dependência de pipeline
+# gerada em runtime por outro módulo (não seed de entrada faltante).
+prefixos_dependencia_pipeline:
+  - "data/processed/"
+  - "data/evidence/"
+
+# Status controlado (idêntico ao Output Contract).
+status_validos:
+  - "IMPLEMENTADO"
+  - "PARCIAL"
+  - "AUSENTE"
+  - "EXPERIMENTAL"
+  - "CONFLITANTE"
+  - "NAO_COMPROVADO"
+
+# Requisitos auditados por módulo de negócio.
+requisitos:
+  - "codigo"
+  - "execucao"
+  - "regras_yaml"
+  - "teste"
+  - "workflow"
+  - "saidas_declaradas"
+  - "saidas_publicadas"
+  - "seeds_entradas"
+
+travas:
+  - "O agente não recalcula score AIMM nem aprova OSCs, espécies, produtos, orçamento ou rotas regulatórias."
+  - "O agente audita apenas estrutura, rastreabilidade e consistência técnica."
+  - "Nenhuma afirmação de presença/ausência é feita sem citar o caminho do arquivo."
+  - "Saída escrita por código e não publicada por workflow é reportada como lacuna, não corrigida automaticamente."
+  - "Arquivo de entrada ausente pode ser válido se classificado como artefato externo no congelamento técnico."
