@@ -104,10 +104,16 @@ def _string_constants_from_assignments(tree: ast.AST) -> dict[str, str]:
 
 
 def _has_public_execution(tree: ast.AST) -> str | None:
-    """Retorna o nome da função pública de execução (execute_*/main), ou None."""
+    """Retorna o nome da função pública de execução, ou None.
+
+    Reconhece as convenções de nome usadas no repositório: prefixos
+    ``execute_`` (inglês) e ``executar_`` (português), ``coletar_`` (coletores
+    de dados) e a função ``main``.
+    """
+    prefixos = ("execute_", "executar_", "coletar_")
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
-            if node.name.startswith("execute_") or node.name == "main":
+            if node.name == "main" or node.name.startswith(prefixos):
                 return node.name
     return None
 
