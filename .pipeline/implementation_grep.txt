@@ -1,0 +1,867 @@
+.gitattributes:23:*.pdf  binary
+.github/workflows/aimm_communication.yml:9:      - "data/reference/aimm_visual_layout_seed.csv"
+.github/workflows/aimm_communication.yml:40:        uses: actions/upload-artifact@v4
+.github/workflows/aimm_communication.yml:45:            data/processed/aimm_visual_outputs_index.csv
+.github/workflows/aimm_communication.yml:48:            outputs/visuals/aimm_dashboard_executivo.html
+.github/workflows/aimm_communication.yml:49:            outputs/visuals/aimm_dashboard_cards.svg
+.github/workflows/aimm_communication.yml:50:            outputs/visuals/aimm_dashboard_flow.mmd
+.github/workflows/aimm_communication.yml:51:            outputs/reports/aimm_communication_brief.md
+.github/workflows/aimm_communication.yml:52:            outputs/reports/aimm_communication_payload.json
+.github/workflows/aimm_communication.yml:54:            data/reference/aimm_visual_layout_seed.csv
+.github/workflows/aimm_dashboard.yml:1:name: aimm-dashboard
+.github/workflows/aimm_dashboard.yml:7:      - "config/aimm_dashboard_rules.yaml"
+.github/workflows/aimm_dashboard.yml:8:      - "data/reference/aimm_dashboard_cards_seed.csv"
+.github/workflows/aimm_dashboard.yml:10:      - "src/fito_aimm/aimm_dashboard.py"
+.github/workflows/aimm_dashboard.yml:11:      - "scripts/testar_aimm_dashboard.py"
+.github/workflows/aimm_dashboard.yml:12:      - ".github/workflows/aimm_dashboard.yml"
+.github/workflows/aimm_dashboard.yml:18:  aimm-dashboard:
+.github/workflows/aimm_dashboard.yml:37:        run: python scripts/testar_aimm_dashboard.py
+.github/workflows/aimm_dashboard.yml:40:        uses: actions/upload-artifact@v4
+.github/workflows/aimm_dashboard.yml:42:          name: aimm-dashboard-fito-amazonia
+.github/workflows/aimm_dashboard.yml:45:            data/processed/aimm_dashboard_cards.csv
+.github/workflows/aimm_dashboard.yml:46:            data/processed/aimm_dashboard_dimension_view.csv
+.github/workflows/aimm_dashboard.yml:49:            data/evidence/evidence_aimm_dashboard.csv
+.github/workflows/aimm_dashboard.yml:50:            outputs/reports/aimm_executive_summary.md
+.github/workflows/aimm_dashboard.yml:51:            outputs/reports/aimm_dashboard_payload.json
+.github/workflows/aimm_dashboard.yml:52:            data/reference/aimm_dashboard_cards_seed.csv
+.github/workflows/aimm_dashboard.yml:54:            config/aimm_dashboard_rules.yaml
+.github/workflows/aimm_dashboard.yml:55:            outputs/logs/teste_aimm_dashboard.txt
+.github/workflows/aimm_engine.yml:8:      - "data/reference/aimm_engine_indicator_inputs_seed.csv"
+.github/workflows/aimm_engine.yml:41:        uses: actions/upload-artifact@v4
+.github/workflows/aimm_engine.yml:45:            data/processed/aimm_indicator_scores.csv
+.github/workflows/aimm_engine.yml:48:            data/processed/aimm_blockers_report.csv
+.github/workflows/aimm_engine.yml:49:            data/processed/aimm_engine_validation_report.csv
+.github/workflows/aimm_engine.yml:51:            data/reference/aimm_engine_indicator_inputs_seed.csv
+.github/workflows/area_densidade_ibge_geociencias.yml:37:        uses: actions/upload-artifact@v4
+.github/workflows/baseline_ibge_sidra.yml:34:        uses: actions/upload-artifact@v4
+.github/workflows/benchmark_proxy.yml:10:      - "data/reference/benchmark_gap_report_seed.csv"
+.github/workflows/benchmark_proxy.yml:43:        uses: actions/upload-artifact@v4
+.github/workflows/benchmark_proxy.yml:49:            data/processed/benchmark_gap_report.csv
+.github/workflows/benchmark_proxy.yml:56:            data/reference/benchmark_gap_report_seed.csv
+.github/workflows/budget_components.yml:42:        uses: actions/upload-artifact@v4
+.github/workflows/budget_components.yml:51:            data/processed/budget_validation_report.csv
+.github/workflows/calculator_architecture.yml:44:        uses: actions/upload-artifact@v4
+.github/workflows/coleta_ibge_teste.yml:34:        uses: actions/upload-artifact@v4
+.github/workflows/mapaosc_triagem.yml:55:        uses: actions/upload-artifact@v4
+.github/workflows/pages.yml:37:        uses: actions/upload-pages-artifact@v3
+.github/workflows/pre_diligencia_consolidacao.yml:104:        uses: actions/upload-artifact@v4
+.github/workflows/pre_diligencia_manual_validation.yml:94:        uses: actions/upload-artifact@v4
+.github/workflows/pre_diligencia_manual_validation.yml:101:            data/processed/pre_diligencia_manual_validation_report.csv
+.github/workflows/pre_diligencia_osc.yml:100:        uses: actions/upload-artifact@v4
+.github/workflows/product_pathway.yml:43:        uses: actions/upload-artifact@v4
+.github/workflows/risk_osc_diagnostics.yml:99:        uses: actions/upload-artifact@v4
+.github/workflows/risk_osc_screening.yml:102:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_19_a_publication.yml:9:      - "data/reference/aimm_visual_review_checklist_seed.csv"
+.github/workflows/rodada_4_19_a_publication.yml:34:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_19_a_publication.yml:39:            data/processed/aimm_visual_review_checklist.csv
+.github/workflows/rodada_4_19_a_publication.yml:40:            data/processed/aimm_publication_readiness_report.csv
+.github/workflows/rodada_4_19_a_publication.yml:46:            outputs/publication/drive_upload_instructions.md
+.github/workflows/rodada_4_19_a_publication.yml:50:            data/reference/aimm_visual_review_checklist_seed.csv
+.github/workflows/rodada_4_19_b_visual_review.yml:1:name: rodada-4-19-b-visual-review
+.github/workflows/rodada_4_19_b_visual_review.yml:7:      - "data/reference/aimm_visual_review_checklist_seed.csv"
+.github/workflows/rodada_4_19_b_visual_review.yml:8:      - "data/manual/aimm_visual_review_checklist_completed.csv"
+.github/workflows/rodada_4_19_b_visual_review.yml:9:      - "scripts/rodada_4_19_b_visual_review.py"
+.github/workflows/rodada_4_19_b_visual_review.yml:10:      - ".github/workflows/rodada_4_19_b_visual_review.yml"
+.github/workflows/rodada_4_19_b_visual_review.yml:16:  visual-review:
+.github/workflows/rodada_4_19_b_visual_review.yml:30:        run: python scripts/rodada_4_19_b_visual_review.py
+.github/workflows/rodada_4_19_b_visual_review.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_19_b_visual_review.yml:35:          name: rodada-4-19-b-visual-review-fito-amazonia
+.github/workflows/rodada_4_19_b_visual_review.yml:37:            data/processed/aimm_visual_review_final_status.csv
+.github/workflows/rodada_4_19_b_visual_review.yml:38:            data/processed/aimm_visual_review_acceptance_report.csv
+.github/workflows/rodada_4_19_b_visual_review.yml:40:            outputs/logs/teste_aimm_visual_review_4_19_b.txt
+.github/workflows/rodada_4_19_c_closure.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_19_c_closure.yml:42:            outputs/reports/ENCERRAMENTO_FORMAL_RODADA_4_19.md
+.github/workflows/rodada_4_20_aimm_alignment.yml:9:      - "data/reference/aimm_indicator_alignment_seed.csv"
+.github/workflows/rodada_4_20_aimm_alignment.yml:34:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_20_aimm_alignment.yml:39:            data/processed/aimm_indicator_alignment_registry.csv
+.github/workflows/rodada_4_20_aimm_alignment.yml:40:            data/processed/aimm_alignment_validation_report.csv
+.github/workflows/rodada_4_20_aimm_alignment.yml:43:            outputs/reports/RELATORIO_ALINHAMENTO_AIMM.md
+.github/workflows/rodada_4_20_aimm_alignment.yml:47:            data/reference/aimm_indicator_alignment_seed.csv
+.github/workflows/rodada_4_21_gis_registry.yml:9:      - "data/reference/gis_indicator_registry_seed.csv"
+.github/workflows/rodada_4_21_gis_registry.yml:34:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_21_gis_registry.yml:39:            data/processed/gis/gis_indicator_registry.csv
+.github/workflows/rodada_4_21_gis_registry.yml:40:            data/processed/gis/gis_readiness_report.csv
+.github/workflows/rodada_4_21_gis_registry.yml:43:            outputs/reports/RELATORIO_GIS_ESTRUTURAL.md
+.github/workflows/rodada_4_21_gis_registry.yml:47:            data/reference/gis_indicator_registry_seed.csv
+.github/workflows/rodada_4_22_b1_gis_manaus_register.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_b1_gis_manaus_register.yml:41:            outputs/reports/RELATORIO_GIS_MANAUS_4_22_B1.md
+.github/workflows/rodada_4_22_b2_gis_manaus_isolated_validate.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_b2_gis_manaus_isolated_validate.yml:41:            outputs/reports/RELATORIO_GIS_MANAUS_4_22_B2.md
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:44:          OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_C4.md")
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:349:                      "tipo": "validacao_visual",
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:351:                      "descricao": "Atributos foram recompostos em tabela interna. A união visual com a camada geométrica deve ser validada no QGIS.",
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:403:                  "limitacao": "Atributos recompostos em tabela interna; join visual no QGIS fica para validação posterior.",
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:406:              report = "\n".join(
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:446:              OUT_REPORT.write_text(report, encoding="utf-8")
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:496:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_c4_gis_manaus_attribute_table.yml:505:            outputs/reports/RELATORIO_GIS_MANAUS_4_22_C4.md
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:1:name: rodada-4-22-d2-gis-visual-validation-register
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:10:  gis-visual-validation-register:
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:39:          SEED = Path("data/manual/gis/gis_manaus_visual_validation_seed.csv")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:41:          OUT_REGISTRY = Path("data/processed/gis/gis_manaus_visual_validation_registry_d2.csv")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:42:          OUT_STATUS = Path("data/processed/gis/gis_manaus_visual_validation_status_d2.csv")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:43:          OUT_GAPS = Path("data/processed/gis/gis_manaus_visual_validation_gaps_d2.csv")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:44:          OUT_EVIDENCE = Path("data/evidence/evidence_gis_manaus_visual_validation_d2.csv")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:45:          OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_D2.md")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:138:              alerts.append("validacao_visual_registrada_por_declaracao_manual_do_operador")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:146:                      "descricao": "O workflow registra a validação visual, mas não acessa o Google Drive para verificar binariamente os arquivos arquivados.",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:175:                  "validacao_visual_qgis": "sim" if not errors else "nao",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:176:                  "join_visual_confirmado": row["join_criado"],
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:187:                  "tipo_evidencia": "registro_de_validacao_visual_qgis",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:199:              report = "\n".join(
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:201:                      "# Rodada 4.22-D2 — Registro da validação visual QGIS",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:220:                      "- Esta rodada apenas registra a validação visual.",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:237:              OUT_REPORT.write_text(report, encoding="utf-8")
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:258:                      "Registro automatizado da validação visual QGIS concluído.",
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:276:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:278:          name: rodada-4-22-d2-gis-visual-validation-register-fito-amazonia
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:280:            data/manual/gis/gis_manaus_visual_validation_seed.csv
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:281:            data/processed/gis/gis_manaus_visual_validation_registry_d2.csv
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:282:            data/processed/gis/gis_manaus_visual_validation_status_d2.csv
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:283:            data/processed/gis/gis_manaus_visual_validation_gaps_d2.csv
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:284:            data/evidence/evidence_gis_manaus_visual_validation_d2.csv
+.github/workflows/rodada_4_22_d2_gis_visual_validation_register.yml:285:            outputs/reports/RELATORIO_GIS_MANAUS_4_22_D2.md
+.github/workflows/rodada_4_22_e_gis_replication_package.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_e_gis_replication_package.yml:38:            outputs/reports/RELATORIO_GIS_REPLICACAO_4_22_E.md
+.github/workflows/rodada_4_22_gis_baseline_preparacao.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_22_gis_baseline_preparacao.yml:44:            outputs/reports/RELATORIO_GIS_BASELINE_PREPARACAO.md
+.github/workflows/rodada_4_22_gis_baseline_preparacao.yml:45:            outputs/reports/GUIA_QGIS_3_40_14_MANAUS_4_22B.md
+.github/workflows/rodada_4_23_gis_module_closure.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_23_gis_module_closure.yml:39:            outputs/reports/RELATORIO_GIS_MODULO_MANAUS_4_23.md
+.github/workflows/rodada_4_24_aimm_handoff_package.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_24_aimm_handoff_package.yml:37:            outputs/reports/RELATORIO_AIMM_RETOMADA_4_24.md
+.github/workflows/rodada_4_25_aimm_technical_manual.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_25_aimm_technical_manual.yml:37:            outputs/reports/RELATORIO_AIMM_MANUAL_TECNICO_4_25.md
+.github/workflows/rodada_4_26_aimm_short_team_manual.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_26_aimm_short_team_manual.yml:37:            outputs/reports/RELATORIO_AIMM_MANUAL_CURTO_EQUIPE_4_26.md
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:1:name: rodada-4-27-automation-ingestion-diagnostic
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:11:  automation-ingestion-diagnostic:
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:34:        run: python scripts/rodada_4_27_automation_ingestion_diagnostic.py
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:37:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:39:          name: rodada-4-27-automation-ingestion-diagnostic-fito-amazonia
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:42:            outputs/aimm/rodada_4_27_diagnostico_automacoes_ingestao
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:43:            data/processed/aimm/aimm_automation_ingestion_diagnostic_registry_4_27.csv
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:44:            data/processed/aimm/aimm_automation_ingestion_diagnostic_status_4_27.csv
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:45:            data/evidence/evidence_aimm_automation_ingestion_diagnostic_4_27.csv
+.github/workflows/rodada_4_27_automation_ingestion_diagnostic.yml:46:            outputs/reports/RELATORIO_AIMM_DIAGNOSTICO_AUTOMACOES_4_27.md
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:1:name: rodada-4-28-file-ingestion-validator
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:10:  file-ingestion-validator:
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:23:      - name: Executar módulo de ingestão AIMM 4.28
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:25:        run: python scripts/rodada_4_28_file_ingestion_validator.py
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:28:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:30:          name: rodada-4-28-file-ingestion-validator-fito-amazonia
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:33:            outputs/aimm/rodada_4_28_ingestao_arquivos
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:34:            data/processed/aimm/aimm_file_ingestion_registry_4_28.csv
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:35:            data/processed/aimm/aimm_file_ingestion_status_4_28.csv
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:36:            data/evidence/evidence_aimm_file_ingestion_4_28.csv
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:37:            outputs/reports/RELATORIO_INGESTAO_ARQUIVOS_AIMM_4_28.md
+.github/workflows/rodada_4_28_file_ingestion_validator.yml:38:            outputs/logs/teste_aimm_ingestao_arquivos_4_28.txt
+.github/workflows/rodada_4_29_benchmark_source_normalization.yml:33:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_29_benchmark_source_normalization.yml:42:            outputs/reports/RELATORIO_BENCHMARK_FONTES_NORMALIZACAO_AIMM_4_29.md
+.github/workflows/rodada_4_30_drive_github_auth_dryrun.yml:42:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_30_drive_github_auth_dryrun.yml:51:            outputs/reports/RELATORIO_API_DRIVE_GITHUB_DRYRUN_4_30.md
+.github/workflows/rodada_4_31_drive_api_real_test.yml:44:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_31_drive_api_real_test.yml:52:            outputs/reports/RELATORIO_DRIVE_API_REAL_4_31.md
+.github/workflows/rodada_4_31b_drive_api_oauth_real_test.yml:46:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_31b_drive_api_oauth_real_test.yml:54:            outputs/reports/RELATORIO_DRIVE_API_OAUTH_4_31B.md
+.github/workflows/rodada_4_32_aimm_minimum_integrated_pipeline.yml:46:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_32_aimm_minimum_integrated_pipeline.yml:54:            outputs/reports/RELATORIO_AIMM_PIPELINE_MINIMO_INTEGRADO_4_32.md
+.github/workflows/rodada_4_33_operational_controlled_input_test.yml:47:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_33_operational_controlled_input_test.yml:55:            outputs/reports/RELATORIO_AIMM_OPERACIONAL_CONTROLADO_4_33.md
+.github/workflows/rodada_4_34_preliminary_controlled_score.yml:48:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_34_preliminary_controlled_score.yml:56:            outputs/reports/RELATORIO_AIMM_SCORE_PRELIMINAR_CONTROLADO_4_34.md
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:1:name: rodada-4-35-end-to-end-controlled-executive-report
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:9:      - "data/manual/aimm/aimm_executive_report_config_4_35.csv"
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:10:      - "scripts/rodada_4_35_end_to_end_controlled_executive_report.py"
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:11:      - ".github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml"
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:17:  end-to-end-controlled-executive-report:
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:18:    name: end-to-end-controlled-executive-report
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:46:        run: python scripts/rodada_4_35_end_to_end_controlled_executive_report.py
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:49:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:51:          name: rodada-4-35-end-to-end-controlled-executive-report-fito-amazonia
+.github/workflows/rodada_4_35_end_to_end_controlled_executive_report.yml:55:            outputs/reports/RELATORIO_EXECUTIVO_AIMM_4_35.md
+.github/workflows/rodada_4_36_demo_usage_handoff_package.yml:46:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_36_demo_usage_handoff_package.yml:54:            outputs/reports/RELATORIO_AIMM_PACOTE_CONGELADO_4_36.md
+.github/workflows/rodada_4_37_operational_interface_inputs.yml:123:          python -m pip install google-api-python-client google-auth google-auth-oauthlib pypdf python-docx
+.github/workflows/rodada_4_37_operational_interface_inputs.yml:130:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_37_operational_interface_inputs.yml:136:            outputs/reports/RELATORIO_TECNICO_PROFISSIONAL_AIMM_4_37.md
+.github/workflows/rodada_4_37_operational_interface_inputs.yml:137:            outputs/reports/RELATORIO_EXECUTIVO_IFC_AIMM_4_37.md
+.github/workflows/rodada_4_38_final_ifc_aimm_operational_package.yml:126:          python -m pip install google-api-python-client google-auth google-auth-oauthlib pypdf python-docx
+.github/workflows/rodada_4_38_final_ifc_aimm_operational_package.yml:133:        uses: actions/upload-artifact@v4
+.github/workflows/rodada_4_38_final_ifc_aimm_operational_package.yml:139:            outputs/reports/RELATORIO_TECNICO_PROFISSIONAL_IFC_AIMM_4_38.md
+.github/workflows/rodada_4_38_final_ifc_aimm_operational_package.yml:140:            outputs/reports/RELATORIO_EXECUTIVO_IFC_AIMM_4_38.md
+.github/workflows/rodada_4_38_final_ifc_aimm_operational_package.yml:141:            outputs/reports/GUIA_USO_FINAL_IFC_AIMM_4_38.md
+.github/workflows/species_selection.yml:42:        uses: actions/upload-artifact@v4
+.github/workflows/system_freeze_index.yml:44:        uses: actions/upload-artifact@v4
+.github/workflows/teste_funcional_query_plan.yml:31:        uses: actions/upload-artifact@v4
+.github/workflows/validar_bases.yml:33:        uses: actions/upload-artifact@v4
+AUDIT_FUNCIONALIDADES.md:175:"trecho_original_ou_descricao": f"Indicadores processados: {len(indicator_scores)}; dimensões: {len(dimension_scores)}; bloqueios: {len(blockers)}; score estrutural preliminar: {overall.[...]
+AUDIT_FUNCIONALIDADES.md:179:    f"Indicadores processados: {len(indicator_scores)}; "
+AUDIT_FUNCIONALIDADES.md:296:│  (CSV export, evidence recording, report generation)        │
+AUDIT_FUNCIONALIDADES.md:302:│  (OAuth upload, webhook notifications)                      │
+Caddyfile:10:    handle_path /api/* {
+Caddyfile.local:8:	handle_path /api/* {
+PHASE-CLOSE.md:7:Segurança de rota OK: GET /api/worldbank/countries sem token => 401
+PHASE-CLOSE.md:8:Fluxo autenticado OK: GET /api/worldbank/countries com Bearer token => 200
+README-local.md:128:- `scripts/worldbank_examples.ps1`
+README.md:76:- `aimm_dashboard.py`
+README.md:113:- `data/processed/wb/indicator_metadata.csv`
+README.md:114:- `data/processed/wb/reports/*.log`
+README.md:115:- `data/processed/wb/reports/MAPPING_CHECK_REPORT.md`
+README.md:131:- `scripts/wb/fetch-indicator-metadata.ps1`
+README.md:132:- `scripts/wb/run-mapping-pipeline.ps1`
+README.md:133:- `scripts/wb/build-mapping-check-report.ps1`
+README.md:135:- `scripts/wb/validate-indicator-code.ps1`
+README.md:141:- motores AIMM (`aimm_engine.yml`, `aimm_dashboard.yml`, etc.)
+app.py:28:WORLDBANK_API_URL = os.getenv("WORLDBANK_API_URL", "https://api.worldbank.org/v2").rstrip("/")
+app.py:46:def parse_worldbank_response(response: requests.Response):
+app.py:77:def call_worldbank(path: str, params: dict):
+app.py:82:        meta, items, parse_error = parse_worldbank_response(response)
+app.py:158:@app.route("/worldbank/countries", methods=["GET"])
+app.py:162:    GET /worldbank/countries?per_page=50&page=1
+app.py:173:    meta, items, err = call_worldbank("/country", params)
+app.py:191:@app.route("/worldbank/indicators", methods=["GET"])
+app.py:193:def get_indicators():
+app.py:195:    GET /worldbank/indicators?search=gdp&per_page=50&page=1
+app.py:207:    meta, items, err = call_worldbank("/indicator", params)
+app.py:230:@app.route("/worldbank/data/<country>/<indicator>", methods=["GET"])
+app.py:232:def get_country_indicator(country: str, indicator: str):
+app.py:234:    GET /worldbank/data/BR/SP.POP.TOTL?date=2010:2024
+app.py:237:    indicator = (indicator or "").strip()
+app.py:241:    if not indicator:
+app.py:244:    logger.info(f"📤 Consultando World Bank: {country} / {indicator}...")
+app.py:254:    path = f"/country/{country}/indicator/{indicator}"
+app.py:255:    meta, items, err = call_worldbank(path, params)
+app.py:260:        logger.warning(f"⚠️ Nenhum dado encontrado para {country}/{indicator}")
+app.py:264:            "indicator": indicator,
+app.py:265:            "message": "No data available for this country/indicator combination"
+app.py:271:    indicator_info = first_item.get("indicator", {}) if isinstance(first_item, dict) else {}
+app.py:302:        "indicator": {
+app.py:303:            "code": indicator,
+app.py:304:            "name": indicator_info.get("value", "Unknown")
+config/aimm_alignment_rules.yaml:60:  - "Revisão visual humana pendente continua bloqueando circulação externa."
+config/aimm_communication_rules.yaml:1:# Rodada 4.18 — pacote editável de comunicação e visualização do dashboard
+config/aimm_communication_rules.yaml:22:  base_calculo: "Rodada 4.17 — aimm-dashboard"
+config/aimm_communication_rules.yaml:33:regras_visualizacao:
+config/aimm_communication_rules.yaml:34:  - "Todo arquivo visual deve conter a trava de score preliminar."
+config/aimm_dashboard_rules.yaml:24:    - "data/processed/aimm_dashboard_cards.csv"
+config/aimm_dashboard_rules.yaml:25:    - "data/processed/aimm_dashboard_dimension_view.csv"
+config/aimm_dashboard_rules.yaml:29:    - "outputs/reports/aimm_executive_summary.md"
+config/aimm_dashboard_rules.yaml:30:    - "outputs/reports/aimm_dashboard_payload.json"
+config/aimm_dashboard_rules.yaml:32:    - "data/evidence/evidence_aimm_dashboard.csv"
+config/aimm_engine_rules.yaml:62:  - "data/processed/benchmark_gap_report.csv"
+config/aimm_publication_rules.yaml:3:# Finalidade: gerar mapa de arquivamento, checklist visual e pacote operacional.
+config/aimm_publication_rules.yaml:19:  revisao_visual: "Fito_Mais_Amazonia/08_revisao_visual"
+config/aimm_publication_rules.yaml:29:  - "A revisão visual humana é obrigatória antes de circulação externa."
+config/aimm_publication_rules.yaml:33:criterios_revisao_visual:
+config/gis_territory_rules.yaml:51:  - "data/processed/gis/gis_indicator_registry.csv"
+config/gis_territory_rules.yaml:52:  - "data/processed/gis/gis_readiness_report.csv"
+config/gis_territory_rules.yaml:55:  - "outputs/reports/RELATORIO_GIS_ESTRUTURAL.md"
+config/round_4_19_closure_rules.yaml:11:  - "Lacuna de revisão visual humana registrada."
+config/round_4_19_closure_rules.yaml:23:  - "A revisão visual humana permanece pendente até preenchimento manual do checklist."
+config/round_4_19_closure_rules.yaml:29:    tema: "revisao_visual_humana"
+config/round_4_19_closure_rules.yaml:30:    descricao: "Checklist de revisão visual permanece pendente."
+data/evidence/evidence_registry.csv:2:EVD_AIMM_001;SRC_IFC_AIMM_MEDICAO_IMPACTO;todos_os_indicadores_aimm;metodológica;Confirmar base AIMM de lacuna, intensidade e benchmarks;arquivo_anexo_How_IFC_Measures_the_Development_Impact_of_Its_Interventions.pdf;How IFC Measures the Development Impact of Its Interventions;página 4;"Reservatório de mais de 500 indicadores de lacuna e quase 600 indicadores de intensidade em 27 frameworks setoriais; normalização e benchmarks criados com dados e expertise IFC/Banco Mundial/fontes externas reconhecidas.";Justifica a criação de dicionário próprio de indicadores, source_registry e evidence_registry para a calculadora AIMM Adaptada.;"mais de 500 indicadores de lacuna; quase 600 indicadores de intensidade; 27 frameworks";número;documento institucional;global;leitura manual do anexo;alto;2026-06-29;ChatGPT;conferido;Os frameworks completos internos não estão integralmente publicados.;Base metodológica da arquitetura de dados;validada
+data/evidence/evidence_registry.csv:3:EVD_AIMM_002;SRC_IFC_AIMM_NOTA_GERAL;todos_os_indicadores_aimm;metodológica;Confirmar avaliação por resultados de projeto e mercado;arquivo_anexo_aimm-general-guidance-note.pdf;AIMM Guidance Note;seções Architecture, Assigning Ratings, Monitoring;AIMM avalia resultados de projeto e resultados de mercado, com ratings qualitativos, ajuste de risco e conversão em score.;Justifica separar dicionário entre lacuna, intensidade, mercado, risco e monitoramento.;não aplicável;conceito;Março de 2026;global;leitura manual do anexo;alto;2026-06-29;ChatGPT;conferido;Não substitui frameworks setoriais internos completos.;Base para regras do score e monitoramento;validada
+data/evidence/evidence_registry.csv:6:EVD_DRIVE_001;SRC_EVIDENCE_REGISTRY;armazenamento_drive;implementação;Registrar método de upload ao Google Drive;https://developers.google.com/workspace/drive/api/guides/manage-uploads;Google Drive API - Upload file data;documentação oficial;A API permite upload de arquivos no Drive usando files.create e uploadType apropriado.;Justifica usar Drive API para armazenar artefatos da calculadora.;"files.create; uploadType";texto;2026;global;busca web;alto;2026-06-29;ChatGPT;conferido;Autenticação deve ser definida separadamente.;Sincronização com Google Drive;validada
+data/evidence/evidence_registry.csv:7:EVD_API_IBGE_001;SRC_IBGE_API;"GAP_TERR;GAP_AGRO";fonte de dados;Registrar API para linha de base territorial;https://servicodados.ibge.gov.br/api/docs/agregados?versao=3;API de dados agregados do IBGE;documentação oficial;API de dados agregados do IBGE permite consulta a agregados, localidades, metadados, períodos e variáveis.;Fonte para baseline municipal e indicadores territoriais.;API agregados;API;2026;Brasil/municípios;busca web;alto;2026-06-29;ChatGPT;conferido;Exige escolha correta de tabelas SIDRA.;Coleta automatizada de baseline;validada
+data/manual/aimm/aimm_operational_input_manifest_4_33.csv:1:codigo_ibge;nm_mun;nm_uf;sigla_uf;area_km2;pacote_gis_validado;pacote_ingestao_validado;pacote_benchmark_validado;drive_api_oauth_validada;observacao
+data/manual/aimm/aimm_preliminary_score_weights_4_34.csv:3:ingestao_arquivos;pacote_ingestao_validado;20;sim;Valida se o módulo de ingestão de arquivos foi criado e testado
+data/manual/gis/gis_manaus_visual_validation_seed.csv:2:4.22-D;Manaus;1302603;municipio_manaus_1302603_atributos_relacional.gpkg;fito_aimm_manaus_4_22_d_validacao_visual.qgz;09_gis;09_gis/04_outputs/rodada_4_22_D_validacao_visual;sim;CD_MUN;codigo_ibge;sim;sim;nao;print_4_22_d_01_mapa_manaus.png;print_4_22_d_02_tabela_aimm_manaus_atributos.png;print_4_22_d_03_join_campos_aimm_validado.png;validado;Validacao visual QGIS 3.40.14 concluida com join CD_MUN igual codigo_ibge e campos aimm preenchidos
+data/reference/aimm_dashboard_cards_seed.csv:5:CARD_004;Indicadores processados;processo;aimm_indicator_scores.csv;count;Contar indicadores processados.
+data/reference/aimm_dashboard_cards_seed.csv:7:CARD_006;Bloqueios/lacunas ativos;bloqueio;aimm_blockers_report.csv;count;Contar bloqueios ativos.
+data/reference/aimm_indicator_alignment_seed.csv:1:indicator_id;nome_indicador;dimensao_canonica;subdimensao;eixo_analitico;tema_transversal;benchmark_status;status_uso;justificativa_uso
+data/reference/aimm_next_actions_seed.csv:8:ACT_007;Criar pacote de outputs editáveis e painel visual;monitoramento;média;Melhorar comunicação do resultado e auditoria da calculadora.;Rodada 4.17
+data/reference/aimm_publication_drive_map_seed.csv:4:aimm_visual_outputs_index.csv;Fito_Mais_Amazonia/04_bases_processadas;csv_base;índice de outputs visuais;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:7:aimm_dashboard_executivo.html;Fito_Mais_Amazonia/05_relatorios;html_editavel;painel executivo autocontido;obrigatorio_revisao_visual
+data/reference/aimm_publication_drive_map_seed.csv:8:aimm_dashboard_cards.svg;Fito_Mais_Amazonia/05_relatorios;svg_editavel;painel visual editável;obrigatorio_revisao_visual
+data/reference/aimm_publication_drive_map_seed.csv:9:aimm_dashboard_flow.mmd;Fito_Mais_Amazonia/05_relatorios;mermaid_editavel;fluxo editável da calculadora;obrigatorio_revisao_visual
+data/reference/aimm_publication_drive_map_seed.csv:11:aimm_communication_payload.json;Fito_Mais_Amazonia/05_relatorios;json_payload;payload para visualização futura;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:14:aimm_visual_layout_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed de layout visual;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:16:aimm_visual_review_checklist.csv;Fito_Mais_Amazonia/08_revisao_visual;csv_revisao;checklist de revisão visual humana;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:17:aimm_publication_readiness_report.csv;Fito_Mais_Amazonia/08_revisao_visual;csv_revisao;relatório de prontidão de publicação;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:18:README_PUBLICACAO_DRIVE.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_publicacao;orientações de publicação no Drive;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:19:REVISAO_VISUAL_HUMANA.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_revisao;orientações de revisão visual;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:20:PACOTE_PUBLICACAO_INDEX.html;Fito_Mais_Amazonia/08_revisao_visual;html_indice;índice local do pacote de publicação;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:21:drive_upload_instructions.md;Fito_Mais_Amazonia/08_revisao_visual;markdown_instrucoes;instruções de upload para o Drive;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:22:aimm_publication_payload.json;Fito_Mais_Amazonia/08_revisao_visual;json_payload;payload da Rodada 4.19-A;obrigatorio
+data/reference/aimm_publication_drive_map_seed.csv:25:aimm_visual_review_checklist_seed.csv;Fito_Mais_Amazonia/00_configuracao;csv_seed;seed do checklist visual;obrigatorio
+data/reference/aimm_visual_layout_seed.csv:1:﻿id_visual;codigo_visual;arquivo_saida;formato;descricao;editabilidade
+data/reference/aimm_visual_layout_seed.csv:2:VIZ_001;html_executivo;outputs/visuals/aimm_dashboard_executivo.html;HTML;Painel executivo autocontido.;editável em qualquer editor de texto
+data/reference/aimm_visual_layout_seed.csv:3:VIZ_002;svg_painel;outputs/visuals/aimm_dashboard_cards.svg;SVG;Cards e fluxo visual em vetores/texto.;editável em Inkscape, draw.io ou editor SVG
+data/reference/aimm_visual_layout_seed.csv:4:VIZ_003;mermaid_fluxo;outputs/visuals/aimm_dashboard_flow.mmd;Mermaid;Fluxo lógico da calculadora.;editável como texto
+data/reference/aimm_visual_layout_seed.csv:5:VIZ_004;roteiro_markdown;outputs/reports/aimm_communication_brief.md;Markdown;Roteiro de fala e briefing executivo.;editável como texto
+data/reference/aimm_visual_layout_seed.csv:6:VIZ_005;payload_visual;outputs/reports/aimm_communication_payload.json;JSON;Payload de comunicação para visualização futura.;editável como dados
+data/reference/aimm_visual_review_checklist_seed.csv:2:REV_001;HTML executivo;aimm_dashboard_executivo.html;Legibilidade;Todos os textos estão legíveis sem zoom excessivo.;pendente;
+data/reference/aimm_visual_review_checklist_seed.csv:3:REV_002;HTML executivo;aimm_dashboard_executivo.html;Trava metodológica;A frase de que não é score AIMM final aparece claramente.;pendente;
+data/reference/aimm_visual_review_checklist_seed.csv:4:REV_003;HTML executivo;aimm_dashboard_executivo.html;Bloqueios;Bloqueios, lacunas e próximas ações aparecem no conteúdo.;pendente;
+data/reference/aimm_visual_review_checklist_seed.csv:5:REV_004;SVG cards;aimm_dashboard_cards.svg;Editabilidade;Abrir em draw.io ou Inkscape e confirmar que o arquivo permanece editável.;pendente;
+data/reference/aimm_visual_review_checklist_seed.csv:6:REV_005;SVG cards;aimm_dashboard_cards.svg;Sem truncamento;Nenhum texto está cortado, sobreposto ou ilegível.;pendente;
+data/reference/aimm_visual_review_checklist_seed.csv:7:REV_006;Mermaid;aimm_dashboard_flow.mmd;Editabilidade;Arquivo abre como texto e pode ser copiado e editado.;pendente;
+data/reference/calculator_layers_map_seed.csv:2:L1;camada_1_aimm;gap;lacunas de desenvolvimento;"indicator_dictionary.csv; benchmark_registry.csv; evidence_registry.csv";gap_score;4.11
+data/reference/drive_archive_manifest_seed.csv:20:4.9-A;ART-4.9-003;pre_diligencia_manual_validation_report.csv;Fito_Mais_Amazonia/06_logs;extrair_e_arquivar_arquivo;não;validado
+data/reference/gis_indicator_registry_seed.csv:1:gis_indicator_id;nome_indicador;grupo;camadas_necessarias;metodo_calculo;unidade;uso_aimm;status_uso;trava
+data/reference/master_artifact_index_seed.csv:20:4.9-A;ART-4.9-003;pre_diligencia_manual_validation_report.csv;log_validacao;artefato pre-diligencia-manual-validation;data/processed/pre_diligencia_manual_validation_report.csv;Fito_Mais_Amazonia/06_logs;opcional;sim;validado
+data/reference/operational_gaps_register_seed.csv:6:LAC-OP-005;Google Drive não automatizado como backend;Sistema geral;"Arquivamento ainda manual; sem upload automático por credencial.";bloqueia armazenamento automatizado completo;média;ativa;Planejar service account/secret ou manter procedimento manual controlado.
+data/reference/round_4_19_archive_expected_seed.csv:4:ARC_419A_003;4.19-A;aimm_visual_review_checklist.csv;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+data/reference/round_4_19_archive_expected_seed.csv:5:ARC_419A_004;4.19-A;aimm_publication_readiness_report.csv;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+data/reference/round_4_19_archive_expected_seed.csv:6:ARC_419A_005;4.19-A;README_PUBLICACAO_DRIVE.md;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+data/reference/round_4_19_archive_expected_seed.csv:7:ARC_419A_006;4.19-A;REVISAO_VISUAL_HUMANA.md;Fito_Mais_Amazonia/08_revisao_visual;pendente_confirmacao;nao_verificado_nesta_rodada;Arquivo esperado da 4.19-A.
+data/reference/round_4_19_archive_expected_seed.csv:8:ARC_419B_001;4.19-B;rodada-4-19-b-visual-review-fito-amazonia.zip;Fito_Mais_Amazonia/07_versoes_congeladas;verificado;conector_google_drive;Arquivo encontrado em 07_versoes_congeladas.
+data/reference/round_4_19_archive_expected_seed.csv:9:ARC_419B_002;4.19-B;aimm_visual_review_final_status.csv;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+data/reference/round_4_19_archive_expected_seed.csv:10:ARC_419B_003;4.19-B;aimm_visual_review_acceptance_report.csv;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+data/reference/round_4_19_archive_expected_seed.csv:11:ARC_419B_004;4.19-B;REVISAO_VISUAL_RESULTADO.md;Fito_Mais_Amazonia/08_revisao_visual;verificado;conector_google_drive;Arquivo encontrado em 08_revisao_visual.
+data/reference/round_4_19_archive_expected_seed.csv:12:ARC_419B_005;4.19-B;teste_aimm_visual_review_4_19_b.txt;Fito_Mais_Amazonia/06_logs;verificado;conector_google_drive;Arquivo encontrado em 06_logs.
+data/reference/source_registry.csv:2:SRC_IFC_AIMM_MEDICAO_IMPACTO;How IFC Measures the Development Impact of Its Interventions;Documento metodológico anexo;IFC / World Bank Group;arquivo_anexo_How_IFC_Measures_the_Development_Impact_of_Its_Interventions.pdf;;Global / IFC;Documento institucional sem série temporal;quando houver nova versão IFC;PDF;Base metodológica para AIMM, lacunas, intensidade, risco e monitoramento;todos_os_indicadores_aimm;alto;arquivo local/anexo;não;"página; seção; trecho; conceito AIMM";"extrair conceitos; registrar página; vincular ao indicador aplicável";não contém benchmarks setoriais completos abertos;verificado;2026-06-29;Fonte principal da lógica AIMM e da referência a mais de 500 indicadores de lacuna e quase 600 de intensidade
+data/reference/source_registry.csv:3:SRC_IFC_AIMM_NOTA_GERAL;AIMM Guidance Note;Documento metodológico anexo;IFC / World Bank Group;arquivo_anexo_aimm-general-guidance-note.pdf;;Global / IFC;Março de 2026;quando houver nova versão IFC;PDF;Regra geral de avaliação, ratings, riscos, project outcomes e market outcomes;todos_os_indicadores_aimm;alto;arquivo local/anexo;não;"página; seção; trecho; regra; tabela";"extrair regra; registrar página; vincular ao indicador aplicável";não substitui frameworks setoriais internos completos;verificado;2026-06-29;Base para score, risco, monitoramento e matriz AIMM
+data/reference/source_registry.csv:5:SRC_IFC_AGRONEGOCIO;AIMM Agribusiness Sector Framework;Framework setorial AIMM;IFC / World Bank Group;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-agribusiness-sector-framework.pdf;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-agribusiness-sector-framework.pdf;Global / mercados IFC;versão pública mais recente;eventual;PDF;Indicadores para agricultura, fornecedores, produtividade, assistência técnica, renda e sustentabilidade;"GAP_AGRO; INT_AGRO; INT_BEN";alto;web/PDF;não;"indicadores; unidade; benchmark; seção; página";normalizar por território, espécie, produtor, hectare ou investimento;pode ser sumário público, não framework interno completo;verificado;2026-06-29;Fonte setorial prioritária para cultivo e agroextrativismo
+data/reference/source_registry.csv:6:SRC_IFC_MANUFATURA;AIMM Manufacturing Sector Framework;Framework setorial AIMM;IFC / World Bank Group;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-manufacturing-sector-framework.pdf;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-manufacturing-sector-framework.pdf;Global / mercados IFC;versão pública mais recente;eventual;PDF;Indicadores de processamento, fornecedores, compras locais, valor adicionado, empregos e eficiência industrial;"GAP_QUAL; INT_IND; MERC_COMP";alto;web/PDF;não;"indicadores; unidade; benchmark; seção; página";normalizar por produto, lote, capacidade, investimento e fornecedor;pode ser sumário público, não framework interno completo;verificado;2026-06-29;Fonte setorial prioritária para beneficiamento, extração, IFAV e indústria
+data/reference/source_registry.csv:7:SRC_IFC_SAUDE;AIMM Health Sector Framework Brief;Framework setorial AIMM;IFC / World Bank Group;https://www.ifc.org/content/dam/ifc/doc/2010/aimm-sector-framework-brief-health.pdf;https://www.ifc.org/content/dam/ifc/doc/2010/aimm-sector-framework-brief-health.pdf;Global / mercados IFC;versão pública disponível;eventual;PDF;Indicadores de acesso, qualidade, usuários, serviços, mercado de saúde e rotas sanitárias;"GAP_MERC; INT_SUS; RISK_REG";alto;web/PDF;não;"indicadores; unidade; seção; página";normalizar por usuário, produto, município, Farmácia Viva ou investimento;documento público pode estar em versão sintética;verificado;2026-06-29;Fonte para interface com SUS, Farmácia Viva, acesso e qualidade
+data/reference/source_registry.csv:8:SRC_IFC_CLIMA;AIMM Climate Finance Sector Framework;Framework setorial AIMM;IFC / World Bank Group;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-climate-finance-sector-framework.pdf;https://www.ifc.org/content/dam/ifc/doc/latest/aimm-climate-finance-sector-framework.pdf;Global / mercados IFC;versão pública mais recente;eventual;PDF;Indicadores de mitigação, adaptação, resiliência, emissões e financiamento climático;"GAP_AMB; MERC_SUST; RISK_CLIM";alto;web/PDF;não;"indicadores; unidade; seção; página";normalizar por produto, território, tCO2e, área ou investimento;não cobre toda biodiversidade amazônica específica;verificado;2026-06-29;Fonte para clima, adaptação e sustentabilidade
+data/reference/source_registry.csv:15:SRC_IBGE_API;API de dados agregados do IBGE / SIDRA;API oficial;IBGE;https://servicodados.ibge.gov.br/api/docs/agregados?versao=3;https://servicodados.ibge.gov.br/api/docs/agregados?versao=3;Brasil / municípios / UF;depende da tabela SIDRA;conforme pesquisa;API JSON;Baseline territorial, socioeconômico, agropecuário e população;"GAP_TERR; GAP_AGRO; MON_08";alto;API;não;"tabela; variável; período; localidade; valor; unidade";"padronizar município IBGE; converter unidades; registrar tabela SIDRA";exige seleção correta de tabelas e variáveis;verificado;2026-06-29;Fonte territorial e estatística nacional
+data/reference/source_registry.csv:16:SRC_BANCO_MUNDIAL_API;World Bank Indicators API;API oficial multilateral;World Bank;https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation;https://api.worldbank.org/v2;Global / países;mais de 50 anos para várias séries;variável por indicador;API JSON/XML;Indicadores internacionais para benchmark, clima, economia e comparação;"GAP_AMB; GAP_MERC; benchmarks_proxy";alto;API;não;"indicator; country; year; value; unit; source";"comparar países; calcular percentis; documentar indicador WDI";"nível país; nem sempre serve para município";verificado;2026-06-29;Fonte de benchmark externo
+data/reference/source_registry_benchmark_seed.csv:3:SRC_BENCH_002;World Bank Data;World Bank;Indicadores macro, governança e desenvolvimento;https://data.worldbank.org/;benchmark_publico;medio;Selecionar indicador específico em rodada futura.
+docs/AIMM_WB_DECISION_LOG.md:23:| 2026-07-08 | DEC-001 | CATEGORIA_01 |  | Mapear para WB_CODE_X | Revisar | Necessita validação de unidade e cobertura | https://data.worldbank.org/indicator | Sem efeito até aprovação |  | 2026-08-08 |
+docs/AIMM_WB_MAPPING_MATRIX.csv:1:"categoria_idx","categoria_aimm","id_aimm","nome_aimm","dimensao_aimm","definicao_aimm","codigo_wb","nome_wb_oficial","source_id","source_name","unit","periodicidade","topics_wb_ids","topics_wb_names","tipo_vinculo","confiabilidade","justificativa_tecnica","pais_cobertura","serie_inicio","serie_fim","ultimo_ano_disponivel","status","owner_revisao","data_revisao","observacoes"
+docs/AIMM_WB_MAPPING_MATRIX_TEMPLATE.csv:1:"categoria_idx","categoria_aimm","id_aimm","nome_aimm","dimensao_aimm","definicao_aimm","codigo_wb","nome_wb_oficial","source_id","source_name","unit","periodicidade","topics_wb_ids","topics_wb_names","tipo_vinculo","confiabilidade","justificativa_tecnica","pais_cobertura","serie_inicio","serie_fim","ultimo_ano_disponivel","status","owner_revisao","data_revisao","observacoes"
+docs/INTERFACE_INTEGRATION_PLAN.md:13:- Portal WB Indicators: https://data.worldbank.org/indicator
+docs/INTERFACE_INTEGRATION_PLAN.md:16:- Indicador por código: `https://api.worldbank.org/v2/indicator/{CODE}?format=json`
+docs/INTERFACE_INTEGRATION_PLAN.md:17:- Tópicos: `https://api.worldbank.org/v2/topic?format=json`
+docs/INTERFACE_INTEGRATION_PLAN.md:18:- Indicadores por tópico: `https://api.worldbank.org/v2/topic/{TOPIC_ID}/indicator?format=json`
+docs/INTERFACE_INTEGRATION_PLAN.md:19:- Indicadores WDI (source 2): `https://api.worldbank.org/v2/source/2/indicator/{CODE}?format=json`
+docs/INTERFACE_INTEGRATION_PLAN.md:23:- `indicator.json` e `{CODE}.json`: inválidos por placeholder `{CODE}` não substituído (erro id=120).
+docs/PLANO_REFATORACAO_PRS.md:67:| **Objetivo** | Definir estrutura-alvo para `src/` (ex.: `src/api/`, `src/services/`, `src/domain/`, `src/infra/`) e reorganizar módulos existentes |
+docs/PROPOSTA_REORGANIZACAO.md:120:│       ├── api/                        ← (futuro) rotas e handlers
+docs/index.html:56:      Esta interface não guarda dados e não recebe upload direto. Ela prepara a execução sem expor credenciais. O processamento real ocorre no workflow protegido do GitHub Actions.
+run-local.ps1:112:	handle_path /api/* {
+run-local.ps1:166:$apiUrl    = "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1"
+run-local.ps1:177:Write-Host "/api/worldbank/countries        => $u (esperado 401)"
+run-local.ps1:178:Write-Host "/api/... com Bearer token       => $b (esperado 200 ou 502 se backend cair)"
+scripts/rodada_4_19_a_publication.py:11:REVIEW_SEED = Path("data/reference/aimm_visual_review_checklist_seed.csv")
+scripts/rodada_4_19_a_publication.py:14:OUT_CHECKLIST = Path("data/processed/aimm_visual_review_checklist.csv")
+scripts/rodada_4_19_a_publication.py:15:OUT_READINESS = Path("data/processed/aimm_publication_readiness_report.csv")
+scripts/rodada_4_19_a_publication.py:22:OUT_UPLOAD_INSTRUCTIONS = Path("outputs/publication/drive_upload_instructions.md")
+scripts/rodada_4_19_a_publication.py:50:                "status_publicacao": "pendente_upload_drive",
+scripts/rodada_4_19_a_publication.py:57:    visual_required = sum(1 for row in drive_map if "revisao" in row["obrigatoriedade"])
+scripts/rodada_4_19_a_publication.py:68:            "checagem": "checklist_revisao_visual",
+scripts/rodada_4_19_a_publication.py:71:            "mensagem": "Checklist de revisão visual gerado e pendente de preenchimento manual.",
+scripts/rodada_4_19_a_publication.py:74:            "checagem": "itens_revisao_visual_obrigatoria",
+scripts/rodada_4_19_a_publication.py:76:            "valor": str(visual_required),
+scripts/rodada_4_19_a_publication.py:83:            "mensagem": "Pendências de revisão visual ainda não resolvidas.",
+scripts/rodada_4_19_a_publication.py:100:        "Este pacote organiza os arquivos da Rodada 4.19-A para arquivamento no Google Drive e revisão visual humana.",
+scripts/rodada_4_19_a_publication.py:111:        "4. Preencher o checklist de revisão visual humana.",
+scripts/rodada_4_19_a_publication.py:134:        "**A revisão visual não aprova score AIMM final. Ela apenas verifica a qualidade comunicacional e operacional dos arquivos.**",
+scripts/rodada_4_19_a_publication.py:151:            "A revisão visual só deve ser considerada concluída quando todos os itens estiverem como `ok` ou `ok_com_observacao`.",
+scripts/rodada_4_19_a_publication.py:157:def build_upload_instructions(drive_map: list[dict[str, str]]) -> str:
+scripts/rodada_4_19_a_publication.py:159:        "# Instruções de upload para o Drive",
+scripts/rodada_4_19_a_publication.py:208:<h2>Checklist de revisão visual</h2>
+scripts/rodada_4_19_a_publication.py:215:<p>O pacote está pronto para arquivamento operacional, mas permanece pendente de revisão visual humana.</p>
+scripts/rodada_4_19_a_publication.py:235:    OUT_UPLOAD_INSTRUCTIONS.write_text(build_upload_instructions(drive_map), encoding="utf-8")
+scripts/rodada_4_19_a_publication.py:241:        "visual_review_checklist": checklist,
+scripts/rodada_4_19_a_publication.py:243:        "trava": "Publicação e revisão visual não liberam score AIMM final.",
+scripts/rodada_4_19_a_publication.py:250:            "tipo_evidencia": "pacote_drive_revisao_visual",
+scripts/rodada_4_19_a_publication.py:255:            "status_conferencia": "pendente_upload_drive_e_revisao_visual_humana",
+scripts/rodada_4_19_a_publication.py:256:            "limitacoes": "Arquivamento no Drive é externo ao GitHub Actions; revisão visual deve ser feita manualmente.",
+scripts/rodada_4_19_a_publication.py:263:        "visual_review_checklist": OUT_CHECKLIST,
+scripts/rodada_4_19_a_publication.py:264:        "publication_readiness_report": OUT_READINESS,
+scripts/rodada_4_19_a_publication.py:266:        "revisao_visual_humana": OUT_REVIEW_MD,
+scripts/rodada_4_19_a_publication.py:268:        "drive_upload_instructions": OUT_UPLOAD_INSTRUCTIONS,
+scripts/rodada_4_19_a_publication.py:279:            "uso": "pacote local/Drive de publicação e revisão visual humana",
+scripts/rodada_4_19_a_publication.py:298:            f"Itens de revisão visual humana: {len(checklist)}",
+scripts/rodada_4_19_a_publication.py:302:            "O pacote local/Drive de publicação e revisão visual humana foi gerado e validado estruturalmente.",
+scripts/rodada_4_19_a_publication.py:304:            "Trava: publicação no Drive e revisão visual não liberam score AIMM final nem decisões executivas.",
+scripts/rodada_4_19_b_visual_review.py:7:INPUT_COMPLETED = Path("data/manual/aimm_visual_review_checklist_completed.csv")
+scripts/rodada_4_19_b_visual_review.py:8:INPUT_TEMPLATE = Path("data/reference/aimm_visual_review_checklist_seed.csv")
+scripts/rodada_4_19_b_visual_review.py:10:OUT_STATUS = Path("data/processed/aimm_visual_review_final_status.csv")
+scripts/rodada_4_19_b_visual_review.py:11:OUT_REPORT = Path("data/processed/aimm_visual_review_acceptance_report.csv")
+scripts/rodada_4_19_b_visual_review.py:13:OUT_LOG = Path("outputs/logs/teste_aimm_visual_review_4_19_b.txt")
+scripts/rodada_4_19_b_visual_review.py:59:    report_rows: list[dict[str, str]] = []
+scripts/rodada_4_19_b_visual_review.py:83:        report_rows.append(
+scripts/rodada_4_19_b_visual_review.py:103:        situacao = "revisao_visual_concluida"
+scripts/rodada_4_19_b_visual_review.py:119:            "observacao": "Revisao visual e controle de aceitacao nao substituem validacao tecnica, regulatoria, orcamentaria ou executiva.",
+scripts/rodada_4_19_b_visual_review.py:124:    write_csv(OUT_REPORT, report_rows)
+scripts/rodada_4_19_b_visual_review.py:150:                "A revisão visual humana ainda não foi concluída.",
+scripts/rodada_4_19_b_visual_review.py:152:                "Isto é esperado quando ainda não existe o arquivo manual `data/manual/aimm_visual_review_checklist_completed.csv`.",
+scripts/rodada_4_19_b_visual_review.py:155:    elif situacao == "revisao_visual_concluida":
+scripts/rodada_4_19_b_visual_review.py:156:        md_lines.append("A revisão visual foi concluída sem pendências ou reprovações.")
+scripts/rodada_4_19_b_visual_review.py:167:            "A revisão visual não libera score AIMM final, orçamento, OSCs, espécies, produtos ou rotas regulatórias.",
+scripts/rodada_4_19_b_visual_review.py:189:        "A validação da revisão visual humana foi processada estruturalmente.",
+scripts/rodada_4_19_b_visual_review.py:191:        "Trava: revisão visual não libera score AIMM final nem decisões executivas.",
+scripts/rodada_4_19_b_visual_review.py:200:        raise ValueError("Há status inválido no checklist de revisão visual.")
+scripts/rodada_4_19_c_closure.py:16:OUT_REPORT = Path("outputs/reports/ENCERRAMENTO_FORMAL_RODADA_4_19.md")
+scripts/rodada_4_19_c_closure.py:51:            "tema": "revisao_visual_humana",
+scripts/rodada_4_19_c_closure.py:52:            "descricao": "A revisão visual humana permanece pendente. A 4.19-B validou estruturalmente o checklist, mas não substitui revisão manual.",
+scripts/rodada_4_19_c_closure.py:55:            "acao_recomendada": "Preencher data/manual/aimm_visual_review_checklist_completed.csv e reexecutar rodada-4-19-b-visual-review.",
+scripts/rodada_4_19_c_closure.py:95:                "acao_recomendada": "Confirmar upload dos artefatos pendentes no Drive ou manter pendência registrada.",
+scripts/rodada_4_19_c_closure.py:150:def build_report(
+scripts/rodada_4_19_c_closure.py:167:        f"- Revisão visual humana: `{status['revisao_visual_humana']}`",
+scripts/rodada_4_19_c_closure.py:224:            "- A revisão visual humana segue pendente.",
+scripts/rodada_4_19_c_closure.py:253:            "revisao_visual_humana": "pendente",
+scripts/rodada_4_19_c_closure.py:274:            "limitacoes": "Verificação Drive automatizada limitada aos itens listados pelo conector. Revisão visual humana permanece pendente.",
+scripts/rodada_4_19_c_closure.py:286:        build_report(archive_rows, status_rows, gaps, next_rounds),
+scripts/rodada_4_20_aimm_alignment.py:9:ALIGNMENT = Path("data/reference/aimm_indicator_alignment_seed.csv")
+scripts/rodada_4_20_aimm_alignment.py:12:OUT_ALIGN = Path("data/processed/aimm_indicator_alignment_registry.csv")
+scripts/rodada_4_20_aimm_alignment.py:13:OUT_VALIDATION = Path("data/processed/aimm_alignment_validation_report.csv")
+scripts/rodada_4_20_aimm_alignment.py:16:OUT_REPORT = Path("outputs/reports/RELATORIO_ALINHAMENTO_AIMM.md")
+scripts/rodada_4_20_aimm_alignment.py:98:                    "indicator_id": row.get("indicator_id", ""),
+scripts/rodada_4_20_aimm_alignment.py:109:                    "indicator_id": row.get("indicator_id", ""),
+scripts/rodada_4_20_aimm_alignment.py:119:                "indicator_id": row.get("indicator_id", ""),
+scripts/rodada_4_20_aimm_alignment.py:135:def build_report(
+scripts/rodada_4_20_aimm_alignment.py:175:            f"| {row['indicator_id']} — {row['nome_indicador']} | "
+scripts/rodada_4_20_aimm_alignment.py:223:        build_report(dimensions, alignment, validation, blockers),
+scripts/rodada_4_21_gis_registry.py:9:INDICATORS = Path("data/reference/gis_indicator_registry_seed.csv")
+scripts/rodada_4_21_gis_registry.py:12:OUT_INDICATORS = Path("data/processed/gis/gis_indicator_registry.csv")
+scripts/rodada_4_21_gis_registry.py:13:OUT_READINESS = Path("data/processed/gis/gis_readiness_report.csv")
+scripts/rodada_4_21_gis_registry.py:16:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_ESTRUTURAL.md")
+scripts/rodada_4_21_gis_registry.py:102:def validate_indicators(rows: list[dict[str, str]]) -> list[dict[str, str]]:
+scripts/rodada_4_21_gis_registry.py:130:def build_gaps(layers: list[dict[str, str]], indicators: list[dict[str, str]]) -> list[dict[str, str]]:
+scripts/rodada_4_21_gis_registry.py:147:    for row in indicators:
+scripts/rodada_4_21_gis_registry.py:151:                    "id_lacuna": f"GAP_{row['gis_indicator_id']}",
+scripts/rodada_4_21_gis_registry.py:164:def build_report(
+scripts/rodada_4_21_gis_registry.py:166:    indicators: list[dict[str, str]],
+scripts/rodada_4_21_gis_registry.py:213:    for row in indicators:
+scripts/rodada_4_21_gis_registry.py:215:            f"| {row['gis_indicator_id']} | {row['nome_indicador']} | {row['grupo']} | "
+scripts/rodada_4_21_gis_registry.py:252:    raw_indicators = read_csv(INDICATORS)
+scripts/rodada_4_21_gis_registry.py:255:    indicators = validate_indicators(raw_indicators)
+scripts/rodada_4_21_gis_registry.py:256:    gaps = build_gaps(layers, indicators)
+scripts/rodada_4_21_gis_registry.py:259:    indicator_errors = sum(1 for row in indicators if row["status_validacao"] == "erro")
+scripts/rodada_4_21_gis_registry.py:263:    future_indicators = sum(1 for row in indicators if row["status_uso"] == "calculavel_futuro")
+scripts/rodada_4_21_gis_registry.py:264:    proxy_indicators = sum(1 for row in indicators if row["status_uso"] == "proxy_baixa_confianca")
+scripts/rodada_4_21_gis_registry.py:275:            "indicadores_registrados": str(len(indicators)),
+scripts/rodada_4_21_gis_registry.py:276:            "indicadores_calculaveis_futuros": str(future_indicators),
+scripts/rodada_4_21_gis_registry.py:277:            "indicadores_proxy_baixa_confianca": str(proxy_indicators),
+scripts/rodada_4_21_gis_registry.py:280:            "erros_indicadores": str(indicator_errors),
+scripts/rodada_4_21_gis_registry.py:281:            "status_rodada": "erro" if layer_errors or indicator_errors else "validada_com_lacunas",
+scripts/rodada_4_21_gis_registry.py:300:    write_csv(OUT_INDICATORS, indicators)
+scripts/rodada_4_21_gis_registry.py:307:        build_report(layers, indicators, readiness, gaps),
+scripts/rodada_4_21_gis_registry.py:319:        f"Indicadores GIS registrados: {len(indicators)}",
+scripts/rodada_4_21_gis_registry.py:320:        f"Indicadores calculáveis futuros: {future_indicators}",
+scripts/rodada_4_21_gis_registry.py:321:        f"Indicadores proxy baixa confiança: {proxy_indicators}",
+scripts/rodada_4_21_gis_registry.py:324:        f"Erros de indicador: {indicator_errors}",
+scripts/rodada_4_21_gis_registry.py:337:    if layer_errors or indicator_errors:
+scripts/rodada_4_22_b1_gis_manaus_register.py:14:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_B1.md")
+scripts/rodada_4_22_b1_gis_manaus_register.py:156:def build_report(registry: list[dict[str, str]], gaps: list[dict[str, str]], errors: int) -> str:
+scripts/rodada_4_22_b1_gis_manaus_register.py:242:    OUT_REPORT.write_text(build_report(registry, gaps, errors), encoding="utf-8")
+scripts/rodada_4_22_b2_gis_manaus_isolated_validate.py:16:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_B2.md")
+scripts/rodada_4_22_b2_gis_manaus_isolated_validate.py:157:def build_report(
+scripts/rodada_4_22_b2_gis_manaus_isolated_validate.py:286:    OUT_REPORT.write_text(build_report(registry, gaps, errors, alerts), encoding="utf-8")
+scripts/rodada_4_22_c2_gis_manaus_attribute_recompose_safe.py:18:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_C2.md")
+scripts/rodada_4_22_c2_gis_manaus_attribute_recompose_safe.py:289:            "tipo": "validacao_visual",
+scripts/rodada_4_22_c2_gis_manaus_attribute_recompose_safe.py:291:            "descricao": "Validação visual no QGIS ainda deve ser feita após download do GeoPackage recomposto.",
+scripts/rodada_4_22_c2_gis_manaus_attribute_recompose_safe.py:345:    report = "\n".join(
+scripts/rodada_4_22_c2_gis_manaus_attribute_recompose_safe.py:382:    OUT_REPORT.write_text(report, encoding="utf-8")
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:18:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MANAUS_4_22_C.md")
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:307:            "tipo": "validacao_visual",
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:309:            "descricao": "A recomposição foi estrutural. Validação visual em QGIS deve ser registrada em rodada posterior.",
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:310:            "acao_recomendada": "Abrir o GeoPackage recomposto no QGIS e confirmar visualmente geometria e tabela de atributos.",
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:341:def build_report(
+scripts/rodada_4_22_c_gis_manaus_attribute_recompose.py:428:    OUT_REPORT.write_text(build_report(registry, gaps, errors, alerts), encoding="utf-8")
+scripts/rodada_4_22_e_gis_replication_package.py:21:    "report": Path("outputs/reports/RELATORIO_GIS_REPLICACAO_4_22_E.md"),
+scripts/rodada_4_22_e_gis_replication_package.py:70:7. Fazer join visual no QGIS.
+scripts/rodada_4_22_e_gis_replication_package.py:122:- Sem problema visual grosseiro
+scripts/rodada_4_22_e_gis_replication_package.py:201:        {"arquivo": "Prints de validação visual", "pasta_drive": "09_gis/04_outputs/rodada_municipio_validacao_visual"},
+scripts/rodada_4_22_e_gis_replication_package.py:235:            "acao_recomendada": "Executar validação geométrica e join visual no QGIS para cada novo município",
+scripts/rodada_4_22_e_gis_replication_package.py:243:            "acao_recomendada": "Confirmar arquivamento visualmente pelo operador",
+scripts/rodada_4_22_e_gis_replication_package.py:258:    report = """
+scripts/rodada_4_22_e_gis_replication_package.py:313:    write_text(ARQUIVOS["report"], report)
+scripts/rodada_4_22_gis_baseline_preparacao.py:19:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_BASELINE_PREPARACAO.md")
+scripts/rodada_4_22_gis_baseline_preparacao.py:20:OUT_QGIS = Path("outputs/reports/GUIA_QGIS_3_40_14_MANAUS_4_22B.md")
+scripts/rodada_4_22_gis_baseline_preparacao.py:221:def build_report(status: dict[str, str], gaps: list[dict[str, str]]) -> str:
+scripts/rodada_4_22_gis_baseline_preparacao.py:344:    OUT_REPORT.write_text(build_report(status, gaps), encoding="utf-8")
+scripts/rodada_4_23_gis_module_closure.py:16:OUT_REPORT = Path("outputs/reports/RELATORIO_GIS_MODULO_MANAUS_4_23.md")
+scripts/rodada_4_23_gis_module_closure.py:223:    report = f"""
+scripts/rodada_4_23_gis_module_closure.py:290:    write_text(OUT_REPORT, report)
+scripts/rodada_4_24_aimm_handoff_package.py:22:    "report": Path("outputs/reports/RELATORIO_AIMM_RETOMADA_4_24.md"),
+scripts/rodada_4_24_aimm_handoff_package.py:57:        {"rodada": "4.17", "bloco": "dashboard AIMM", "status": "validada", "resultado": "painel e resumo executivo preliminar"},
+scripts/rodada_4_24_aimm_handoff_package.py:58:        {"rodada": "4.18", "bloco": "comunicacao AIMM", "status": "validada", "resultado": "pacote editavel de comunicacao e visualizacao"},
+scripts/rodada_4_24_aimm_handoff_package.py:60:        {"rodada": "4.19-B", "bloco": "revisao visual", "status": "validada com pendencias", "resultado": "registro de revisao visual humana pendente"},
+scripts/rodada_4_24_aimm_handoff_package.py:68:        {"rodada": "4.22-D", "bloco": "join QGIS", "status": "validada", "resultado": "join visual QGIS confirmado"},
+scripts/rodada_4_24_aimm_handoff_package.py:69:        {"rodada": "4.22-D2", "bloco": "registro validacao visual", "status": "validada", "resultado": "validacao visual QGIS registrada"},
+scripts/rodada_4_24_aimm_handoff_package.py:78:        {"id": "TRAVA_004", "tema": "Drive", "descricao": "Workflows nao verificam binariamente arquivos no Google Drive; arquivamento depende de validacao visual humana.", "status": "ativa"},
+scripts/rodada_4_24_aimm_handoff_package.py:80:        {"id": "TRAVA_006", "tema": "preenchimento manual", "descricao": "Revisao visual humana e alguns insumos manuais seguem como lacunas operacionais registradas.", "status": "ativa"},
+scripts/rodada_4_24_aimm_handoff_package.py:154:- dashboard e comunicação;
+scripts/rodada_4_24_aimm_handoff_package.py:170:- join visual no QGIS confirmado;
+scripts/rodada_4_24_aimm_handoff_package.py:180:- Revisão visual humana segue como lacuna controlada em parte do fluxo.
+scripts/rodada_4_24_aimm_handoff_package.py:242:- O join visual QGIS foi validado.
+scripts/rodada_4_24_aimm_handoff_package.py:253:    report = """
+scripts/rodada_4_24_aimm_handoff_package.py:310:    write_text(FILES["report"], report)
+scripts/rodada_4_25_aimm_technical_manual.py:22:    "report": Path("outputs/reports/RELATORIO_AIMM_MANUAL_TECNICO_4_25.md"),
+scripts/rodada_4_25_aimm_technical_manual.py:82:            "saidas": "baseline GIS Manaus, join visual validado e pacote de replicacao",
+scripts/rodada_4_25_aimm_technical_manual.py:95:            "modulo": "dashboard_comunicacao",
+scripts/rodada_4_25_aimm_technical_manual.py:98:            "saidas": "dashboard, briefing, payload e materiais de comunicacao",
+scripts/rodada_4_25_aimm_technical_manual.py:109:        {"ordem": "5", "etapa": "validar prints e logs", "responsavel": "revisor humano", "saida": "conformidade visual registrada"},
+scripts/rodada_4_25_aimm_technical_manual.py:144:        {"trava_id": "AIMM_425_005", "tema": "Drive", "descricao": "GitHub Actions nao confirma arquivos no Drive", "acao": "manter arquivamento visual humano"},
+scripts/rodada_4_25_aimm_technical_manual.py:205:- dashboard e comunicação;
+scripts/rodada_4_25_aimm_technical_manual.py:255:O GIS validado inclui GeoPackage isolado, tabela relacional e join visual no QGIS.
+scripts/rodada_4_25_aimm_technical_manual.py:344:7. Sempre registrar prints quando houver validação visual.
+scripts/rodada_4_25_aimm_technical_manual.py:353:    report = """
+scripts/rodada_4_25_aimm_technical_manual.py:411:    write_text(FILES["report"], report)
+scripts/rodada_4_26_aimm_short_team_manual.py:21:    "report": Path("outputs/reports/RELATORIO_AIMM_MANUAL_CURTO_EQUIPE_4_26.md"),
+scripts/rodada_4_26_aimm_short_team_manual.py:69:            "uso_pratico": "ainda não há upload/download automático entre GitHub e Drive",
+scripts/rodada_4_26_aimm_short_team_manual.py:74:            "funcionalidade": "Módulo de ingestão de arquivos",
+scripts/rodada_4_26_aimm_short_team_manual.py:97:            "uso_pratico": "baseline territorial Manaus e join visual QGIS",
+scripts/rodada_4_26_aimm_short_team_manual.py:180:            "fluxo_visual": "mermaid_editavel",
+scripts/rodada_4_26_aimm_short_team_manual.py:182:            "ingestao_arquivos": "nao_implementada",
+scripts/rodada_4_26_aimm_short_team_manual.py:195:            "fluxo_visual": "gerado",
+scripts/rodada_4_26_aimm_short_team_manual.py:198:            "ingestao_arquivos": "nao_implementada",
+scripts/rodada_4_26_aimm_short_team_manual.py:201:            "proxima_rodada_descricao": "diagnostico funcional de automacoes, Drive-GitHub e modulos de ingestao",
+scripts/rodada_4_26_aimm_short_team_manual.py:243:        "| Módulo de ingestão de arquivos | não implementado |",
+scripts/rodada_4_26_aimm_short_team_manual.py:350:    report = [
+scripts/rodada_4_26_aimm_short_team_manual.py:361:        "- Fluxo visual editável em Mermaid.",
+scripts/rodada_4_26_aimm_short_team_manual.py:370:        "- Módulo de ingestão de arquivos não implementado.",
+scripts/rodada_4_26_aimm_short_team_manual.py:378:        "Rodada 4.27 — diagnóstico funcional de automações, Drive-GitHub e módulos de ingestão.",
+scripts/rodada_4_26_aimm_short_team_manual.py:386:        "Fluxo visual Mermaid gerado: sim",
+scripts/rodada_4_26_aimm_short_team_manual.py:411:    write_text(FILES["report"], report)
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:10:BASE = Path("outputs/aimm/rodada_4_27_diagnostico_automacoes_ingestao")
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:19:    "registry": Path("data/processed/aimm/aimm_automation_ingestion_diagnostic_registry_4_27.csv"),
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:20:    "status": Path("data/processed/aimm/aimm_automation_ingestion_diagnostic_status_4_27.csv"),
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:21:    "evidence": Path("data/evidence/evidence_aimm_automation_ingestion_diagnostic_4_27.csv"),
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:22:    "report": Path("outputs/reports/RELATORIO_AIMM_DIAGNOSTICO_AUTOMACOES_4_27.md"),
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:142:    ingestao_detectada = count_glob("**/*ingest*") + count_glob("**/*ingestao*")
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:169:            "componente": "upload_automatico_drive",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:183:            "componente": "ingestao_arquivos",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:184:            "status": "nao_implementada" if ingestao_detectada == 0 else "parcial_ou_nome_detectado",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:185:            "evidencia": f"arquivos_com_ingest_detectados:{ingestao_detectada}",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:187:            "proxima_acao": "criar modulo padrao de ingestao na 4.28",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:263:            "modulo": "ingestao_arquivos",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:295:            "acao": "criar pasta de teste no Drive antes do primeiro upload automatico",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:298:            "requisito": "script_upload_drive",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:310:            "requisito": "manifesto_ingestao",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:320:            "nome": "modulo de ingestao e validacao de arquivos",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:342:            "entrega": "upload e download controlado em pasta de teste",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:367:            "item": "modulos de ingestao classificados",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:386:            "pacote": "diagnostico_funcional_automacoes_drive_github_ingestao",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:390:            "ingestao_detectada": str(ingestao_detectada),
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:406:            "ingestao_arquivos": "nao_implementada" if ingestao_detectada == 0 else "parcial_ou_nome_detectado",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:410:            "proxima_rodada_descricao": "modulo de ingestao e validacao de arquivos",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:418:            "descricao": "Diagnostico funcional de automacoes, API Drive-GitHub, ingestao de arquivos e benchmarks.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:420:            "limitacao": "Nao acessa Google Drive, nao executa upload/download e nao processa benchmark real.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:429:        "Esta rodada classificou o estado real das automações, da integração Drive-GitHub e dos módulos de ingestão.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:437:        f"- Arquivos com termo ingest/ingestao detectados: `{ingestao_detectada}`",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:442:        "O sistema executa workflows e gera artefatos, mas ainda não possui pipeline automático completo de Drive, ingestão e benchmark.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:446:        "A próxima rodada deve criar o módulo de ingestão e validação de arquivos, sem depender ainda da API Drive.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:449:    report = [
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:462:        "- Módulos de ingestão.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:476:        "Rodada 4.28 — módulo de ingestão e validação de arquivos.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:485:        f"Arquivos ingestao detectados: {ingestao_detectada}",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:498:        "Diagnostico funcional de automacoes, Drive-GitHub e ingestao gerado.",
+scripts/rodada_4_27_automation_ingestion_diagnostic.py:514:    write_text(FILES["report"], report)
+scripts/rodada_4_28_file_ingestion_validator.py:10:BASE = Path("outputs/aimm/rodada_4_28_ingestao_arquivos")
+scripts/rodada_4_28_file_ingestion_validator.py:11:MANIFEST = Path("data/manual/aimm_file_ingestion_manifest_seed.csv")
+scripts/rodada_4_28_file_ingestion_validator.py:19:    "registry": Path("data/processed/aimm/aimm_file_ingestion_registry_4_28.csv"),
+scripts/rodada_4_28_file_ingestion_validator.py:20:    "status": Path("data/processed/aimm/aimm_file_ingestion_status_4_28.csv"),
+scripts/rodada_4_28_file_ingestion_validator.py:21:    "evidence": Path("data/evidence/evidence_aimm_file_ingestion_4_28.csv"),
+scripts/rodada_4_28_file_ingestion_validator.py:22:    "report": Path("outputs/reports/RELATORIO_INGESTAO_ARQUIVOS_AIMM_4_28.md"),
+scripts/rodada_4_28_file_ingestion_validator.py:23:    "log": Path("outputs/logs/teste_aimm_ingestao_arquivos_4_28.txt"),
+scripts/rodada_4_28_file_ingestion_validator.py:47:    ".pdf",
+scripts/rodada_4_28_file_ingestion_validator.py:71:    "report",
+scripts/rodada_4_28_file_ingestion_validator.py:73:    "dashboard",
+scripts/rodada_4_28_file_ingestion_validator.py:105:        "destino_github": "outputs/aimm ou outputs/reports",
+scripts/rodada_4_28_file_ingestion_validator.py:162:        "criterio": "ingestao nao libera score AIMM final",
+scripts/rodada_4_28_file_ingestion_validator.py:242:            "caminho_github": "outputs/reports/RELATORIO_EXEMPLO.md",
+scripts/rodada_4_28_file_ingestion_validator.py:244:            "categoria": "report",
+scripts/rodada_4_28_file_ingestion_validator.py:364:            "pacote": "modulo_ingestao_validacao_arquivos",
+scripts/rodada_4_28_file_ingestion_validator.py:385:            "ingestao_funcional": "sim",
+scripts/rodada_4_28_file_ingestion_validator.py:397:            "tipo_evidencia": "modulo_ingestao_arquivos",
+scripts/rodada_4_28_file_ingestion_validator.py:398:            "descricao": "Modulo funcional inicial de ingestao e validacao de arquivos por manifesto.",
+scripts/rodada_4_28_file_ingestion_validator.py:404:    report = [
+scripts/rodada_4_28_file_ingestion_validator.py:405:        "# Relatório da Rodada 4.28 — módulo de ingestão e validação de arquivos",
+scripts/rodada_4_28_file_ingestion_validator.py:409:        "A rodada criou o módulo funcional inicial de ingestão controlada de arquivos.",
+scripts/rodada_4_28_file_ingestion_validator.py:422:        "- Não faz upload ou download automático.",
+scripts/rodada_4_28_file_ingestion_validator.py:457:        "Modulo de ingestao e validacao de arquivos gerado.",
+scripts/rodada_4_28_file_ingestion_validator.py:469:    write_text(FILES["report"], report)
+scripts/rodada_4_29_benchmark_source_normalization.py:24:    "report": Path("outputs/reports/RELATORIO_BENCHMARK_FONTES_NORMALIZACAO_AIMM_4_29.md"),
+scripts/rodada_4_29_benchmark_source_normalization.py:55:    "pdf_manual",
+scripts/rodada_4_29_benchmark_source_normalization.py:162:            "fonte": "data/evidence e outputs/reports",
+scripts/rodada_4_29_benchmark_source_normalization.py:537:    report = [
+scripts/rodada_4_29_benchmark_source_normalization.py:606:    write_text(FILES["report"], report)
+scripts/rodada_4_30_drive_github_auth_dryrun.py:21:    "report": Path("outputs/reports/RELATORIO_API_DRIVE_GITHUB_DRYRUN_4_30.md"),
+scripts/rodada_4_30_drive_github_auth_dryrun.py:115:        readiness = "nao_pronto_para_upload_download_real"
+scripts/rodada_4_30_drive_github_auth_dryrun.py:217:            "acao": "upload_drive_pasta_teste",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:260:            "upload_drive_real": "nao",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:265:            "proxima_rodada_descricao": "teste real controlado de upload e consulta Drive API",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:275:            "limitacao": "Nao executa upload/download real no Drive.",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:301:    report = [
+scripts/rodada_4_30_drive_github_auth_dryrun.py:315:        "- Rodar teste real de upload/consulta na 4.31.",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:347:        "Trava: nao acessa Drive, nao faz upload/download e nao libera score AIMM final.",
+scripts/rodada_4_30_drive_github_auth_dryrun.py:358:    write_text(FILES["report"], report)
+scripts/rodada_4_31_drive_api_real_test.py:21:    "report": Path("outputs/reports/RELATORIO_DRIVE_API_REAL_4_31.md"),
+scripts/rodada_4_31_drive_api_real_test.py:117:        "finalidade=validar_upload_e_consulta_metadata_sem_score_final",
+scripts/rodada_4_31_drive_api_real_test.py:163:            "upload_drive_real": "sim",
+scripts/rodada_4_31_drive_api_real_test.py:233:            "upload_drive_real": "sim",
+scripts/rodada_4_31_drive_api_real_test.py:248:            "tipo": "upload_consulta_drive_api",
+scripts/rodada_4_31_drive_api_real_test.py:257:    report = [
+scripts/rodada_4_31_drive_api_real_test.py:262:        "A Rodada 4.31 executou upload real de arquivo pequeno no Google Drive e consulta real de metadata pela Drive API.",
+scripts/rodada_4_31_drive_api_real_test.py:314:    write_text(FILES["report"], report)
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:24:    "report": Path("outputs/reports/RELATORIO_DRIVE_API_OAUTH_4_31B.md"),
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:99:        "finalidade=validar_upload_real_e_consulta_metadata",
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:150:            "upload_drive_real": "sim",
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:182:            "upload_drive_real": "sim",
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:194:            "tipo": "upload_consulta_drive_api_oauth",
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:202:    report = [
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:207:        "A Rodada 4.31-B validou upload real no Google Drive usando OAuth de usuário.",
+scripts/rodada_4_31b_drive_api_oauth_real_test.py:259:    write_text(FILES["report"], report)
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:27:    "report": Path("outputs/reports/RELATORIO_AIMM_PIPELINE_MINIMO_INTEGRADO_4_32.md"),
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:82:            "componente": "ingestao_arquivos_4_28",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:83:            "descricao": "Modulo de ingestao e validacao de arquivos.",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:85:                "scripts/*4_28*ingestion*.py",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:86:                "scripts/*file_ingestion*.py",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:88:                ".github/workflows/*ingestion*.yml",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:103:            "descricao": "Modulo GIS Manaus, validacao visual e encerramento GIS.",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:115:            "descricao": "Modulo de upload real Drive API por OAuth.",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:229:        "description": "Rodada 4.32 AIMM — teste do pipeline minimo integrado com upload real por OAuth.",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:255:    upload_drive_real = "sim"
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:266:            "upload_drive_real": upload_drive_real,
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:279:            "ingestao_4_28_detectada": next(
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:280:                row["detectado_no_repositorio"] for row in componentes if row["componente"] == "ingestao_arquivos_4_28"
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:291:            "upload_drive_real": upload_drive_real,
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:330:            "status": next(row["status"] for row in componentes if row["componente"] == "ingestao_arquivos_4_28"),
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:361:            "upload_drive_real": upload_drive_real,
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:384:    report_lines = [
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:393:        f"- Upload Drive real: `{upload_drive_real}`",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:403:        report_lines.append(
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:407:    report_lines.extend(
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:427:        f"Ingestão 4.28 detectada: {status_rows[0]['ingestao_4_28_detectada']}",
+scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py:461:    write_text(FILES["report"], report_lines)
+scripts/rodada_4_33_operational_controlled_input_test.py:29:    "report": Path("outputs/reports/RELATORIO_AIMM_OPERACIONAL_CONTROLADO_4_33.md"),
+scripts/rodada_4_33_operational_controlled_input_test.py:41:    "pacote_ingestao_validado",
+scripts/rodada_4_33_operational_controlled_input_test.py:152:            "pacote_ingestao_validado": norm(row.get("pacote_ingestao_validado")),
+scripts/rodada_4_33_operational_controlled_input_test.py:171:                "pacote_ingestao_validado": flags["pacote_ingestao_validado"],
+scripts/rodada_4_33_operational_controlled_input_test.py:295:            "upload_drive_real": "sim",
+scripts/rodada_4_33_operational_controlled_input_test.py:315:            "pacote_ingestao_validado": row["pacote_ingestao_validado"],
+scripts/rodada_4_33_operational_controlled_input_test.py:356:            "status": "ok" if validated_rows and validated_rows[0]["pacote_ingestao_validado"] == "sim" else "alerta",
+scripts/rodada_4_33_operational_controlled_input_test.py:384:            "upload_drive_real": "sim",
+scripts/rodada_4_33_operational_controlled_input_test.py:398:            "descricao": "Manifesto operacional controlado lido, validado e registrado com upload real no Drive.",
+scripts/rodada_4_33_operational_controlled_input_test.py:406:    report_lines = [
+scripts/rodada_4_33_operational_controlled_input_test.py:464:    write_text(FILES["report"], report_lines)
+scripts/rodada_4_34_preliminary_controlled_score.py:31:    "report": Path("outputs/reports/RELATORIO_AIMM_SCORE_PRELIMINAR_CONTROLADO_4_34.md"),
+scripts/rodada_4_34_preliminary_controlled_score.py:43:    "pacote_ingestao_validado",
+scripts/rodada_4_34_preliminary_controlled_score.py:353:            "upload_drive_real": "sim",
+scripts/rodada_4_34_preliminary_controlled_score.py:427:            "upload_drive_real": "sim",
+scripts/rodada_4_34_preliminary_controlled_score.py:441:            "descricao": "Score preliminar AIMM calculado com pesos explicitos e upload real no Drive.",
+scripts/rodada_4_34_preliminary_controlled_score.py:451:    report_lines = [
+scripts/rodada_4_34_preliminary_controlled_score.py:473:        report_lines.append(
+scripts/rodada_4_34_preliminary_controlled_score.py:477:    report_lines.extend(
+scripts/rodada_4_34_preliminary_controlled_score.py:526:    write_text(FILES["report"], report_lines)
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:18:CONFIG = Path("data/manual/aimm/aimm_executive_report_config_4_35.csv")
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:23:    "executive_report_base": BASE / "RELATORIO_EXECUTIVO_AIMM_4_35.md",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:24:    "executive_report_outputs": Path("outputs/reports/RELATORIO_EXECUTIVO_AIMM_4_35.md"),
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:43:    "pacote_ingestao_validado",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:281:        "A rodada executou um teste ponta a ponta controlado da calculadora AIMM: entrada controlada, validação de campos, cálculo preliminar, geração de relatório executivo e upload real no Google Drive por OAuth.",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:320:    write_text(FILES["executive_report_base"], executive_lines)
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:321:    write_text(FILES["executive_report_outputs"], executive_lines)
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:328:        str(FILES["executive_report_base"]),
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:365:            "modulo": "end_to_end_controlled_executive_report",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:369:            "upload_drive_real": "sim",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:453:            "nome": "end_to_end_controlled_executive_report",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:459:            "upload_drive_real": "sim",
+scripts/rodada_4_35_end_to_end_controlled_executive_report.py:473:            "descricao": "Entrada controlada, calculo preliminar, relatorio executivo e upload real no Drive executados.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:31:    "report": Path("outputs/reports/RELATORIO_AIMM_PACOTE_CONGELADO_4_36.md"),
+scripts/rodada_4_36_demo_usage_handoff_package.py:180:        "      <li>4.38 — ingestão real de documentos em lote.</li>",
+scripts/rodada_4_36_demo_usage_handoff_package.py:217:        {"dimensao": "gis_territorial", "peso": 25, "indicador": "pacote_gis_validado", "descricao": "Confirma base GIS Manaus, join e validação visual.", "status_4_36": "piloto_validado_com_lacunas"},
+scripts/rodada_4_36_demo_usage_handoff_package.py:218:        {"dimensao": "ingestao_arquivos", "peso": 20, "indicador": "pacote_ingestao_validado", "descricao": "Confirma manifesto e validação inicial de arquivos.", "status_4_36": "validado"},
+scripts/rodada_4_36_demo_usage_handoff_package.py:220:        {"dimensao": "drive_api_oauth", "peso": 20, "indicador": "drive_api_oauth_validada", "descricao": "Confirma upload real GitHub-Drive por OAuth.", "status_4_36": "validado"},
+scripts/rodada_4_36_demo_usage_handoff_package.py:230:        {"grupo": "relatórios", "arquivo_ou_pasta": "outputs/reports", "funcao": "relatórios técnicos e executivos", "usuario": "equipe gestora"},
+scripts/rodada_4_36_demo_usage_handoff_package.py:260:        "- Já existe upload real no Google Drive por API.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:290:        "Entrada controlada → validação → cálculo preliminar → relatório executivo → upload Drive → arquivamento.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:302:        "4.38 — ingestão real de documentos em lote.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:307:    report = [
+scripts/rodada_4_36_demo_usage_handoff_package.py:337:        "A 4.36 não é ainda uma aplicação web com upload de documentos por arrastar-e-soltar. Para isso será necessária a 4.37/4.38.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:379:            "drive_upload_real": "sim",
+scripts/rodada_4_36_demo_usage_handoff_package.py:390:            "descricao": "Pacote demonstrável com interface HTML, guias, matriz, formulário, manifesto e upload real no Drive.",
+scripts/rodada_4_36_demo_usage_handoff_package.py:392:            "limitacao": "interface ainda nao executa upload direto de documentos por navegador",
+scripts/rodada_4_36_demo_usage_handoff_package.py:408:    write_text(FILES["report"], report)
+scripts/rodada_4_36_demo_usage_handoff_package.py:488:        "Trava: interface 4.36 e demonstrativa; upload direto de documentos por navegador depende da 4.37/4.38.",
+scripts/rodada_4_37_operational_interface_inputs.py:17:from pypdf import PdfReader
+scripts/rodada_4_37_operational_interface_inputs.py:32:    "relatorio_tecnico": Path("outputs/reports/RELATORIO_TECNICO_PROFISSIONAL_AIMM_4_37.md"),
+scripts/rodada_4_37_operational_interface_inputs.py:33:    "relatorio_executivo": Path("outputs/reports/RELATORIO_EXECUTIVO_IFC_AIMM_4_37.md"),
+scripts/rodada_4_37_operational_interface_inputs.py:266:        if suffix == ".pdf" or mime == "application/pdf":
+scripts/rodada_4_37_operational_interface_inputs.py:271:            return "\n".join(parts)[:MAX_TEXT_CHARS], "pdf_pypdf_primeiras_25_paginas"
+scripts/rodada_4_37_operational_interface_inputs.py:291:    elif "pdf" in mime or suffix == ".pdf":
+scripts/rodada_4_37_operational_interface_inputs.py:292:        doc_type = "pdf"
+scripts/rodada_4_37_operational_interface_inputs.py:391:def upload_file(service, folder_id: str, path: Path, mime: str, prefix: str, run_id: str) -> dict[str, Any]:
+scripts/rodada_4_37_operational_interface_inputs.py:530:            "documentos_extraidos": sum(1 for r in document_rows if str(r.get("status_extracao", "")).startswith(("texto", "pdf", "docx", "google"))),
+scripts/rodada_4_37_operational_interface_inputs.py:653:    uploaded_tecnico = upload_file(service, output_folder_id, FILES["relatorio_tecnico"], "text/markdown", "AIMM_4_37_TECNICO", run_id)
+scripts/rodada_4_37_operational_interface_inputs.py:654:    uploaded_exec = upload_file(service, output_folder_id, FILES["relatorio_executivo"], "text/markdown", "AIMM_4_37_EXECUTIVO", run_id)
+scripts/rodada_4_37_operational_interface_inputs.py:660:            "arquivo_drive": uploaded_tecnico.get("name", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:661:            "file_id_mascarado": mask(uploaded_tecnico.get("id", "")),
+scripts/rodada_4_37_operational_interface_inputs.py:662:            "webViewLink": uploaded_tecnico.get("webViewLink", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:663:            "size": uploaded_tecnico.get("size", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:668:            "arquivo_drive": uploaded_exec.get("name", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:669:            "file_id_mascarado": mask(uploaded_exec.get("id", "")),
+scripts/rodada_4_37_operational_interface_inputs.py:670:            "webViewLink": uploaded_exec.get("webViewLink", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:671:            "size": uploaded_exec.get("size", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:688:            "upload_drive_real": "sim",
+scripts/rodada_4_37_operational_interface_inputs.py:710:            "proxima_recomendada": "4.38_ingestao_documental_em_lote_e_relatorio_profissional_com_anexos",
+scripts/rodada_4_37_operational_interface_inputs.py:721:            "relatorio_tecnico_drive": uploaded_tecnico.get("name", ""),
+scripts/rodada_4_37_operational_interface_inputs.py:722:            "relatorio_executivo_drive": uploaded_exec.get("name", ""),
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:17:from pypdf import PdfReader
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:31:    "relatorio_tecnico": Path("outputs/reports/RELATORIO_TECNICO_PROFISSIONAL_IFC_AIMM_4_38.md"),
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:32:    "relatorio_executivo": Path("outputs/reports/RELATORIO_EXECUTIVO_IFC_AIMM_4_38.md"),
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:33:    "relatorio_uso": Path("outputs/reports/GUIA_USO_FINAL_IFC_AIMM_4_38.md"),
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:244:        if suffix == ".pdf" or mime == "application/pdf":
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:249:            return "\n".join(pages)[:MAX_TEXT_CHARS], "pdf_extraido"
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:268:    elif suffix == ".pdf" or "pdf" in mime:
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:269:        doc_type = "pdf"
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:378:def upload_file(service, folder_id: str, path: Path, mime: str, prefix: str, run_id: str) -> dict[str, Any]:
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:507:            "upload_drive_real": "sim",
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:672:    uploaded = []
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:673:    uploaded.append(upload_file(service, output_folder, FILES["relatorio_tecnico"], "text/markdown", "AIMM_4_38_TECNICO", run_id))
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:674:    uploaded.append(upload_file(service, output_folder, FILES["relatorio_executivo"], "text/markdown", "AIMM_4_38_EXECUTIVO", run_id))
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:675:    uploaded.append(upload_file(service, output_folder, FILES["relatorio_uso"], "text/markdown", "AIMM_4_38_GUIA_USO", run_id))
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:685:        for item in uploaded
+scripts/rodada_4_38_final_ifc_aimm_operational_package.py:705:            "descricao": "Leitura Drive, triagem documental, extração, normalização AIMM, GIS, relatórios e upload Drive.",
+scripts/test_api_integration.ps1:18:Write-Host "==> TESTE 2: /api/worldbank/countries sem token (esperado 401)"
+scripts/test_api_integration.ps1:20:    $r = Invoke-WebRequest -Uri "$GatewayUrl/api/worldbank/countries" -SkipHttpErrorCheck -TimeoutSec 12
+scripts/test_api_integration.ps1:29:Write-Host "==> TESTE 3: /api/worldbank/countries com token (esperado 200)"
+scripts/test_api_integration.ps1:32:    $r = Invoke-WebRequest -Uri "$GatewayUrl/api/worldbank/countries?per_page=5" -Headers $headers -SkipHttpErrorCheck -TimeoutSec 20
+scripts/testar_aimm_communication.py:40:    html_text = Path(outputs["html_dashboard"]).read_text(encoding="utf-8")
+scripts/testar_aimm_communication.py:41:    svg_text = Path(outputs["svg_dashboard"]).read_text(encoding="utf-8")
+scripts/testar_aimm_communication.py:64:        f"- {outputs['visual_outputs_index']}",
+scripts/testar_aimm_communication.py:65:        f"- {outputs['html_dashboard']}",
+scripts/testar_aimm_communication.py:66:        f"- {outputs['svg_dashboard']}",
+scripts/testar_aimm_communication.py:74:        "O pacote editável de comunicação e visualização do dashboard AIMM foi gerado e validado estruturalmente.",
+scripts/testar_aimm_dashboard.py:8:from fito_aimm.aimm_dashboard import execute_aimm_dashboard
+scripts/testar_aimm_dashboard.py:10:RELATORIO = Path("outputs/logs/teste_aimm_dashboard.txt")
+scripts/testar_aimm_dashboard.py:19:    result = execute_aimm_dashboard()
+scripts/testar_aimm_dashboard.py:57:        f"- {outputs['dashboard_cards_csv']}",
+scripts/testar_aimm_dashboard.py:63:        f"- {outputs['dashboard_payload_json']}",
+scripts/testar_aimm_engine.py:39:    validation = read_csv(Path(outputs["aimm_engine_validation_report"]))
+scripts/testar_aimm_engine.py:47:        f"Indicadores processados: {result['total_indicators']}",
+scripts/testar_aimm_engine.py:55:        f"- {outputs['aimm_indicator_scores']}",
+scripts/testar_aimm_engine.py:58:        f"- {outputs['aimm_blockers_report']}",
+scripts/testar_aimm_engine.py:59:        f"- {outputs['aimm_engine_validation_report']}",
+scripts/testar_benchmark_proxy.py:54:        f"- {outputs['benchmark_gap_report']}",
+scripts/testar_budget_components.py:44:    validation = read_csv(Path(outputs["budget_validation_report"]))
+scripts/testar_budget_components.py:46:        raise ValueError("budget_validation_report contém erro.")
+scripts/testar_budget_components.py:68:        f"- {outputs['budget_validation_report']}",
+scripts/testar_pre_diligencia_manual_validation.py:27:    report = ler_csv(Path(result["arquivos"]["report"]))
+scripts/testar_pre_diligencia_manual_validation.py:32:    if not report:
+scripts/testar_pre_diligencia_manual_validation.py:33:        raise ValueError("pre_diligencia_manual_validation_report.csv ficou vazio.")
+scripts/testar_pre_diligencia_manual_validation.py:47:        f"- {result['arquivos']['report']}",
+scripts/worldbank_examples.ps1:3:    [string]$ApiBase = "https://api.worldbank.org/v2"
+scripts/worldbank_examples.ps1:87:                $OutFile = ".\outputs\worldbank_$ts.zip"
+scripts/worldbank_examples.ps1:124:    Write-Host "4) Endpoint privado via Gateway (/api/worldbank/data/{pais}/{indicador})"
+scripts/worldbank_examples.ps1:125:    Write-Host "5) Endpoint privado via Gateway (/api/worldbank/indicators?search=...)"
+scripts/worldbank_examples.ps1:149:            $url = "$ApiBase/indicator?$qs"
+scripts/worldbank_examples.ps1:156:                $out = Ask-NonEmpty "Arquivo de saída (.zip)" ".\outputs\indicators.zip"
+scripts/worldbank_examples.ps1:186:            $indicator = Ask-NonEmpty "Código do indicador (ex: NY.GDP.MKTP.CD)" "NY.GDP.MKTP.CD"
+scripts/worldbank_examples.ps1:202:            $url = "$ApiBase/country/$country/indicator/$indicator?$qs"
+scripts/worldbank_examples.ps1:206:                $default = ".\outputs\${country}_${indicator}.zip"
+scripts/worldbank_examples.ps1:221:            $indicator = Ask-NonEmpty "Código do indicador (ex: NY.GDP.MKTP.CD)" "NY.GDP.MKTP.CD"
+scripts/worldbank_examples.ps1:222:            $url = "$GatewayUrl/api/worldbank/data/$country/$indicator"
+scripts/worldbank_examples.ps1:245:            $url = "$GatewayUrl/api/worldbank/indicators?search=$([uri]::EscapeDataString($search))"
+src/fito_aimm/aimm_communication.py:14:LAYOUT_SEED = Path("data/reference/aimm_visual_layout_seed.csv")
+src/fito_aimm/aimm_communication.py:17:DASH_CARDS = Path("data/processed/aimm_dashboard_cards.csv")
+src/fito_aimm/aimm_communication.py:18:DASH_DIMENSIONS = Path("data/processed/aimm_dashboard_dimension_view.csv")
+src/fito_aimm/aimm_communication.py:20:DASH_PAYLOAD = Path("outputs/reports/aimm_dashboard_payload.json")
+src/fito_aimm/aimm_communication.py:23:OUT_VISUAL_INDEX = Path("data/processed/aimm_visual_outputs_index.csv")
+src/fito_aimm/aimm_communication.py:27:OUT_HTML = Path("outputs/visuals/aimm_dashboard_executivo.html")
+src/fito_aimm/aimm_communication.py:28:OUT_SVG = Path("outputs/visuals/aimm_dashboard_cards.svg")
+src/fito_aimm/aimm_communication.py:29:OUT_MERMAID = Path("outputs/visuals/aimm_dashboard_flow.mmd")
+src/fito_aimm/aimm_communication.py:30:OUT_BRIEF = Path("outputs/reports/aimm_communication_brief.md")
+src/fito_aimm/aimm_communication.py:31:OUT_JSON = Path("outputs/reports/aimm_communication_payload.json")
+src/fito_aimm/aimm_communication.py:58:def ensure_dashboard_outputs() -> None:
+src/fito_aimm/aimm_communication.py:64:        from fito_aimm.aimm_dashboard import execute_aimm_dashboard
+src/fito_aimm/aimm_communication.py:67:        raise RuntimeError(f"Outputs do dashboard ausentes e não foi possível importar aimm_dashboard. Ausentes: {missing}. Erro: {exc}") from exc
+src/fito_aimm/aimm_communication.py:69:    result = execute_aimm_dashboard()
+src/fito_aimm/aimm_communication.py:71:        raise RuntimeError(f"Falha ao executar dashboard como pré-etapa de comunicação: {result['errors']}")
+src/fito_aimm/aimm_communication.py:257:    H --> O["Uso futuro: dashboard web"]
+src/fito_aimm/aimm_communication.py:315:            "uso": "pacote comunicação dashboard AIMM",
+src/fito_aimm/aimm_communication.py:323:    ensure_dashboard_outputs()
+src/fito_aimm/aimm_communication.py:365:        "visual_outputs_index": OUT_VISUAL_INDEX,
+src/fito_aimm/aimm_communication.py:366:        "html_dashboard": OUT_HTML,
+src/fito_aimm/aimm_communication.py:367:        "svg_dashboard": OUT_SVG,
+src/fito_aimm/aimm_communication.py:379:        "tipo_evidencia": "pacote_comunicacao_visualizacao",
+src/fito_aimm/aimm_communication.py:380:        "pergunta_ou_lacuna": "O sistema gerou pacote editável de comunicação e visualização do dashboard AIMM?",
+src/fito_aimm/aimm_communication.py:381:        "url_ou_arquivo": "outputs/visuals/aimm_dashboard_executivo.html; outputs/visuals/aimm_dashboard_cards.svg; outputs/visuals/aimm_dashboard_flow.mmd; outputs/reports/aimm_communication_brief.md",
+src/fito_aimm/aimm_communication.py:382:        "titulo_documento": "Pacote editável de comunicação e visualização — Rodada 4.18",
+src/fito_aimm/aimm_communication.py:394:        "status_conferencia": "pendente_validação_visual_humana",
+src/fito_aimm/aimm_communication.py:396:        "uso_na_calculadora": "Camada de comunicação, visualização e auditoria executiva.",
+src/fito_aimm/aimm_dashboard.py:11:RULES = Path("config/aimm_dashboard_rules.yaml")
+src/fito_aimm/aimm_dashboard.py:12:CARDS_SEED = Path("data/reference/aimm_dashboard_cards_seed.csv")
+src/fito_aimm/aimm_dashboard.py:17:ENGINE_INDICATORS = Path("data/processed/aimm_indicator_scores.csv")
+src/fito_aimm/aimm_dashboard.py:18:ENGINE_BLOCKERS = Path("data/processed/aimm_blockers_report.csv")
+src/fito_aimm/aimm_dashboard.py:19:ENGINE_VALIDATION = Path("data/processed/aimm_engine_validation_report.csv")
+src/fito_aimm/aimm_dashboard.py:22:OUT_CARDS = Path("data/processed/aimm_dashboard_cards.csv")
+src/fito_aimm/aimm_dashboard.py:23:OUT_DIM_VIEW = Path("data/processed/aimm_dashboard_dimension_view.csv")
+src/fito_aimm/aimm_dashboard.py:26:OUT_EVIDENCE = Path("data/evidence/evidence_aimm_dashboard.csv")
+src/fito_aimm/aimm_dashboard.py:27:OUT_MD = Path("outputs/reports/aimm_executive_summary.md")
+src/fito_aimm/aimm_dashboard.py:28:OUT_JSON = Path("outputs/reports/aimm_dashboard_payload.json")
+src/fito_aimm/aimm_dashboard.py:73:        raise RuntimeError(f"Falha ao executar motor AIMM como pré-etapa do dashboard: {result['errors']}")
+src/fito_aimm/aimm_dashboard.py:84:def build_cards(cards_seed, overall, dimensions, indicators, blockers):
+src/fito_aimm/aimm_dashboard.py:87:        "aimm_indicator_scores.csv": len(indicators),
+src/fito_aimm/aimm_dashboard.py:89:        "aimm_blockers_report.csv": len(blockers),
+src/fito_aimm/aimm_dashboard.py:130:def build_executive_summary(overall, dimensions, indicators, blockers, rules):
+src/fito_aimm/aimm_dashboard.py:141:        "indicadores_processados": str(len(indicators)),
+src/fito_aimm/aimm_dashboard.py:174:        "url_ou_arquivo": "data/processed/aimm_executive_summary.csv; outputs/reports/aimm_executive_summary.md",
+src/fito_aimm/aimm_dashboard.py:176:        "pagina_tabela_secao": "executive_summary; dashboard_cards; dimension_view; output_manifest",
+src/fito_aimm/aimm_dashboard.py:189:        "uso_na_calculadora": "Saída executiva, trilha de auditoria e base para painel visual futuro.",
+src/fito_aimm/aimm_dashboard.py:240:def execute_aimm_dashboard() -> dict[str, Any]:
+src/fito_aimm/aimm_dashboard.py:249:    indicators = read_csv(ENGINE_INDICATORS)
+src/fito_aimm/aimm_dashboard.py:257:    summary = build_executive_summary(overall, dimensions, indicators, blockers, rules)
+src/fito_aimm/aimm_dashboard.py:258:    cards = build_cards(cards_seed, overall, dimensions, indicators, blockers)
+src/fito_aimm/aimm_dashboard.py:263:        "dashboard_cards_csv": OUT_CARDS,
+src/fito_aimm/aimm_dashboard.py:268:        "dashboard_payload_json": OUT_JSON,
+src/fito_aimm/aimm_engine.py:11:INPUTS = Path("data/reference/aimm_engine_indicator_inputs_seed.csv")
+src/fito_aimm/aimm_engine.py:15:OUT_INDICATOR = Path("data/processed/aimm_indicator_scores.csv")
+src/fito_aimm/aimm_engine.py:18:OUT_BLOCKERS = Path("data/processed/aimm_blockers_report.csv")
+src/fito_aimm/aimm_engine.py:19:OUT_VALIDATION = Path("data/processed/aimm_engine_validation_report.csv")
+src/fito_aimm/aimm_engine.py:113:def calculate_indicator_scores(inputs: list[dict[str, str]], rules: dict[str, Any]) -> list[dict[str, Any]]:
+src/fito_aimm/aimm_engine.py:145:def calculate_dimension_scores(indicator_scores: list[dict[str, Any]], dim_policy: list[dict[str, str]]) -> list[dict[str, Any]]:
+src/fito_aimm/aimm_engine.py:150:        members = [r for r in indicator_scores if r["dimensao_aimm"] == dim]
+src/fito_aimm/aimm_engine.py:203:def generate_validation(errors: list[str], indicator_scores, dimension_scores, overall, blockers) -> list[dict[str, str]]:
+src/fito_aimm/aimm_engine.py:213:        "status": "ok" if indicator_scores else "erro",
+src/fito_aimm/aimm_engine.py:214:        "valor": str(len(indicator_scores)),
+src/fito_aimm/aimm_engine.py:240:def generate_evidence(indicator_scores, dimension_scores, overall, blockers):
+src/fito_aimm/aimm_engine.py:247:        "url_ou_arquivo": "data/processed/aimm_indicator_scores.csv; data/processed/aimm_dimension_scores.csv; data/processed/aimm_overall_score.csv",
+src/fito_aimm/aimm_engine.py:249:        "pagina_tabela_secao": "indicator_scores; dimension_scores; overall_score; blockers",
+src/fito_aimm/aimm_engine.py:250:        "trecho_original_ou_descricao": f"Indicadores processados: {len(indicator_scores)}; dimensões: {len(dimension_scores)}; bloqueios: {len(blockers)}; score estrutural preliminar: {overall.get('score_estrutural_preliminar')}.",
+src/fito_aimm/aimm_engine.py:279:    indicator_scores = calculate_indicator_scores(inputs, rules)
+src/fito_aimm/aimm_engine.py:280:    dimension_scores = calculate_dimension_scores(indicator_scores, dim_policy)
+src/fito_aimm/aimm_engine.py:282:    validation = generate_validation([], indicator_scores, dimension_scores, overall, blockers)
+src/fito_aimm/aimm_engine.py:283:    evidence = generate_evidence(indicator_scores, dimension_scores, overall, blockers)
+src/fito_aimm/aimm_engine.py:285:    write_csv(OUT_INDICATOR, indicator_scores)
+src/fito_aimm/aimm_engine.py:294:        "total_indicators": len(indicator_scores),
+src/fito_aimm/aimm_engine.py:301:            "aimm_indicator_scores": str(OUT_INDICATOR),
+src/fito_aimm/aimm_engine.py:304:            "aimm_blockers_report": str(OUT_BLOCKERS),
+src/fito_aimm/aimm_engine.py:305:            "aimm_engine_validation_report": str(OUT_VALIDATION),
+src/fito_aimm/benchmark_proxy.py:13:GAPS = Path("data/reference/benchmark_gap_report_seed.csv")
+src/fito_aimm/benchmark_proxy.py:19:OUT_GAPS = Path("data/processed/benchmark_gap_report.csv")
+src/fito_aimm/benchmark_proxy.py:79:    errors.extend(check_unique(gaps, "id_lacuna_benchmark", "benchmark_gap_report"))
+src/fito_aimm/benchmark_proxy.py:137:    gaps_by_indicator: dict[str, list[str]] = {}
+src/fito_aimm/benchmark_proxy.py:139:        gaps_by_indicator.setdefault(g.get("id_indicador", ""), []).append(g.get("id_lacuna_benchmark", ""))
+src/fito_aimm/benchmark_proxy.py:152:            "lacunas_relacionadas": "|".join(gaps_by_indicator.get(b.get("id_indicador", ""), [])),
+src/fito_aimm/benchmark_proxy.py:172:        "url_ou_arquivo": "data/processed/benchmark_registry.csv; data/processed/benchmark_gap_report.csv; data/processed/benchmark_readiness_matrix.csv",
+src/fito_aimm/benchmark_proxy.py:174:        "pagina_tabela_secao": "benchmark_registry; proxy_method_registry; benchmark_gap_report; readiness_matrix",
+src/fito_aimm/benchmark_proxy.py:230:            "benchmark_gap_report": str(OUT_GAPS),
+src/fito_aimm/budget_components.py:21:OUT_VALIDATION = Path("data/processed/budget_validation_report.csv")
+src/fito_aimm/budget_components.py:175:def build_validation_report(errors: list[str], components, total_expected: float, phase_values) -> list[dict[str, str]]:
+src/fito_aimm/budget_components.py:249:    # Validation report is written even if no errors.
+src/fito_aimm/budget_components.py:253:    validation = build_validation_report(errors, components, total_expected, phase_values)
+src/fito_aimm/budget_components.py:256:        # Still save report for inspection, then fail.
+src/fito_aimm/budget_components.py:288:            "budget_validation_report": str(OUT_VALIDATION),
+src/fito_aimm/coletor_ibge.py:14:LOCALIDADES_BASE_URL = "https://servicodados.ibge.gov.br/api/v1/localidades"
+src/fito_aimm/pre_diligencia_manual_validator.py:14:OUTPUT_REPORT = Path("data/processed/pre_diligencia_manual_validation_report.csv")
+src/fito_aimm/pre_diligencia_manual_validator.py:64:    report = []
+src/fito_aimm/pre_diligencia_manual_validator.py:76:                report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:89:                report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:102:            report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:114:            report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:126:            report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:137:            report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:149:    for item in report:
+src/fito_aimm/pre_diligencia_manual_validator.py:164:    if not report:
+src/fito_aimm/pre_diligencia_manual_validator.py:165:        report.append({
+src/fito_aimm/pre_diligencia_manual_validator.py:174:    return rows_validated, report
+src/fito_aimm/pre_diligencia_manual_validator.py:184:        "url_ou_arquivo": "data/processed/pre_diligencia_manual_validation_report.csv",
+src/fito_aimm/pre_diligencia_manual_validator.py:209:    output_report: Path = OUTPUT_REPORT,
+src/fito_aimm/pre_diligencia_manual_validator.py:221:    validated, report = validar(rows_to_validate, cfg)
+src/fito_aimm/pre_diligencia_manual_validator.py:224:    salvar_csv(output_report, report)
+src/fito_aimm/pre_diligencia_manual_validator.py:226:    erros = sum(1 for r in report if r.get("severidade") == "erro")
+src/fito_aimm/pre_diligencia_manual_validator.py:227:    alertas = sum(1 for r in report if r.get("severidade") == "alerta")
+src/fito_aimm/pre_diligencia_manual_validator.py:239:            "report": str(output_report),
+status-local.ps1:188:$u = HttpCode -Url "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1"
+status-local.ps1:196:  $b = HttpCode -Url "http://127.0.0.1:8080/api/worldbank/countries?per_page=1&page=1" -Headers $headers
+status-local.ps1:201:Write-Host "/api/worldbank/countries        => $u (esperado 401)"
+status-local.ps1:202:Write-Host "/api/... com Bearer token       => $b (esperado 200 ou 502)"

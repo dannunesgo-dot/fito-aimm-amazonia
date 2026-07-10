@@ -1,0 +1,9 @@
+A	PULL_REQUEST_PHASE1.md
+A	docs/deprecated/README.md
+A	docs/deprecated/buscador.py
+A	docs/deprecated/conferidor.py
+A	docs/deprecated/extrator.py
+A	docs/deprecated/sincroniza_drive.py
+M	src/fito_aimm/aimm_engine.py
+A	src/fito_aimm/utils/__init__.py
+A	src/fito_aimm/utils/normalization.py

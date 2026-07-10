@@ -1,0 +1,56 @@
+M	.github/workflows/aimm_engine.yml
+M	.github/workflows/area_densidade_ibge_geociencias.yml
+M	.github/workflows/baseline_ibge_sidra.yml
+M	.github/workflows/coleta_ibge_teste.yml
+M	.github/workflows/mapaosc_triagem.yml
+M	.github/workflows/rodada_4_31_drive_api_real_test.yml
+M	.github/workflows/rodada_4_31b_drive_api_oauth_real_test.yml
+M	.github/workflows/rodada_4_32_aimm_minimum_integrated_pipeline.yml
+M	.github/workflows/validar_bases.yml
+A	.gitignore
+M	config/aimm_engine_rules.yaml
+A	config/rodada_4_38_triagem_rules.yaml
+A	config/territorios.yaml
+A	data/evidence/evidence_aimm_engine.csv
+A	data/processed/aimm_blockers_report.csv
+A	data/processed/aimm_dimension_scores.csv
+A	data/processed/aimm_engine_validation_report.csv
+A	data/processed/aimm_indicator_scores.csv
+A	data/processed/aimm_overall_score.csv
+R100	src/fito_aimm/buscador.py	docs/deprecated/buscador.py
+R100	src/fito_aimm/conferidor.py	docs/deprecated/conferidor.py
+R100	src/fito_aimm/extrator.py	docs/deprecated/extrator.py
+R100	src/fito_aimm/sincroniza_drive.py	docs/deprecated/sincroniza_drive.py
+A	outputs/logs/teste_aimm_engine.txt
+A	pytest.ini
+M	requirements.txt
+M	scripts/rodada_4_31_drive_api_real_test.py
+M	scripts/rodada_4_31b_drive_api_oauth_real_test.py
+M	scripts/rodada_4_32_aimm_minimum_integrated_pipeline.py
+M	scripts/rodada_4_38_final_ifc_aimm_operational_package.py
+M	scripts/testar_area_densidade_ibge.py
+M	scripts/testar_baseline_ibge.py
+M	scripts/testar_coleta_ibge.py
+M	scripts/testar_mapaosc_triagem.py
+M	scripts/validar_bases.py
+M	src/fito_aimm/aimm_engine.py
+M	src/fito_aimm/coletor_ibge.py
+M	src/fito_aimm/coletor_ibge_geociencias.py
+M	src/fito_aimm/coletor_mapaosc.py
+A	src/fito_aimm/drive_sync.py
+A	src/fito_aimm/mapaosc/__init__.py
+A	src/fito_aimm/mapaosc/classifier.py
+A	src/fito_aimm/mapaosc/fetcher.py
+A	src/fito_aimm/mapaosc/normalizer.py
+A	src/fito_aimm/territorios.py
+A	src/fito_aimm/validators/__init__.py
+A	src/fito_aimm/validators/schema_validator.py
+A	tests/conftest.py
+A	tests/fixtures/sample_aimm_inputs_invalid.csv
+A	tests/fixtures/sample_aimm_inputs_valid.csv
+A	tests/fixtures/sample_mapaosc.csv
+A	tests/integration/test_mapaosc_pipeline.py
+A	tests/unit/test_aimm_engine.py
+A	tests/unit/test_mapaosc_classifier.py
+A	tests/unit/test_rodada_4_38_triagem.py
+A	tests/unit/test_schema_validator.py

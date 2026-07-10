@@ -1,0 +1,2 @@
+A	docs/app.js
+A	docs/styles.css
