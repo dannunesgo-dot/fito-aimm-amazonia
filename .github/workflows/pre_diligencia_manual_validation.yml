@@ -5,9 +5,10 @@ on:
   push:
     paths:
       - "config/pre_diligencia_manual_validation_rules.yaml"
-      - "data/reference/pre_diligencia_manual_input_schema.csv"
       - "data/input/pre_diligencia_status_validacao_manual.csv"
+      - "data/processed/pre_diligencia_status_validacao.csv"
       - "src/fito_aimm/pre_diligencia_manual_validator.py"
+      - "src/fito_aimm/__init__.py"
       - "scripts/testar_pre_diligencia_manual_validation.py"
       - ".github/workflows/pre_diligencia_manual_validation.yml"
 
@@ -24,45 +25,50 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Baixar artefato aprovado da consolidação
+      - name: Verificar módulo de validação manual
+        shell: bash
+        run: |
+          set -e
+          echo "Conteúdo de src/fito_aimm:"
+          ls -la src/fito_aimm
+          test -f src/fito_aimm/pre_diligencia_manual_validator.py
+
+      - name: Recuperar artefato de status da pré-diligência a partir do pre-diligencia-osc
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -e
-          mkdir -p data/processed data/evidence data/input outputs/logs /tmp/pre_cons_artifact
+          mkdir -p data/processed data/evidence data/input outputs/logs /tmp/pre_diligencia_artifact
 
           if [ -s data/processed/pre_diligencia_status_validacao.csv ]; then
-            echo "Arquivo base de status já existe no repositório. Usando arquivo versionado."
+            echo "Arquivo de status já existe no repositório. Usando arquivo versionado."
             exit 0
           fi
 
-          echo "Tentando baixar artefato do último workflow pre-diligencia-consolidacao bem-sucedido."
+          echo "Tentando baixar artefato do último workflow pre-diligencia-osc bem-sucedido."
 
           RUN_ID="$(gh run list \
-            --workflow pre_diligencia_consolidacao.yml \
+            --workflow pre_diligencia_osc.yml \
             --status success \
             --limit 1 \
             --json databaseId \
             --jq '.[0].databaseId')"
 
           if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
-            echo "ERRO: não encontrei execução bem-sucedida do workflow pre-diligencia-consolidacao."
+            echo "ERRO: não encontrei execução bem-sucedida do workflow pre-diligencia-osc."
+            echo "Execute antes o workflow pre-diligencia-osc para gerar o status de validação."
             exit 1
           fi
 
           gh run download "$RUN_ID" \
-            --name pre-diligencia-consolidacao-fito-amazonia \
-            --dir /tmp/pre_cons_artifact
+            --name pre-diligencia-osc-fito-amazonia \
+            --dir /tmp/pre_diligencia_artifact
 
           echo "Conteúdo do artefato baixado:"
-          find /tmp/pre_cons_artifact -type f -print | sort
+          find /tmp/pre_diligencia_artifact -type f -print | sort
 
-          STATUS_FILE="$(find /tmp/pre_cons_artifact -type f -name 'pre_diligencia_status_validacao.csv' | head -n 1 || true)"
-          CONS_FILE="$(find /tmp/pre_cons_artifact -type f -name 'pre_diligencia_consolidado.csv' | head -n 1 || true)"
-          ENC_FILE="$(find /tmp/pre_cons_artifact -type f -name 'pre_diligencia_encaminhamentos.csv' | head -n 1 || true)"
-          PEND_FILE="$(find /tmp/pre_cons_artifact -type f -name 'pre_diligencia_pendencias.csv' | head -n 1 || true)"
-          LOG_FILE="$(find /tmp/pre_cons_artifact -type f -name 'teste_pre_diligencia_consolidacao.txt' | head -n 1 || true)"
+          STATUS_FILE="$(find /tmp/pre_diligencia_artifact -type f -name 'pre_diligencia_status_validacao.csv' | head -n 1 || true)"
 
           if [ -z "$STATUS_FILE" ]; then
             echo "ERRO: artefato baixado, mas pre_diligencia_status_validacao.csv não foi encontrado."
@@ -70,12 +76,7 @@ jobs:
           fi
 
           cp "$STATUS_FILE" data/processed/pre_diligencia_status_validacao.csv
-          [ -n "$CONS_FILE" ] && cp "$CONS_FILE" data/processed/pre_diligencia_consolidado.csv || true
-          [ -n "$ENC_FILE" ] && cp "$ENC_FILE" data/processed/pre_diligencia_encaminhamentos.csv || true
-          [ -n "$PEND_FILE" ] && cp "$PEND_FILE" data/processed/pre_diligencia_pendencias.csv || true
-          [ -n "$LOG_FILE" ] && cp "$LOG_FILE" outputs/logs/teste_pre_diligencia_consolidacao.txt || true
-
-          echo "Artefato de consolidação recuperado com sucesso."
+          echo "Artefato de status recuperado com sucesso."
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -87,10 +88,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Executar validação de entrada manual
+      - name: Executar validação de preenchimento manual da pré-diligência
         run: python scripts/testar_pre_diligencia_manual_validation.py
 
-      - name: Publicar artefatos de validação manual
+      - name: Publicar artefatos da validação manual
         uses: actions/upload-artifact@v4
         with:
           name: pre-diligencia-manual-validation-fito-amazonia
@@ -100,6 +101,5 @@ jobs:
             data/processed/pre_diligencia_status_validacao_ready_for_drive.csv
             data/processed/pre_diligencia_manual_validation_report.csv
             data/evidence/evidence_pre_diligencia_manual_validation.csv
-            data/reference/pre_diligencia_manual_input_schema.csv
             config/pre_diligencia_manual_validation_rules.yaml
             outputs/logs/teste_pre_diligencia_manual_validation.txt

@@ -1,0 +1,111 @@
+﻿modulo;requisito;status;arquivo;evidencia;impacto;acao_recomendada
+aimm_communication.py;seeds_entradas;PARCIAL;data/processed/aimm_dashboard_cards.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_communication.py;seeds_entradas;PARCIAL;data/processed/aimm_dashboard_dimension_view.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_communication.py;seeds_entradas;PARCIAL;data/processed/aimm_executive_summary.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_communication.py;seeds_entradas;PARCIAL;data/processed/aimm_next_actions.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_communication.py;codigo;IMPLEMENTADO;src/fito_aimm/aimm_communication.py;Módulo com 412 linhas.;informativo;nenhuma
+aimm_communication.py;execucao;IMPLEMENTADO;src/fito_aimm/aimm_communication.py;Função pública: execute_aimm_communication.;informativo;nenhuma
+aimm_communication.py;teste;IMPLEMENTADO;scripts/testar_aimm_communication.py;Teste presente.;informativo;nenhuma
+aimm_communication.py;workflow;IMPLEMENTADO;.github/workflows/aimm_communication.yml;Workflow presente.;informativo;nenhuma
+aimm_dashboard.py;seeds_entradas;PARCIAL;data/processed/aimm_blockers_report.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_dashboard.py;seeds_entradas;PARCIAL;data/processed/aimm_dimension_scores.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_dashboard.py;seeds_entradas;PARCIAL;data/processed/aimm_engine_validation_report.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_dashboard.py;seeds_entradas;PARCIAL;data/processed/aimm_indicator_scores.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_dashboard.py;seeds_entradas;PARCIAL;data/processed/aimm_overall_score.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+aimm_dashboard.py;codigo;IMPLEMENTADO;src/fito_aimm/aimm_dashboard.py;Módulo com 302 linhas.;informativo;nenhuma
+aimm_dashboard.py;execucao;IMPLEMENTADO;src/fito_aimm/aimm_dashboard.py;Função pública: execute_aimm_dashboard.;informativo;nenhuma
+aimm_dashboard.py;teste;IMPLEMENTADO;scripts/testar_aimm_dashboard.py;Teste presente.;informativo;nenhuma
+aimm_dashboard.py;workflow;IMPLEMENTADO;.github/workflows/aimm_dashboard.yml;Workflow presente.;informativo;nenhuma
+aimm_engine.py;codigo;IMPLEMENTADO;src/fito_aimm/aimm_engine.py;Módulo com 308 linhas.;informativo;nenhuma
+aimm_engine.py;execucao;IMPLEMENTADO;src/fito_aimm/aimm_engine.py;Função pública: execute_aimm_engine.;informativo;nenhuma
+aimm_engine.py;teste;IMPLEMENTADO;scripts/testar_aimm_engine.py;Teste presente.;informativo;nenhuma
+aimm_engine.py;workflow;IMPLEMENTADO;.github/workflows/aimm_engine.yml;Workflow presente.;informativo;nenhuma
+benchmark_proxy.py;codigo;IMPLEMENTADO;src/fito_aimm/benchmark_proxy.py;Módulo com 236 linhas.;informativo;nenhuma
+benchmark_proxy.py;execucao;IMPLEMENTADO;src/fito_aimm/benchmark_proxy.py;Função pública: execute_benchmark_proxy.;informativo;nenhuma
+benchmark_proxy.py;teste;IMPLEMENTADO;scripts/testar_benchmark_proxy.py;Teste presente.;informativo;nenhuma
+benchmark_proxy.py;workflow;IMPLEMENTADO;.github/workflows/benchmark_proxy.yml;Workflow presente.;informativo;nenhuma
+budget_components.py;codigo;IMPLEMENTADO;src/fito_aimm/budget_components.py;Módulo com 291 linhas.;informativo;nenhuma
+budget_components.py;execucao;IMPLEMENTADO;src/fito_aimm/budget_components.py;Função pública: execute_budget_components.;informativo;nenhuma
+budget_components.py;teste;IMPLEMENTADO;scripts/testar_budget_components.py;Teste presente.;informativo;nenhuma
+budget_components.py;workflow;IMPLEMENTADO;.github/workflows/budget_components.yml;Workflow presente.;informativo;nenhuma
+calculator_architecture.py;codigo;IMPLEMENTADO;src/fito_aimm/calculator_architecture.py;Módulo com 180 linhas.;informativo;nenhuma
+calculator_architecture.py;execucao;IMPLEMENTADO;src/fito_aimm/calculator_architecture.py;Função pública: execute_calculator_architecture.;informativo;nenhuma
+calculator_architecture.py;teste;IMPLEMENTADO;scripts/testar_calculator_architecture.py;Teste presente.;informativo;nenhuma
+calculator_architecture.py;workflow;IMPLEMENTADO;.github/workflows/calculator_architecture.yml;Workflow presente.;informativo;nenhuma
+coletor_ibge.py;codigo;IMPLEMENTADO;src/fito_aimm/coletor_ibge.py;Módulo com 436 linhas.;informativo;nenhuma
+coletor_ibge.py;execucao;IMPLEMENTADO;src/fito_aimm/coletor_ibge.py;Função pública: coletar_populacao_estimada_municipios.;informativo;nenhuma
+coletor_ibge.py;teste;IMPLEMENTADO;scripts/testar_coleta_ibge.py;Teste presente.;informativo;nenhuma
+coletor_ibge.py;workflow;IMPLEMENTADO;.github/workflows/baseline_ibge_sidra.yml;Workflow presente.;informativo;nenhuma
+coletor_ibge_geociencias.py;seeds_entradas;PARCIAL;data/raw/ibge/geociencias/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls;"Seed ausente no repositório; tolerável se artefato externo (congelamento técnico).";informativo;nenhuma
+coletor_ibge_geociencias.py;codigo;IMPLEMENTADO;src/fito_aimm/coletor_ibge_geociencias.py;Módulo com 456 linhas.;informativo;nenhuma
+coletor_ibge_geociencias.py;execucao;IMPLEMENTADO;src/fito_aimm/coletor_ibge_geociencias.py;Função pública: coletar_populacao_estimada.;informativo;nenhuma
+coletor_ibge_geociencias.py;teste;IMPLEMENTADO;scripts/testar_area_densidade_ibge.py;Teste presente.;informativo;nenhuma
+coletor_ibge_geociencias.py;workflow;IMPLEMENTADO;.github/workflows/area_densidade_ibge_geociencias.yml;Workflow presente.;informativo;nenhuma
+coletor_mapaosc.py;codigo;IMPLEMENTADO;src/fito_aimm/coletor_mapaosc.py;Módulo com 620 linhas.;informativo;nenhuma
+coletor_mapaosc.py;execucao;IMPLEMENTADO;src/fito_aimm/coletor_mapaosc.py;Função pública: coletar_mapaosc_municipios.;informativo;nenhuma
+coletor_mapaosc.py;teste;IMPLEMENTADO;scripts/testar_mapaosc_triagem.py;Teste presente.;informativo;nenhuma
+coletor_mapaosc.py;workflow;IMPLEMENTADO;.github/workflows/mapaosc_triagem.yml;Workflow presente.;informativo;nenhuma
+module_pipeline_audit.py;codigo;IMPLEMENTADO;src/fito_aimm/module_pipeline_audit.py;Módulo com 453 linhas.;informativo;nenhuma
+module_pipeline_audit.py;execucao;IMPLEMENTADO;src/fito_aimm/module_pipeline_audit.py;Função pública: execute_module_pipeline_audit.;informativo;nenhuma
+module_pipeline_audit.py;teste;IMPLEMENTADO;scripts/testar_module_pipeline_audit.py;Teste presente.;informativo;nenhuma
+module_pipeline_audit.py;workflow;IMPLEMENTADO;.github/workflows/module_pipeline_audit.yml;Workflow presente.;informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/evidence/evidence_pre_diligencia_consolidacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_consolidado.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_encaminhamentos.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_fila_contato.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_pendencias.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_status_validacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_consolidacao.py;codigo;IMPLEMENTADO;src/fito_aimm/pre_diligencia_consolidacao.py;Módulo com 249 linhas.;informativo;nenhuma
+pre_diligencia_consolidacao.py;execucao;IMPLEMENTADO;src/fito_aimm/pre_diligencia_consolidacao.py;Função pública: executar_consolidacao_pre_diligencia.;informativo;nenhuma
+pre_diligencia_consolidacao.py;teste;IMPLEMENTADO;scripts/testar_pre_diligencia_consolidacao.py;Teste presente.;informativo;nenhuma
+pre_diligencia_consolidacao.py;workflow;IMPLEMENTADO;.github/workflows/pre_diligencia_consolidacao.yml;Workflow presente.;informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/evidence/evidence_pre_diligencia_manual_validation.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_manual_validation_report.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_status_validacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_status_validacao_ready_for_drive.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_status_validacao_template_drive.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_manual_validator.py;seeds_entradas;PARCIAL;data/input/pre_diligencia_status_validacao_manual.csv;"Seed ausente no repositório; tolerável se artefato externo (congelamento técnico).";informativo;nenhuma
+pre_diligencia_manual_validator.py;codigo;IMPLEMENTADO;src/fito_aimm/pre_diligencia_manual_validator.py;Módulo com 242 linhas.;informativo;nenhuma
+pre_diligencia_manual_validator.py;execucao;IMPLEMENTADO;src/fito_aimm/pre_diligencia_manual_validator.py;Função pública: executar_validacao_input_manual.;informativo;nenhuma
+pre_diligencia_manual_validator.py;teste;IMPLEMENTADO;scripts/testar_pre_diligencia_manual_validation.py;Teste presente.;informativo;nenhuma
+pre_diligencia_manual_validator.py;workflow;IMPLEMENTADO;.github/workflows/pre_diligencia_manual_validation.yml;Workflow presente.;informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/evidence/evidence_pre_diligencia_osc.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/processed/checklist_contato_validacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/processed/organizacoes_pre_diligencia_topN.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_fila_contato.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_solicitacao_documentos.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;seeds_entradas;PARCIAL;data/processed/pre_diligencia_status_validacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+pre_diligencia_osc.py;codigo;IMPLEMENTADO;src/fito_aimm/pre_diligencia_osc.py;Módulo com 292 linhas.;informativo;nenhuma
+pre_diligencia_osc.py;execucao;IMPLEMENTADO;src/fito_aimm/pre_diligencia_osc.py;Função pública: executar_pre_diligencia_osc.;informativo;nenhuma
+pre_diligencia_osc.py;teste;IMPLEMENTADO;scripts/testar_pre_diligencia_osc.py;Teste presente.;informativo;nenhuma
+pre_diligencia_osc.py;workflow;IMPLEMENTADO;.github/workflows/pre_diligencia_osc.yml;Workflow presente.;informativo;nenhuma
+product_pathway.py;codigo;IMPLEMENTADO;src/fito_aimm/product_pathway.py;Módulo com 241 linhas.;informativo;nenhuma
+product_pathway.py;execucao;IMPLEMENTADO;src/fito_aimm/product_pathway.py;Função pública: execute_product_pathway.;informativo;nenhuma
+product_pathway.py;teste;IMPLEMENTADO;scripts/testar_product_pathway.py;Teste presente.;informativo;nenhuma
+product_pathway.py;workflow;IMPLEMENTADO;.github/workflows/product_pathway.yml;Workflow presente.;informativo;nenhuma
+risk_osc.py;seeds_entradas;PARCIAL;data/evidence/evidence_risk_osc_screening.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc.py;seeds_entradas;PARCIAL;data/processed/organizacoes_candidatas_mapaosc.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc.py;seeds_entradas;PARCIAL;data/processed/organizacoes_lista_curta_diligencia.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc.py;seeds_entradas;PARCIAL;data/processed/risk_osc_screening.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc.py;codigo;IMPLEMENTADO;src/fito_aimm/risk_osc.py;Módulo com 223 linhas.;informativo;nenhuma
+risk_osc.py;execucao;IMPLEMENTADO;src/fito_aimm/risk_osc.py;Função pública: executar_risk_osc_screening.;informativo;nenhuma
+risk_osc.py;teste;IMPLEMENTADO;scripts/testar_risk_osc_screening.py;Teste presente.;informativo;nenhuma
+risk_osc.py;workflow;IMPLEMENTADO;.github/workflows/risk_osc_screening.yml;Workflow presente.;informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/evidence/evidence_risk_osc_diagnostics.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/processed/checklist_contato_validacao.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/processed/organizacoes_pre_diligencia_topN.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/processed/risk_osc_diagnostics.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/processed/risk_osc_screening.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;seeds_entradas;PARCIAL;data/processed/risk_osc_threshold_scenarios.csv;"Dependência de pipeline gerada em runtime por outro módulo; ausente em clone estático.";informativo;nenhuma
+risk_osc_diagnostics.py;codigo;IMPLEMENTADO;src/fito_aimm/risk_osc_diagnostics.py;Módulo com 372 linhas.;informativo;nenhuma
+risk_osc_diagnostics.py;execucao;IMPLEMENTADO;src/fito_aimm/risk_osc_diagnostics.py;Função pública: executar_diagnostico_risk_osc.;informativo;nenhuma
+risk_osc_diagnostics.py;teste;IMPLEMENTADO;scripts/testar_risk_osc_diagnostics.py;Teste presente.;informativo;nenhuma
+risk_osc_diagnostics.py;workflow;IMPLEMENTADO;.github/workflows/risk_osc_diagnostics.yml;Workflow presente.;informativo;nenhuma
+species_selection.py;codigo;IMPLEMENTADO;src/fito_aimm/species_selection.py;Módulo com 243 linhas.;informativo;nenhuma
+species_selection.py;execucao;IMPLEMENTADO;src/fito_aimm/species_selection.py;Função pública: execute_species_selection.;informativo;nenhuma
+species_selection.py;teste;IMPLEMENTADO;scripts/testar_species_selection.py;Teste presente.;informativo;nenhuma
+species_selection.py;workflow;IMPLEMENTADO;.github/workflows/species_selection.yml;Workflow presente.;informativo;nenhuma
+system_freeze_index.py;codigo;IMPLEMENTADO;src/fito_aimm/system_freeze_index.py;Módulo com 168 linhas.;informativo;nenhuma
+system_freeze_index.py;execucao;IMPLEMENTADO;src/fito_aimm/system_freeze_index.py;Função pública: execute_system_freeze_index.;informativo;nenhuma
+system_freeze_index.py;teste;IMPLEMENTADO;scripts/testar_system_freeze_index.py;Teste presente.;informativo;nenhuma
+system_freeze_index.py;workflow;IMPLEMENTADO;.github/workflows/system_freeze_index.yml;Workflow presente.;informativo;nenhuma

@@ -1,0 +1,13 @@
+﻿tipo;nome;origem_ou_rota;modulo_consumidor;arquivo;metodo_ou_formato;estado;observacao
+api_externa;apisidra.ibge.gov.br;https://apisidra.ibge.gov.br/values;coletor_ibge.py;src/fito_aimm/coletor_ibge.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+api_externa;servicodados.ibge.gov.br;https://servicodados.ibge.gov.br/api/v1/localidades;coletor_ibge.py;src/fito_aimm/coletor_ibge.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+api_externa;apisidra.ibge.gov.br;https://apisidra.ibge.gov.br/values;coletor_ibge_geociencias.py;src/fito_aimm/coletor_ibge_geociencias.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+api_externa;geoftp.ibge.gov.br;https://geoftp.ibge.gov.br/organizacao_do_territorio/estrutura_territorial/areas_territoriais/2025/AR_BR_RG_UF_RGINT_RGI_MUN_2025.xls;coletor_ibge_geociencias.py;src/fito_aimm/coletor_ibge_geociencias.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+api_externa;mapaosc.ipea.gov.br;https://mapaosc.ipea.gov.br/arquivos/subitems/4038-dicionario-de-dados-mapa-oscs.xlsx;coletor_mapaosc.py;src/fito_aimm/coletor_mapaosc.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+api_externa;mapaosc.ipea.gov.br;https://mapaosc.ipea.gov.br/download/20260522_MOSC_baseDivulgacao.csv;coletor_mapaosc.py;src/fito_aimm/coletor_mapaosc.py;HTTP GET (verificar formato no módulo);NAO_VERIFICADA;"Estado da URL não verificado por este módulo; verificar em runtime com rede."
+endpoint_interno;home;/;app.py;app.py;GET;ATIVA;Bearer token: nao
+endpoint_interno;health;/health;app.py;app.py;GET;ATIVA;Bearer token: nao
+endpoint_interno;get_countries;/worldbank/countries;app.py;app.py;GET;REQUER_AUTENTICACAO;Bearer token: sim
+endpoint_interno;get_indicators;/worldbank/indicators;app.py;app.py;GET;REQUER_AUTENTICACAO;Bearer token: sim
+endpoint_interno;get_country_indicator;/worldbank/data/<country>/<indicator>;app.py;app.py;GET;REQUER_AUTENTICACAO;Bearer token: sim
+endpoint_interno;test_auth;/test;app.py;app.py;GET;REQUER_AUTENTICACAO;Bearer token: sim
