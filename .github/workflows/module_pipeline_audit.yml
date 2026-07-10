@@ -1,0 +1,47 @@
+name: module-pipeline-audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "config/module_pipeline_audit_rules.yaml"
+      - "src/fito_aimm/module_pipeline_audit.py"
+      - "scripts/testar_module_pipeline_audit.py"
+      - ".github/workflows/module_pipeline_audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  module-pipeline-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar auditoria factual de módulo/pipeline
+        run: python scripts/testar_module_pipeline_audit.py
+
+      - name: Publicar artefatos da auditoria
+        uses: actions/upload-artifact@v4
+        with:
+          name: module-pipeline-audit-fito-amazonia
+          path: |
+            data/processed/module_pipeline_inventory.csv
+            data/processed/module_pipeline_unpublished_outputs.csv
+            data/evidence/evidence_module_pipeline_audit.csv
+            docs/MODULE_PIPELINE_EVIDENCE_TABLE.csv
+            config/module_pipeline_audit_rules.yaml
+            outputs/logs/teste_module_pipeline_audit.txt
