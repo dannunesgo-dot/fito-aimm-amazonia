@@ -15,7 +15,7 @@ LAYOUT_SEED = Path("data/reference/aimm_visual_layout_seed.csv")
 
 DASH_SUMMARY = Path("data/processed/aimm_executive_summary.csv")
 DASH_CARDS = Path("data/processed/aimm_dashboard_cards.csv")
-DASH_DIMENSIONS = Path("data/processed/aimm_dashboard_dimension_view.csv")
+DASH_AXES = Path("data/processed/aimm_dashboard_axes_view.csv")
 DASH_NEXT_ACTIONS = Path("data/processed/aimm_next_actions.csv")
 DASH_PAYLOAD = Path("outputs/reports/aimm_dashboard_payload.json")
 
@@ -56,7 +56,7 @@ def load_yaml(path: Path) -> dict[str, Any]:
 
 
 def ensure_dashboard_outputs() -> None:
-    required = [DASH_SUMMARY, DASH_CARDS, DASH_DIMENSIONS, DASH_NEXT_ACTIONS]
+    required = [DASH_SUMMARY, DASH_CARDS, DASH_AXES, DASH_NEXT_ACTIONS]
     if all(p.exists() for p in required):
         return
 
@@ -91,7 +91,7 @@ def build_html(summary, cards, dimensions, messages, next_actions, rules) -> str
         for c in cards
     )
     dim_rows = "\n".join(
-        f"<tr><td>{esc(d.get('dimensao_aimm',''))}</td><td>{esc(d.get('papel',''))}</td><td>{esc(d.get('score_dimensao_preliminar',''))}</td><td>{esc(d.get('status_dimensao',''))}</td></tr>"
+        f"<tr><td>{esc(d.get('eixo',''))}</td><td>{esc(d.get('rating',''))}</td><td>{esc(d.get('risco',''))}</td><td>{esc(d.get('pontos_ajustados',''))}</td></tr>"
         for d in dimensions
     )
     message_blocks = "\n".join(
@@ -221,10 +221,10 @@ def build_svg(summary, cards, dimensions, messages):
     for idx, d in enumerate(dimensions):
         cy = y + idx * 42
         parts.append(f'<rect x="40" y="{cy-25}" width="1120" height="34" fill="#f3f4f6" stroke="#d1d5db"/>')
-        parts.append(text(60, cy, d.get("dimensao_aimm", ""), 18, "bold"))
+        parts.append(text(60, cy, d.get("eixo", ""), 18, "bold"))
         parts.append(text(250, cy, f"papel: {d.get('papel','')}", 16))
-        parts.append(text(500, cy, f"score: {d.get('score_dimensao_preliminar','')}", 16))
-        parts.append(text(720, cy, f"status: {d.get('status_dimensao','')}", 16))
+        parts.append(text(500, cy, f"pontos: {d.get('pontos_ajustados','')}", 16))
+        parts.append(text(720, cy, f"{d.get('rating','')} / {d.get('risco','')}", 16))
 
     y += 250
     parts.append(text(40, y, "Mensagem de leitura", 24, "bold"))
@@ -283,7 +283,7 @@ def build_brief(summary, cards, dimensions, messages, next_actions):
         lines.append(f"- **{c.get('titulo')}**: {c.get('valor')} — {c.get('interpretacao')}")
     lines.extend(["", "## 4. Dimensões AIMM", ""])
     for d in dimensions:
-        lines.append(f"- **{d.get('dimensao_aimm')}**: {d.get('score_dimensao_preliminar')} — {d.get('status_dimensao')}")
+        lines.append(f"- **{d.get('eixo')}**: {d.get('rating')} / {d.get('risco')} — {d.get('pontos_ajustados')} pontos")
     lines.extend(["", "## 5. Mensagens por tema", ""])
     for m in messages:
         lines.append(f"### {m.get('tema')}")
@@ -326,7 +326,7 @@ def execute_aimm_communication() -> dict[str, Any]:
     layout = read_csv(LAYOUT_SEED)
     summary = read_csv(DASH_SUMMARY)
     cards = read_csv(DASH_CARDS)
-    dimensions = read_csv(DASH_DIMENSIONS)
+    dimensions = read_csv(DASH_AXES)
     next_actions = read_csv(DASH_NEXT_ACTIONS)
 
     if not summary:

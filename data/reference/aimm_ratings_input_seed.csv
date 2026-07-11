@@ -1,0 +1,6 @@
+campo;valor;origem;status
+project_outcome_rating;Moderate;PROVISORIO_EXEMPLO;nao_validado
+project_outcome_risco;Qualified;PROVISORIO_EXEMPLO;nao_validado
+market_outcome_rating;Moderate;PROVISORIO_EXEMPLO;nao_validado
+market_outcome_risco;Qualified;PROVISORIO_EXEMPLO;nao_validado
+elegivel_clima_inclusao;nao;PROVISORIO_EXEMPLO;nao_validado

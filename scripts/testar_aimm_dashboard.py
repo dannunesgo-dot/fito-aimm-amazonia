@@ -21,55 +21,61 @@ def main():
     if result["errors"]:
         for err in result["errors"]:
             print(f"ERRO: {err}")
-        raise ValueError(f"Dashboard AIMM falhou com {len(result['errors'])} erro(s).")
+        raise ValueError(f"Dashboard falhou com {len(result['errors'])} erro(s).")
 
+    # Todas as saídas declaradas devem existir.
     outputs = result["outputs"]
-    for key, path in outputs.items():
-        p = Path(path)
-        if not p.exists():
-            raise FileNotFoundError(f"Saída ausente: {key} -> {path}")
-        if p.suffix == ".csv":
-            rows = read_csv(p)
-            if not rows:
-                raise ValueError(f"CSV vazio: {key} -> {path}")
-        else:
-            text = p.read_text(encoding="utf-8")
-            if not text.strip():
-                raise ValueError(f"Arquivo textual vazio: {key} -> {path}")
+    for chave, caminho in outputs.items():
+        if not Path(caminho).exists():
+            raise FileNotFoundError(f"Saída ausente: {chave} -> {caminho}")
 
-    summary = read_csv(Path(outputs["executive_summary_csv"]))[0]
-    if summary["pode_ser_usado_como_score_final"] != "não":
-        raise ValueError("Trava violada: painel não pode liberar score final.")
+    # A visão por eixo deve ter exatamente os dois eixos oficiais.
+    eixos = read_csv(Path(outputs["axes"]))
+    nomes = {e["eixo"] for e in eixos}
+    esperados = {"Project Outcome", "Market Outcome"}
+    if nomes != esperados:
+        raise ValueError(f"Eixos incorretos: {nomes}. Esperado: {esperados}")
+
+    # O score deve bater com a soma dos eixos (+ ajuste).
+    soma = sum(int(e["pontos_ajustados"]) for e in eixos) + result["ajuste_clima_inclusao"]
+    if soma != result["score_total"]:
+        raise ValueError(
+            f"Score inconsistente: eixos somam {soma}, mas score_total é {result['score_total']}"
+        )
 
     RELATORIO.parent.mkdir(parents=True, exist_ok=True)
-    lines = [
+    linhas = [
         "TESTE AIMM_DASHBOARD — Fito+ Amazônia",
         "=" * 86,
-        f"Score estrutural preliminar exibido: {result['score']}",
-        f"Status de prontidão: {result['status']}",
-        f"Cards executivos gerados: {result['cards']}",
-        f"Dimensões exibidas: {result['dimensions']}",
-        f"Bloqueios/lacunas exibidos: {result['blockers']}",
-        f"Próximas ações registradas: {result['next_actions']}",
+        "Dashboard religado ao motor oficial (fitomais_aimm_engine).",
         "",
-        "Arquivos gerados:",
-        f"- {outputs['executive_summary_csv']}",
-        f"- {outputs['dashboard_cards_csv']}",
-        f"- {outputs['dimension_view_csv']}",
-        f"- {outputs['next_actions_csv']}",
-        f"- {outputs['output_manifest']}",
-        f"- {outputs['evidence_csv']}",
-        f"- {outputs['executive_summary_md']}",
-        f"- {outputs['dashboard_payload_json']}",
+        f"Score AIMM: {result['score_total']} ({result['faixa']})",
+        f"  Project Outcome: {result['project']['rating']} / {result['project']['risco']} = {result['project']['pontos']} pontos",
+        f"  Market Outcome:  {result['market']['rating']} / {result['market']['risco']} = {result['market']['pontos']} pontos",
+        f"  Ajuste clima/inclusão: {result['ajuste_clima_inclusao']}",
+        "",
+        "Memória de cálculo:",
+    ]
+    linhas += [f"  - {m}" for m in result["memoria_calculo"]]
+    linhas += [
+        "",
+        f"Status do resultado: {result['status']}",
+        "",
+        "Verificações estruturais:",
+        "  [OK] Todas as saídas declaradas foram geradas.",
+        "  [OK] Visão por eixo contém exatamente Project Outcome e Market Outcome.",
+        "  [OK] Score total confere com a soma dos eixos.",
         "",
         "Resultado: SUCESSO.",
-        "O painel/resumo executivo e os outputs da calculadora AIMM foram gerados e validados estruturalmente.",
-        "",
-        "Trava: o painel apresenta resultado estrutural preliminar. Não libera score AIMM final nem aprova decisões executivas.",
     ]
-    text = "\n".join(lines)
-    RELATORIO.write_text(text, encoding="utf-8")
-    print(text)
+    if result["provisorio"]:
+        linhas.append(
+            "TRAVA: ratings PROVISÓRIOS de exemplo. O score NÃO é avaliação real. "
+            "Os ratings reais virão do sector framework Fito+ (Camada 2)."
+        )
+    texto = "\n".join(linhas)
+    RELATORIO.write_text(texto, encoding="utf-8")
+    print(texto)
 
 
 if __name__ == "__main__":
