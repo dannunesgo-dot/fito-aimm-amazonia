@@ -1,0 +1,36 @@
+name: fitomais-aimm-engine
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/fito_aimm/fitomais_aimm_engine.py"
+      - "scripts/testar_fitomais_aimm_engine.py"
+      - ".github/workflows/fitomais_aimm_engine.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fitomais-aimm-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Validar motor AIMM contra a norma oficial (7 casos)
+        run: python scripts/testar_fitomais_aimm_engine.py
+      - name: Publicar log de validação
+        uses: actions/upload-artifact@v4
+        with:
+          name: fitomais-aimm-engine-fito-amazonia
+          path: |
+            outputs/logs/teste_fitomais_aimm_engine.txt
