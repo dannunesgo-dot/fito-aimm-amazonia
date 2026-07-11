@@ -1,0 +1,16 @@
+﻿branch;arquivo;tipo;categoria;impacto_nucleo;observacao
+refactor/phase2;PHASE2_IMPLEMENTATION.md;ADICIONADO;documento;nao;
+refactor/phase2;PULL_REQUEST_PHASE1.md;ADICIONADO;documento;nao;
+refactor/phase2;docs/deprecated/README.md;ADICIONADO;documento;nao;
+refactor/phase2;docs/deprecated/buscador.py;ADICIONADO;modulo_python;nao;
+refactor/phase2;docs/deprecated/conferidor.py;ADICIONADO;modulo_python;nao;
+refactor/phase2;docs/deprecated/extrator.py;ADICIONADO;modulo_python;nao;
+refactor/phase2;docs/deprecated/sincroniza_drive.py;ADICIONADO;modulo_python;nao;
+refactor/phase2;src/fito_aimm/aimm_engine.py;MODIFICADO;modulo_python;sim;NUCLEO modificado: 14+ 1-
+refactor/phase2;src/fito_aimm/models/__init__.py;ADICIONADO;modulo_python;nao;sem classe/funcao publica
+refactor/phase2;src/fito_aimm/models/aimm_models.py;ADICIONADO;modulo_python;nao;16 classe(s)/funcao(oes)
+refactor/phase2;src/fito_aimm/utils/__init__.py;ADICIONADO;modulo_python;nao;sem classe/funcao publica
+refactor/phase2;src/fito_aimm/utils/normalization.py;ADICIONADO;modulo_python;nao;sem classe/funcao publica
+refactor/phase2;src/fito_aimm/validators/__init__.py;ADICIONADO;modulo_python;nao;sem classe/funcao publica
+refactor/phase2;src/fito_aimm/validators/aimm_validator.py;ADICIONADO;modulo_python;nao;3 classe(s)/funcao(oes)
+refactor/phase2;src/fito_aimm/validators/base_validator.py;ADICIONADO;modulo_python;nao;6 classe(s)/funcao(oes)

@@ -1,0 +1,52 @@
+name: branch-comparison
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_alvo:
+        description: "Branch a comparar com main (ex.: refactor/phase2)"
+        required: true
+        default: "refactor/phase2"
+
+permissions:
+  contents: read
+
+jobs:
+  branch-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Baixar repositório (histórico completo)
+        uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 traz TODOS os branches e histórico — necessário para
+          # comparar main com outros branches. O checkout padrão (raso) não os vê.
+          fetch-depth: 0
+
+      - name: Garantir referências remotas de todos os branches
+        shell: bash
+        run: |
+          git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+          git fetch --all --prune
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Executar comparação do branch alvo
+        run: python scripts/testar_branch_comparison.py "${{ github.event.inputs.branch_alvo }}"
+
+      - name: Publicar artefatos da comparação
+        uses: actions/upload-artifact@v4
+        with:
+          name: branch-comparison-fito-amazonia
+          path: |
+            docs/BRANCH_COMPARISON_TABLE.csv
+            outputs/logs/teste_branch_comparison.txt
